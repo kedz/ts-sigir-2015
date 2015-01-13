@@ -1,5 +1,5 @@
 PROJECT=paper
-SRC=$(PROJECT).tex
+SRC=$(PROJECT).tex relatedwork.tex introduction.tex
 TARGET=$(PROJECT).pdf
 $(TARGET):$(SRC)
 	pdflatex $(SRC)
