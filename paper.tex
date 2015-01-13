@@ -39,10 +39,12 @@
 %
 % For tracking purposes - this is V2.0 - May 2012
 
-%\documentclass{sig-alternate} \usepackage{url} \usepackage{color}
-\documentclass[10pt]{article} \usepackage{url} \usepackage{color}
+\documentclass{sig-alternate} 
+\usepackage{url} 
+\usepackage{color}
+% \documentclass[10pt]{article} \usepackage{url} \usepackage{color}
 \usepackage[utf8]{inputenc}
-\usepackage[margin=1in]{geometry}
+% \usepackage[margin=1in]{geometry}
 \usepackage{amssymb}
 \usepackage{amsmath}
 \usepackage{amsfonts}
@@ -77,13 +79,15 @@
 %(0-89791-88-6/97/05) to be over-ridden - IF NEED BE.  --- End of Author
 %Metadata ---
 
-\title{Columbia University at TREC 2014: Temporal Summarization}
+\title{The Anatomy of a Temporal Summarization System}
 
-\author[1]{Chris Kedzie}
-\author[1]{Kathleen McKeown}
-\author[2]{Fernando Diaz}
-\affil[1]{Columbia University, Department of Computer Science}
-\affil[2]{Microsoft Research}
+\numberofauthors{1} %  in this sample file, there are a *total*
+\author{}
+% \author[1]{Chris Kedzie}
+% \author[1]{Kathleen McKeown}
+% \author[2]{Fernando Diaz}
+% \affil[1]{Columbia University, Department of Computer Science}
+% \affil[2]{Microsoft Research}
 %    Alternate {\ttlit ACM} SIG Proceedings Paper in LaTeX
 %Format\titlenote{(Produces the permission block, and copyright information).
 %For use with SIG-ALTERNATE.CLS. Supported by ACM.}} \subtitle{[Extended
@@ -461,7 +465,8 @@ start of the Stream Corpus.
 We use the same Wikipedia corpora to construct the lanuage models used
 in our salience prediction model (\cref{subsubsec:lm}). 
 
-\begin{figure}
+\begin{figure*}
+	\begin{center}
 \begin{tabular}{| p{5cm} c c |}
 \hline
 Event & WP Categories & No. Docs/Sents/Words\\
@@ -490,7 +495,8 @@ Port\_Said\_Stadium\_riot \newline
 \end{tabular}
 \caption{Domain specific Wikipedia corpora for semantic similarity and 
 language models. }
-\end{figure} 
+\end{center}
+\end{figure*} 
 
 
 We use the TREC 2013 Stream Corpus and TS 2013 event/gold nugget data to 
@@ -558,9 +564,9 @@ conditions are emitted as an update.
 Additionally, we maintain the complete set of updates in order to penalize
 salience predictions in the subsequent time steps. 
 
-\begin{figure}
-\centering
-\begin{algorithm}[H]
+% \begin{figure}
+% \centering
+\begin{algorithm}%[H]
  \KwData{$Query$ --- the set of event query words\\ 
         $SC$ --- the stream corpus\\
 
@@ -597,7 +603,7 @@ salience predictions in the subsequent time steps.
  } 
  \caption{Temporal Summarization Algorithm}
 \end{algorithm}
-\end{figure}
+% \end{figure}
 
 \subsection{Document Retrieval}\label{subsec:Document Retrieval}
 
