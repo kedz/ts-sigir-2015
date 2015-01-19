@@ -1,0 +1,195 @@
+\subsection{Predicting Sentence Salience}
+\label{subsec:Predict}
+
+In order to use AP clustering for summarization, we need to assign a
+preference value to each input sentence.  In our approach, we equate a
+sentence's salience with its preference.  A good model of sentence salience
+should predict higher values for sentences that are more likely to appear in a
+human generated summary of the event. 
+
+We do not have such human judgments, but we do have last year's gold nugget
+sentences.
+The response variable we try to predict is a sentence's semantic similarity
+(see ?) to the gold nugget sentences, i.e. we want to predict the similarity
+to a gold nugget when the gold nugget is not known.
+
+
+To build training data for this regression task, 
+we use the TREC 2013 event/gold nuggets. For each event, we retrieve all 
+sentences using the document retrieval and content selection steps outlined
+in the previous selection. We then sample with replacement 200 sentences
+from this collection, and extract non-lexical features (described in more 
+detail below) for each sentence
+to construct our design matrix $\mathbf{X}$. To build our response variables
+$\mathbf{y}$ we compute the maximum semantic similarity of each input
+sentence to the gold nugget sentences. We fit a $\operatorname{GP}$ with
+an RBF kernel to this data, optimizing kernel parameters with the scaled 
+conjugate gradient method. This sampling procedure is repeated 100 times
+for each of the ? 2013 TS events, yielding ? total models. In our salience 
+predictions for the 2014 events, we take the mean prediction of all models.
+
+ 
+%we take a subset of sentences
+%relevant to the TREC events (approximately 1000) and match them to the gold
+%nugget sentence with highest similarity as determined by the sentence
+%similarity system of \cite{guo2012simple}. 
+%\cite{} have used this system previously to correlate sentences to meaningful
+%units of information in human generated summaries. 
+%We use the real-valued similarity scores as our salience scores for the
+%training sentences.
+
+We want our model to be predictive across different kinds of events so we
+avoid lexical features.  Instead, we extract a variety of features including
+language model scores, geographic relevance, and temporal relevance from each
+sentence.  These features are used to fit a Gaussian process regression model
+that can predict the similarity of a sentence to a gold summary
+\cite{preotiuc2013temporal}.  
+%We use the model predicted salience of each
+%sentence as it's preference value in the AP clustering. 
+
+\subsubsection{Features}
+\paragraph{Basic Features}
+
+We employ several basic features that have been used previously in supervised
+models to rank sentence salience \cite{kupiec1995trainable,conroy2001using}.
+These include sentence length, the number of capitalized words normalized by
+sentence length, document position, number of named entities, etc.
+
+\paragraph{Query Features}
+
+These features are derived from the event query and the event type.
+These include the number of query words present in the sentence
+in addition to the number of event type synonyms, hypernyms, and hyponyms
+as found in WordNet \cite{miller1995wordnet}.
+E.g., for event type \emph{earthquake}, e.g., we obtain ``quake,'' ``temblor,''
+``seism,'' ``aftershock,'' etc.   
+
+
+\paragraph{Language Model Features}\label{subsubsec:lm}
+
+%Because the data in our experiments is scraped from the web, it is common to
+%find sentences that contain both salient informantion and two kinds of noise:
+%noisey fragments of web page structure (e.g. section titles, \emph{News},
+%\emph{Sports}, etc.) and references to other news not relevant to the topic
+%summary.
+%
+We use two trigram language models, trained using the SRILM toolkit
+\cite{stolcke2002srilm}, taking as features the average log probability (i.e.
+the sentence's total log probability normalized by sentence length) from each
+model.  This first model is trained on 4 years (2005-2009) of articles from
+the Gigaword corpus.  Specifically, we use articles from the Associated Press
+and the New York Times. This model is intended to assess the general writing
+quality (grammaticality, word usage) of an input sentence and helps us to
+filter out text snippets which are not sentences (e.g., web page titles).  The
+second model is a domain specific language model. We build a corpus of
+Wikipedia articles for each event type, consisting of documents from a related
+Wikipedia category. E.g. for earthquakes, we collect pages under the category
+\emph{Category:Earthquakes}. This model assigns higher probability to
+sentences that are focused on the given domain.
+
+%For both models, we Finally, we extract the percentage of capitalized words,
+%and sentence length as features. These last two features also help to
+%identify sentences that are less likely to contain relevant content-- overly
+%long and heavily capitalized sentences in our corpus were likely to be long
+%strings of web-page headlines, section headers, and other irrelevant page
+%structure. 
+
+\paragraph{Geographic Relevance Features}
+
+Locations are identified using a named entity tagger. For each location in a
+sentence, we obtain its latitude and longitude using the Google Maps API.  We
+then compute its distance to that of the event location.  It is possible for a
+sentence and an event to have multiple locations so we take as features the
+minimum, maximum, and average distance of all sentence-event location pairs.
+Distances are calculated using the Vincenty distance.
+
+\paragraph{Temporal Relevance Features}
+
+Our data consists of hourly crawls of online content and so we exploit the
+temporality of corpus by capturing the burstiness of a sentence, i.e.  the
+change in word frequency from one hour to the next.``Bursty'' sentences often
+indicate new and important data. 
+
+Let $D_t$ be the set of web pages at time $t$ and let $s = \{w_1,\ldots,
+w_n\}$ be a sentence from a page $d \in D_t$.  We calculate the 1-hour
+burstiness of sentence $s$ from document $d$ at hour $t$  as \begin{align*}
+\operatorname{b}_1(s,d,t) = \frac{1}{|s|} \sum_{w \in s} \Bigg( &
+\operatorname{tf-idf}_t(w,d)  \\ & \left. - \frac{\sum_{d^\prime \in D_{t-1}:
+w \in d^\prime } \operatorname{tf-idf}_{t-1}(w,d^\prime)}{|\{d^\prime \in
+D_{t-1}: w \in d^\prime\}|} \right) \end{align*}
+
+where \begin{align*} \operatorname{tf-idf}_t(w,d) =&
+\log\left(1+\sum_{w^\prime \in d}1\{w=w^\prime\}  \right)\\ & \times
+\log\left(\frac{|D_t|}{1 + \sum_{d^\prime \in D_t}1\{w \in d^\prime\}}\right).
+\end{align*}
+% 1\{w = w^\prime} %- \operatorname{avg-tf-idf}_{t_{i-1}}(w).
+%\end{align*}
+
+
+We similarly find the sentence's 5-hour burstiness.  In addition to
+burstiness, we also include the sentence's average tf-idf and hours since the
+event in question started as features.
+
+\subsubsection{Gaussian Process Regression}
+\fdcomment{transition to gp description}
+
+A Gaussian process (GP) is a distribution over functions and is a 
+generalization of the multi-variate Gaussian to the infinite dimensional
+setting. That is, we use the observed data to define a distribution over 
+possible functions that generated this data, without having to explicitly 
+parameterize the function---in this sense GPs are considered 
+a non-parametric model.
+
+Formally, let $p(f)$ be a distribution over functions where $f$ is any mapping
+of an input space $\mathcal{X}$ to the reals,
+
+$$f: \mathcal{X} \rightarrow \mathcal{R}.$$ 
+Let the random variable $\mathbf{f} = (f(x_1),\ldots,f(x_n) )$ be
+ an $n$-dimensional vector whose elements are evaluations of the function $f$
+at points $x_i \in \mathcal{X}$.
+We say $p(f)$ is a Gaussian process if for any finite subset 
+$\{x_1,\ldots,x_n\} \subset \mathcal{X}$, the marginal distribution over 
+that finite subset $p(\mathbf{f})$ has a multivariate Gaussian distribution.
+A GP is parameterized by a mean function $\mu(\mathbf{x})$ and a 
+covariance function $K(x,x^\prime)$. Generally, the mean function is simply
+set to 0, leaving the distribution to be completely characterized by the
+kernel function on the data.
+
+In the regression setting, we typically have a response variable $y$ that
+is the sum of our model prediction  and 
+some Gaussian noise, i.e. $y = f(x) + \epsilon$ with 
+$\epsilon \sim \mathcal{N}(0, \sigma^2)$. When
+$f \sim \operatorname{GP}(\mathbf{0}, \mathbf{K})$, the
+two distributions
+of principal interest are the marginal likelihood
+$p(\mathbf{y}|\mathbf{X}) = 
+\mathcal{N}(\mathbf{0},\mathbf{K} + \sigma^2\mathbf{I})$ and the predictive
+distribution,
+
+$$p(\mathbf{y_*}|\mathbf{x_*},\mathbf{X},\mathbf{y}) =
+\mathcal{N}(\boldsymbol{\mu}_*, \boldsymbol{\sigma}^2_*) $$
+
+where $\mathbf{x_*}$ is a new or unseen input, $\mathbf{y_*}$ our predicted
+response, and
+\begin{align*}
+\boldsymbol{\mu}_* & = \mathbf{K_*}(\mathbf{K} + \sigma^2\mathbf{I})^{-1}\mathbf{y} \\
+\boldsymbol{\sigma}^2_* & 
+= \mathbf{K}_{**} - \mathbf{K}_*(\mathbf{K} + \sigma^2\mathbf{I})^{-1}
+\mathbf{K}_*^T + \sigma^2\\
+\end{align*}.
+
+Here $\mathbf{K}_* = K(\mathbf{x}_*, \mathbf{X})$, and 
+$\mathbf{K}_{**} = K(\mathbf{x}_*, \mathbf{x}_*)$.
+
+
+GP's are incredibly general, and are state of the art for many regression 
+tasks (?). The reliance on the covariance matrix 
+$\mathbf{K}$ for parameterization opens up the wide world of kernel methods
+for regression, and many varieties of similarity functions can be used.
+In our experiments we used a radial basis function kernel 
+$$K(\mathbf{x},\mathbf{x}^\prime) = \sigma^2 \exp\bigg(- \frac{1}{2} 
+\sum_{i=1}^d \frac{ (x_i-x^\prime_i)^2}{\ell_i^2} \bigg)$$ where 
+$\sigma$ and the $\ell_i$ are parameters we fit to our observed training data.
+The $\ell_i$ are feature dependent scaling parameters; once learned, they not
+only improve the accuracy of the model, but give us some introspection 
+into which features are more important.

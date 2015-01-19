@@ -47,20 +47,9 @@
 % \usepackage[margin=1in]{geometry}
 \usepackage{amssymb}
 \usepackage{amsmath}
+\usepackage[inline]{enumitem}
 \usepackage{amsfonts}
 \usepackage[]{algorithm2e}
-\DeclareMathOperator{\corpus}{\mathcal{C}}
-\DeclareMathOperator{\doc}{\mathnormal{d}}
-\DeclareMathOperator{\sent}{\mathnormal{s}}
-\DeclareMathOperator{\order}{\pi}
-\DeclareMathOperator{\dtime}{\mathnormal{t}}
-\DeclareMathOperator{\hour}{\mathnormal{h}}
-\DeclareMathOperator{\hours}{\mathcal{H}}
-\DeclareMathOperator{\Sim}{\mathbf{K}}
-\DeclareMathOperator{\SMat}{\mathbf{X}}
-\DeclareMathOperator{\Pref}{\boldsymbol{\pi}}
-\DeclareMathOperator{\Exemp}{\mathnormal{Exemplars}}
-\DeclareMathOperator{\Updates}{\mathnormal{Updates}}
 \usepackage{cleveref}
 \crefname{section}{§}{§§}
 \Crefname{section}{§}{§§}
@@ -68,7 +57,9 @@
 \usepackage{authblk}
 \newcommand{\fdadd}[1]{\textcolor{red}{#1}}
 \newcommand{\fdcomment}[1]{\textbf{\textcolor{red}{[FD: #1]}}}
-\newcommand{\ckcomment}[1]{\textbf{\textcolor{red}{[CK: #1]}}}
+\newcommand{\ckcomment}[1]{\textbf{\textcolor{blue}{[CK: #1]}}}
+\newcommand{\kmcomment}[1]{\textbf{\textcolor{green}{[KM: #1]}}}
+\input{notation.tex}
 
 \begin{document}
 
@@ -186,12 +177,14 @@ only baseline.
 
 %\keywords{Extractive Summarization, Affinity Propagation}
 
-
+\fdcomment{We should try to pull out as much of the TREC-specific language as possible (e.g. `run submissions', `participation in the TS track') to make the results more general.}
 \input{introduction.tex}
 
 \input{relatedwork.tex}
 
 \input{motivation.tex}
+
+\input{problemdefinition.tex}
 
 \input{algorithms.tex}
 

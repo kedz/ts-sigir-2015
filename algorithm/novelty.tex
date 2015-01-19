@@ -1,0 +1,9 @@
+\subsection{Ensuring Novelty}
+We run AP clustering with our rescaled and penalized sentence similarities
+and preferences. When the clustering has converged we emit all exemplar
+sentences (cluster centers) whose preference is $\lambda$ standard deviations
+above the mean preference for the current time period and who do not belong
+to singleton clusters as updates. These updates and their preferences are 
+retained for penalty calculations in subsequent time steps.
+
+

@@ -4,8 +4,8 @@ Most multi-document summarization approaches involve either sentence
 clustering or ranking or both to select summary sentences.
 When the summarization task
 is broad or underspecified, clustering is most appropriate in that the data
-"speaks for itself." This is probably most true when summarization is 
-interpretted to mean exploratory data analysis. 
+``speaks for itself.'' This is probably most true when summarization is 
+interpreted to mean exploratory data analysis. 
 When there are more constraints on the output, as in many text summarization
 tasks,
 it is often easier to design appropriate features for the ranking approach, 
@@ -17,3 +17,7 @@ of this clustering model on the TREC Temporal Summarization task.
 
 \ckcomment{Not sure how to present this together, we also essentially evaluate
 a salience model by feature ablation for the TS task, but this feels very specific compared to the general framework idea.}
+
+\fdcomment{I guess I think we need to two things in this section (and/or introduction).  1. explain why the problem matters.  2. explain why our approach is compelling.  }
+
+\fdcomment{if easy to generate, would be good to have a single figure for an event that includes 1. the query, 2. the distribution of (filtered) document volume over time, and 3. a sample of the gold nuggets.  this provides the reader with a visual explanation of the problem, the solution, and the difficulty}
