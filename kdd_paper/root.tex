@@ -1,0 +1,830 @@
+% This is "sig-alternate.tex" V2.0 May 2012 This file should be compiled with
+% V2.5 of "sig-alternate.cls" May 2012
+%
+% This example file demonstrates the use of the 'sig-alternate.cls' V2.5
+% LaTeX2e document class file. It is for those submitting articles to ACM
+% Conference Proceedings WHO DO NOT WISH TO STRICTLY ADHERE TO THE SIGS
+% (PUBS-BOARD-ENDORSED) STYLE.  The 'sig-alternate.cls' file will produce a
+% similar-looking, albeit, 'tighter' paper resulting in, invariably, fewer
+% pages.
+%
+% ----------------------------------------------------------------------------------------------------------------
+% This .tex file (and associated .cls V2.5) produces: 1) The Permission
+% Statement 2) The Conference (location) Info information 3) The Copyright
+% Line with ACM data 4) NO page numbers
+%
+% as against the acm_proc_article-sp.cls file which DOES NOT produce 1) thru'
+% 3) above.
+%
+% Using 'sig-alternate.cls' you have control, however, from within the source
+% .tex file, over both the CopyrightYear (defaulted to 200X) and the ACM
+% Copyright Data (defaulted to X-XXXXX-XX-X/XX/XX).  e.g.
+% \CopyrightYear{2007} will cause 2007 to appear in the copyright line.
+% \crdata{0-12345-67-8/90/12} will cause 0-12345-67-8/90/12 to appear in the
+% copyright line.
+%
+% ---------------------------------------------------------------------------------------------------------------
+% This .tex source is an example which *does* use the .bib file (from which
+% the .bbl file % is produced).  REMEMBER HOWEVER: After having produced the
+% .bbl file, and prior to final submission, you *NEED* to 'insert' your .bbl
+% file into your source .tex file so as to provide ONE 'self-contained' source
+% file.
+%
+% ================= IF YOU HAVE QUESTIONS ======================= Questions
+% regarding the SIGS styles, SIGS policies and procedures, Conferences etc.
+% should be sent to Adrienne Griscti (griscti@acm.org)
+%
+% Technical questions _only_ to Gerald Murray (murray@hq.acm.org)
+% ===============================================================
+%
+% For tracking purposes - this is V2.0 - May 2012
+
+\documentclass{sig-alternate} \usepackage{url} \usepackage{color}
+\newcommand{\fdadd}[1]{\textcolor{red}{#1}}
+\newcommand{\fdcomment}[1]{\textbf{\textcolor{red}{[FD: #1]}}}
+
+\begin{document}
+
+%
+% --- Author Metadata here ---
+\conferenceinfo{WOODSTOCK}{'97 El Paso, Texas USA}
+%\CopyrightYear{2007} % Allows default copyright year (20XX) to be over-ridden
+%- IF NEED BE.  \crdata{0-12345-67-8/90/01}  % Allows default copyright data
+%(0-89791-88-6/97/05) to be over-ridden - IF NEED BE.  --- End of Author
+%Metadata ---
+
+\title{Summarizing Disasters Over Time}
+%    Alternate {\ttlit ACM} SIG Proceedings Paper in LaTeX
+%Format\titlenote{(Produces the permission block, and copyright information).
+%For use with SIG-ALTERNATE.CLS. Supported by ACM.}} \subtitle{[Extended
+%Abstract] \titlenote{A full version of this paper is available as
+%\textit{Author's Guide to Preparing ACM SIG Proceedings Using
+%\LaTeX$2_\epsilon$\ and BibTeX} at \texttt{www.acm.org/eaddress.htm}}}
+%
+% You need the command \numberofauthors to handle the 'placement and
+% alignment' of the authors beneath the title.
+%
+% For aesthetic reasons, we recommend 'three authors at a time' i.e. three
+% 'name/affiliation blocks' be placed beneath the title.
+%
+% NOTE: You are NOT restricted in how many 'rows' of "name/affiliations" may
+% appear. We just ask that you restrict the number of 'columns' to three.
+%
+% Because of the available 'opening page real-estate' we ask you to refrain
+% from putting more than six authors (two rows with three columns) beneath the
+% article title.  More than six makes the first-page appear very cluttered
+% indeed.
+%
+% Use the \alignauthor commands to handle the names and affiliations for an
+% 'aesthetic maximum' of six authors.  Add names, affiliations, addresses for
+% the seventh etc. author(s) as the argument for the \additionalauthors
+% command.  These 'additional authors' will be output/set for you without
+% further effort on your part as the last section in the body of your article
+% BEFORE References or any Appendices.
+
+\numberofauthors{3} %  in this sample file, there are a *total*
+% of EIGHT authors. SIX appear on the 'first-page' (for formatting reasons)
+% and the remaining two appear in the \additionalauthors section.
+%
+\author{
+% You can go ahead and credit any number of authors here, e.g. one 'row of
+% three' or two rows (consisting of one row of three and a second row of one,
+% two or three).
+%
+% The command \alignauthor (no curly braces needed) should precede each author
+% name, affiliation/snail-mail address and e-mail address. Additionally, tag
+% each line of affiliation/address with \affaddr, and tag the e-mail address
+% with \email.
+%
+% 1st. author
+\alignauthor Chris Kedzie\\ \affaddr{Columbia University}\\
+\affaddr{Department of Computer Science} \email{kedzie@cs.columbia.edu}
+% 2nd. author
+\alignauthor Kathleen McKeown\\ \affaddr{Columbia University}\\
+\affaddr{Department of Computer Science}\\ \email{kathy@cs.columbia.edu}
+% 3rd. author
+\alignauthor Fernando Diaz\\ \affaddr{Microsoft Research}\\
+\email{fdiaz@microsoft.com}
+% There's nothing stopping you putting the seventh, eighth, etc.  author on
+% the opening page (as the 'third row') but we ask, for aesthetic reasons that
+% you place these 'additional authors' in the \additional authors block, viz.
+} \date{30 July 1999}
+% Just remember to make sure that the TOTAL number of authors is the number
+% that will appear on the first page PLUS the number that will appear in the
+% \additionalauthors section.
+
+\maketitle \begin{abstract} We have developed a text summarization system that
+can generate summaries over time from web crawls on disasters. We show that
+our method of identifying exemplar sentences for a summary using affinity
+propagation clustering produces better summaries than clustering based on
+K-medoids as measured using Rouge on a small set of examples. A key component
+of our approach is the prediction of salient information using event related
+features based on location, temporal changes in topic, and two different
+language models.  \end{abstract}
+
+% A category with the (minimum) three required fields
+\category{H.4}{Information Systems Applications}{Miscellaneous}
+%A category including the fourth, optional field follows...
+\category{D.2.8}{Software Engineering}{Metrics}[complexity measures,
+performance measures]
+
+\terms{Summarization}
+
+\keywords{Extractive Summarization, Affinity Propagation}
+
+\section{Introduction}
+
+During crises, information is critical for first responders and those caught
+in the event.  When the event is significant, as in the case of Hurricane
+Sandy, the amount of information produced by traditional news outlets,
+government agencies, relief organizations, and social media can vastly
+overwhelm those trying to monitor the situation. Methods for identifying,
+tracking, and summarizing events from text based input have been explored
+extensively  (e.g.,
+\cite{allan1998topic,Filatova&Hatzivassiloglou.04a,Wang&al.11}). However,
+these experiments were not performed in the large and heterogeneous
+environment of the modern web.
+
+
+
+%Previous work on generating event descriptions and/or multi-document
+%summarization has relied on clustering algorithms to find representative
+%sentences appropriate for an event summary.  These methods impose a metric
+%space on the text data that can make it difficult to incorporate external
+%sources of information elegantly -- in this paper we argue that centroid
+%sentences are not a priori the best candidates for inclusion in an event
+%summary.
+
+In this paper, we present an update summarization system to track events
+across time. Our system predicts sentence salience in the context of a
+large-scale event, such as a disaster,  and integrates these predictions into
+a clustering based multi-document summarization system. We train a regression
+model to predict sentence salience and use these predictions to bias the
+formation of sentence clusters around more salient regions in the input space
+using affinity propagation (AP) clustering.  AP uses the salience predictions
+as well as pairwise similarities among input sentences to identify
+\emph{exemplar} sentences, which we use as our summary output.  Our approach
+differs from other methods of summarization that compute salience by pairwise
+comparisons alone, ignoring features of importance that are intrinsic to the
+sentences themselves.
+
+
+
+
+
+
+
+
+%the formation of sentence clusters around more salient sentences. We
+%introduce the affinity propagation algorithm as as an elegant way to
+%incorporate our salience predictions into a
+
+%What follows is a description of our ongoing event summarization efforts.  We
+%briefly situate our approach to summarization within the broader field of
+%multi-document summarization, and then introduce the affinity propagation
+%algorithm which we use for clustering. This algorithm allows us to elegantly
+%address the salient sentence selection problem by incorporating our prior
+%beliefs about sentence quality. Next, we describe out method for modeling
+%summary sentence quality, and the features used in this model.  Finally, we
+%address future features and system improvements that we are incorporating
+%into our summarizer.
+
+
+\section{Related Work}
+
+A principal concern in extractive multi-document summarization is the
+selection of salient sentences for inclusion in summary output
+\cite{nenkova2012survey}.  This has often been approached as a ranking
+problem.
+%We broadly conceptualize this decision as either an intrinsic or extrinsic
+%sentence evaluation process. Intrinsic approaches evaluate sentences
+%individually, possibly by predicting the impact on summary quality using
+%sentece level features. 
+Sentences have been ranked by the average word probability, average tf-idf
+score, and the number of topically related words (topic-signatures in the
+summarization literature)
+\cite{nenkova2005impact,hovy1998automated,lin2000automated}. The first two
+statistics are easily computable from the input sentences, while the third
+only requires an additional, generic background corpus.  Another ranking
+approach, centroid summarization, involves creating an average bag of words
+(BOW) vector, the centroid, from the input sentences and ranking sentences by
+their similarity to the centroid \cite{radev2004centroid}.  Graph
+\cite{erkan2004lexrank} and clustering
+\cite{hatzivassiloglou2001simfinder,mckeown1999towards,siddharthan2004syntactic}
+based approaches, on the other hand, make use of pair-wise similarity
+comparisons amongst input sentences.  In these models, salient sentences are
+more central to the input or cluster, respectively.
+
+%identify salient regions of the input space while simultaneously coping with
+%redundancy.  Graph-based algorithms have been used to rank sentences
+%Clustering algorithms, e.g., are commonly used to exploit redundancy in
+%input. Input sentences are clustered and summaries are generated by selecting
+%the most representative sentence from each cluster.  Graph-based models have
+%also been used for summarization.  E.g., the LexRank algorithm treats
+%sentences as nodes in a graph, where edges are constructed by way of cosine
+%similarity between sentence nodes; edges are either continuosly weighted by
+%similarity or discrete, existing only when the similarity is above a
+%threshold.  The PageRank algorithm is used on the graph to find the most
+%important sentence nodes. In both clustering and graph-based approaches,
+%sentence salience is largely determined by the pairwise relations between
+%sentences.
+
+Supervised learning has also been applied to this task. Model features are
+usually derived from human generated summaries, and are non-lexical in nature
+(e.g., sentence starting position, number of topic-signatures, number of
+unique words, word frequencies). Seminal work in this area has employed naive
+Bayes and logistic regression classifiers to identify sentences for summary
+inclusion \cite{kupiec1995trainable,conroy2001using}. 
+
+%\fdadd{
+Several researchers have recognized the importance of summarization during
+natural disasters.  Guo \textit{et al.} developed a system for detecting
+novel, relevant, and comprehensive sentences immediately after a natural
+disaster \cite{qi:temporal-summarization}.  The method uses a model of
+sentence relevance and novelty in order to select appropriate updates.
+Training data for regression targets is automatically generated from
+retrospective Wikipedia data.  The system is evaluated on news documents
+related to 197 natural and human disasters from 2009 to 2011 using variants of
+Rouge modified to capture novelty, relevance, and comprehensiveness
+\cite{lin2004rouge}.  Wang and Li present a clustering-based approach to
+efficiency detect important updates during natural disasters
+\cite{wang:update-summarization}.  The algorithm works by hierarchically
+clustering sentences online, allowing the system to output a more expressive
+narrative structure than Guo \textit{et al.}.  The method is evaluated on
+official press releases related to Hurricane Wilma  in 2005 using Rouge score
+between the system summary and a manually generated target summary.
+%}
+
+This work uses the TREC Stream Corpus data set that is in use by the TREC
+Temporal Summarization track \cite{frank2012building,aslam2013trec} .
+Generally, last year's participants used a pipelined approach to build
+summaries, generally ranking sentences, filtering out all but the most
+relevant, and then performing some sort of deduplication/redundancy removal
+step.  Ranking approaches ranged from simple query word match to more
+sophisticated query expansion and and query based language model scoring
+\cite{liu2013ictnet,xu2013trec,baruah2013univ}.  Perhaps most similar to our
+approach, the system of \cite{xu2013trec} uses a weighted combination of
+features (similarity to query, named entity frequency, predicate frequency,
+presence of numerical values, sentence novelty, etc.) to score sentences;
+sentences above a threshold are added to the summary.  Both the weights and
+the threshold are selected by hand.
+
+
+Our system seeks to combine the best of these approaches, using supervised
+learning to predict salience rankings, and directly incorporate this
+information in a clustering algorithm to bias the formation of sentence
+clusters around highly salient regions. 
+
+%Broadly, we conceive of the above 
+
+
+
+%Another popular graph-based model
+
+
+
+
+ 
+%Larger clusters generally indicate more important For example 
+
+
+
+
+
+%\cite{} also explore the use of a hidden Markov model to predict summary
+%inclusion based on previously selected sentences.
+
+
+ 
+%ranking.
+%
+%The field of extractive summarization has long been focused on determing
+%sentence importance or salience.  Many These efforts have largely involved
+%unsupervised, data-driven approaches, where systems rank input sentences
+%using features easily computable from the input, and sometimes an unrelated
+%background corpus.  The most basic sentence rankings are by average word
+%probability and average TF-IDF score, statistics that are computable from the
+%input alone.  One of the more effective techniques, topic-sigantures,
+%involves identifying the most topically related words in the input sentences.
+%This is done using a log-likelihood ratio test ($\chi^2$) to determine which
+%of two hypotheses hold for a word in the input: (1) the probability of the
+%word in the input distribution and the background distribution are identical,
+%or (2) the probability of the word is greater in the input distribution than
+%in the background distribution. If (2) is true with some statistical
+%significance, the word is said to be a topic signature. As with the previous
+%features, a common approach is to rank sentences by the number of
+%topic-signatures they contain.
+%
+%In mulit-document summarization, clustering algorthims are often employed to
+%determine sentence importance, with larger clusters corresponding to more
+%important topics. 
+%
+%Supervised learning approaches have also been explored. Features are usually
+%derived from human generated summaries, and are non-lexical in nature (e.g.,
+%sentence starting position, number of topic-signatures, number of unique
+%words, word frequencies). Seminal work in this area has employed naive Bayes
+%and logistic regression classifiers to identify sentences for summary
+%inclusion. \cite{} also explore the use of a hidden Markov model to predict
+%summary inclusion based on previously selected sentences.
+%
+%If this  
+%
+%tried to rank sentences by their overlap with query words. 
+%
+
+
+%and models are developed to predict the likelihood of a sentences inclusion
+%in a summary. Naive Bayes, hidden Markov models, and logistic regression to
+%predict a sentence's summary inclusion.
+%
+%Researches have also experimented with supervised learning for summarization,
+%however, machine learning approaches have not yielded significant advances in
+%generic summarization. One difficulty is that gold data is difficult to
+%obtain.
+%
+%
+%In  
+%
+%
+%%which remain competetive to supervised machine-learning techniques.
+%
+%have ranked sentences by
+%
+%
+%their average word probability, average TF-IDF weighting, and/or topic
+%signatures; these representations are all easily computable from the input
+%sentences, and, for topic signatures, an unrelated background corpus.  Topic
+%signatures in
+%
+% 
+%These efforts can be broadly split into two camps: feature based ranking and
+%clustering.
+%
+%
+%
+%Determing sentence importance has been A large portion of automatic
+%summarization research has focused on  
+%
+%
+
+\section{Multi-Document Summarization Framework}
+
+%To generate event summaries, we identify the most salient sentences from a
+%collection of related documents and present these sentences as the event
+%summary. This approach, commonly referred to as extractive summarization,
+%avoids the complexity of parsing a semantic representation from the input
+%sentences and subsequently generating a summary\cite{nenkova2012survey}.
+
+
+A common approach to automatic summarization is to identify sentences with the
+highest centrality with respect to the input sentences.  Intuitively,
+sentences with a high degree of centrality are more semantically related to
+the entire set of input sentences.  A summary can thus be obtained by
+returning the $k$ most central sentences.  This generally implies the
+calculation of pairwise distances between all sentences
+\cite{radev2004centroid, erkan2004lexrank}.  In these approaches, sentences
+are evaluated extrinsically by their distance to other sentences, either
+directly \cite{erkan2004lexrank} or through an aggregate centroid object
+\cite{radev2004centroid}. The distance between sentences is most commonly the
+cosine distance of sentence term-vectors, but in general this can be an
+arbitrary real-valued similarity function.
+%; the distance function imposes a topology on the space of input sentences.
+
+For some domains, it is very likely that we will have additional background
+knowledge that could be predictive of sentence salience for the event being
+summarized.  For example, certain kinds of information extracted from the
+sentence text (e.g., temporal or geographic proximity) can indicate relevance
+to a given event.  It would be difficult to incorporate this kind of salience
+into the measure of centrality.
+
+
+For example, consider a cluster of three sentence vectors $s_1 = (1,1,0)$,
+$s_2 = (1,1,1)$, and $s_3 = (0,1,1)$. Without any other information, $s_2$ has
+the highest degree of centrality, i.e. it has the highest average cosine
+similarity and smallest average Euclidean distance to the other sentences.
+Now, if we believe that $s_1$ is $\alpha$ times more salient than the other
+sentences, we cannot simply scale $s_1$ by $\alpha$--the average cosine
+similarity will remain unchanged, since the vector magnitude does not affect
+the angle and $s_1$ will have an even greater the average Euclidean distance
+from the rest.  Worse still, $s_2$ will still be the most representative
+sentence of the three.
+
+%For example, if we scaled the BOW vector based on our belief in its salience,
+%it would not effect the cosine distance since the angle between two vectors
+%is not changed by the magnitude of either
+
+%Simply scaling the sentence vector based on our belief in it's fitness does
+%not with our prior beliefs-- When using the BOWs representation, the input
+%space is lexically defined, but our salience metric may not be based on any
+%specific lexical items. 
+
+
+%These approaches make it difficult to leverage prior knowledge to guide the
+%selection of salient sentences. Sentences 
+
+
+%
+%Centroid based algorthims are commonly employed in the summarization
+%literature to compress a large number of sentences into a much smaller,
+%representative set. 
+%
+%The $k$-medoids clustering algorithm is commonly used to partition input
+%sentences into topically distinct clusters, where the most representative
+%sentences (the cluster medoids) are taken to build the summary. The quality
+%of the summary in this framework is dependent on the method of sentence
+%representation and the ability of a similarity or distance metric to
+%adequately capture pairwise comparisons between sentences. Previous work in
+%event clustering has examined the use of different term weightings (tf-idf,
+%named-entities)  and lower dimensional term representations (LSA, LDA) for
+%use in summarization.
+%
+%
+%A popular graph-based alternative, LexRank, treats each sentence as a node in
+%a graph, and identifies the nodes that are most central by in-degree.  The
+%existence of an edge between two sentences is determined by a similarity
+%function (either by setting a threshold above which the edge exists, or by
+%taking the similarity as a continuous edge weight). The sentences with the
+%highest eigenvector centrality can be found using random walks (PageRank).
+%The $k$ most central sentences are used as the summary.
+%
+%One drawback of these algorithms is that they do not provide an elegant way
+%to incorporate prior information about sentence salience.
+
+In our approach, the system generates clusters using an affinity propagation
+algorithm and from each cluster an exemplar sentence is selected that is added
+to the summary.  In the following sections, we show how  prior information
+representing salience can easily be incorporated into the affinity propagation
+algorithm.  We believe the incorporation of salience to be useful in noisy
+environments (e.g., a web crawl), and that it can help the formation of
+clusters around the most relevant inputs. Our current system  is trained using
+features derived from location, changes in wording across time and language
+models that characterize the language of disaster to generate summaries at
+regular intervals across time.  As we develop the system further, we will
+extend it to generate updates across time,  penalizing the salience of
+concepts already selected by the summarizer to encourage the discovery of
+novel sentences as the event unfolds. 
+
+
+
+\subsection{Data}
+
+Our documents for summarization come from the online news portion of the TREC
+Stream Corpus, a 6.45tb corpus obtained by hourly web crawls from October 2011
+through mid February 2013
+\cite{frank2012building}.\footnote{\url{http://trec-kba.org/kba-stream-corpus-2014.shtml}}
+Summary events come from the TREC Temporal Summarization track, and include
+natural disasters like Hurricane Sandy as well as man-made events like a 2012
+train accident in Buenos
+Aires.\footnote{\url{http://trec.nist.gov/data/tempsumm2013.html}} The track
+organizers also provide a search query for each event \cite{aslam2013trec}.
+For each event, we collect the documents that contain all query words and
+stratify them by the hour they were collected. 
+
+For evaluation purposes, the track organizers also provided gold nugget
+information (i.e. important pieces of information, usually the length of a
+short clause or sentence). These gold nuggets come from the event's related
+Wikipedia article and also include the timestamp of when they were added to
+the page.
+
+%KM _ Ask Chris: is this true?
+To create hourly gold summaries to evaluate our system, we simply take the set
+of gold nugget information from the start of the event up to the current hour. 
+
+\subsection{Affinity Propagation}
+
+Affinity propagation (AP) is a message passing algorithm that identifies both
+exemplar data points and assignments of each point to an exemplar.  This is
+done iteratively by passing \emph{responsibility} and \emph{availability}
+messages between data points that quantify the fitness of one data point to
+represent another, and the fitness of a data point to be represented based on
+the choices of other data points respectively \cite{dueck2007non}.
+
+
+%Each element $R(i,k)$ expresses the fitness of the $k^{th}$ point to serve as
+%the exemplar of the $i^{th}$ point relative to other potential exemplars.
+%Each element $A(i, k)$ represents the $k^{th}$ point's ``availability'' to
+%serve as an exemplar of the $i^{th}$ point, taking into account other points'
+%preference for the $k^{th}$ point as an exemplar.
+
+AP is parameterized by a $n\times n$ similarity matrix $S$ and a $n\times 1$
+preference vector $\pi$.  $S$ is a real-valued matrix where $S(i,j)$ is the
+similarity of the $i$-th data point to the $j$-th data point.  $S$ does not
+need to be symmetric.  $\pi$ is a real-valued vector where $\pi(i)$ expresses
+our preference that the $i$-th data point can serve as an exemplar a priori of
+other data points. 
+
+In our experiments $\pi(i)$ is set to the salience prediction from the
+Gaussian process regression for the $i$-th sentence minus an offset. This
+offset drives most of the preferences negative and reduces the number of
+returned exemplars to a handful of sentences (around 4-5).  For the similarity
+matrix, we use $S(i,j) = -\operatorname{dist}(i,j)^2$, where
+$\operatorname{dist}$ is the Euclidean distance between the BOW vectors for
+sentences $i$ and $j$.
+%we used the negative squared cosine distance of sentence bag-of-words. 
+The summary output is the set $\mathcal{E}$ of returned exemplars found after
+convergence.
+
+
+
+
+%While, AP does not set the number of exemplars before-hand, a lower overall
+%preference values will result in a smaller number of exemplars.
+
+
+%arbitrary pair-wise similarity function $S: \mathcal{R}^d \rightarrow
+%\mathcal{R}$, where $d$ is the dimension of the data being clustered and a
+%real-valued preference $\pi_i$ quantifying our belief a priori of the
+%$i^{th}$ element's ability to serve as an exemplar.
+
+AP has two useful properties for summarization. First, the number of clusters
+identified is determined by the preferences -- lower overall preference
+values  will result in fewer clusters. Unlike $k$-means, we do not have to
+specify how many clusters we would like to find.  Determining the number of
+clusters in a principled way each time we run the clustering algorithm would
+be difficult in our setup.  Secondly, the arbitrary nature of the preferences
+and similarity function allow us to incorporate a variety of signals for
+identifying the best exemplars. 
+
+
+\subsection{Predicting Sentence Salience}
+
+In order to use AP clustering for summarization, we need to assign a
+preference value to each input sentence.  In our approach, we equate a
+sentence's salience with its preference.  A good model of sentence salience
+should predict higher values for sentences that are more likely to appear in a
+human generated summary of the event.
+
+To build training data for this regression task, we take a subset of sentences
+relevant to the TREC events (approximately 1000) and match them to the gold
+nugget sentence with highest similarity as determined by the sentence
+similarity system of \cite{guo2012simple}. 
+%\cite{} have used this system previously to correlate sentences to meaningful
+%units of information in human generated summaries. 
+We use the real-valued similarity scores as our salience scores for the
+training sentences.
+
+We want our model to be predictive across different kinds of events so we
+avoid lexical features.  Instead, we extract a variety of features including
+language model scores, geographic relevance, and temporal relevance from each
+sentence.  These features are used to fit a Gaussian process regression model
+that can predict the similarity of a sentence to a gold summary
+\cite{preotiuc2013temporal}.  We use the model predicted salience of each
+sentence as it's preference value in the AP clustering. 
+%In order to predict the salience score for a sentence, 
+
+ %\cite{guo2012simple} produces a real-valued score of the similarity We use
+ %\cite{guo2012simple} produces real valued similarity scores s.
+ %\cite{guo2012simple} determines the similarity of two sentences by deriving
+ %low dimensional We have As a proxy measure for sentence salience, we use the
+ %maximum similarity of an input sentence to a human generated summary
+ %sentence, using the state-of-the-art sentence similarity module of
+ %\cite{guo2012simple}. \cite{guo2012simple} derive a lower-dimensional vector
+ %of latent features for a sentence. The similarity of two sentences is then
+ %the cosine similarity of the latent vectors.  In order to predict this
+ %similarity we extract a variety of features including language model scores,
+ %geographic relevance, and temporal relevance.  We learn a predictive
+ %function of sentence-summary similarity by fitting a Gaussian process model
+ %on these features. \cite{preotiuc2013temporal}
+
+%As training data for this model, we take a portion of the sentences found in
+%the relevant documents and find their highest similarity to the gold nugget
+%information seen thus far.  
+
+%When assigning preference scores
+
+
+%After obtaining similarity scores for sentences in our training set, we fit a
+%Gaussian process model to learn 
+
+
+%Our model 
+
+
+
+
+%Correllating automatic measures of sentence salience with human judgments is
+%a difficult task. , we use the maximum cosine similarity to 
+
+\begin{table*}[ht] \begin{center} \begin{tabular}{| c p{7.0cm} || c p{7.0cm}
+|} \hline Preference & AP Clustering & Preference & $k$-Medoids Clustering\\
+\hline 9.010 & The magnitude-7.5 quake, about 20 miles deep, was centered off
+the town of Champerico .People fled buildings in Guatemala City , in Mexico
+City and in the capital of the Mexican state of Chiapas , across the border
+from Guatemala & 9.010 & The magnitude-7.5 quake, about 20 miles deep, was
+centered off the town of Champerico .People fled buildings in Guatemala City ,
+in Mexico City and in the capital of the Mexican state of Chiapas , across the
+border from Guatemala   \\ \hline 9.010 & A reporter in the town of San Marcos
+, about 80 miles north of the epicenter, told local radio station Emisoras
+Unidas that houses had collapsed onto residents and smashed televisions and
+other appliances had been scattered into the streets.  & 3.007 & ``Things fell
+in my kitchen .'' Perez said more than 2,000 soldiers were deployed from a
+base in San Marcos to help with disaster relief.\\ \hline 9.007 & The local
+fire department said on its Twitter account that a school had collapsed and
+eight injured people had been taken to a nearby hospital.  & 3.007 &  Ingrid
+Lopez , who went to the hospital with a 72-year-old aunt whose legs was
+crushed by a falling wall, said she had waited hours for an X-ray.\\ \hline
+7.008 & There are three confirmed dead and many missing after the strongest
+earthquake to hit Guatemala since a deadly 1976 quake that killed 23,000.  &
+1.007 & Hundreds of people crammed into the hallways of the small town
+hospital waiting for medical staff to help out hundreds of injured family
+members, some complaining they were not getting care quickly enough. \\ \hline
+\end{tabular} \end{center} \caption{Example summary using affinity propagation
+(left) and $k$-medoids (right)} \end{table*} \begin{table*}[t] \begin{center}
+\begin{tabular}{| c || c | c | c || c | c | c || c | c | c |} \hline Method &
+\multicolumn{3}{c}{ROUGE-1} & \multicolumn{3}{c}{ROUGE-2} &
+\multicolumn{3}{c}{ROUGE-3} \\ & Recall & Prec. & F-1 & Recall & Prec. & F-1 &
+Recall & Prec. & F-1 \\ \hline $k$-medoids & 0.127 & 0.414 & 0.181 & 0.025 &
+0.076 & 0.035 & 0.003 & 0.010 & 0.005\\ \hline AP & 0.117 & 0.440 & 0.173 &
+0.022 & 0.082 & 0.033 & 0.004 & 0.015 & 0.006\\ \hline \end{tabular}
+\end{center} \caption{ROUGE scores for $k$-medoids and affinity propagation
+methods} \end{table*}
+
+
+
+\subsection{Basic Features}
+
+We employ several basic features that have been used previously in supervised
+models to rank sentence salience \cite{kupiec1995trainable,conroy2001using}.
+These include sentence length, the number of capitalized words normalized by
+sentence length, and the number of query words present in the sentence.  Query
+words include the event's type (e.g., \emph{earthquake}) and are expanded with
+the event type's WordNet \cite{miller1995wordnet} synset, hypernyms, and
+hyponyms.  For \emph{earthquake}, e.g., we obtain ``quake,'' ``temblor,''
+``seism,'' ``aftershock,'' etc.   
+
+
+\subsection{Language Model Features}
+
+%Because the data in our experiments is scraped from the web, it is common to
+%find sentences that contain both salient informantion and two kinds of noise:
+%noisey fragments of web page structure (e.g. section titles, \emph{News},
+%\emph{Sports}, etc.) and references to other news not relevant to the topic
+%summary.
+%
+We use two trigram language models, trained using the SRILM toolkit
+\cite{stolcke2002srilm}, taking as features the average log probability (i.e.
+the sentence's total log probability normalized by sentence length) from each
+model.  This first model is trained on 4 years (2005-2009) of articles from
+the Gigaword corpus.  Specifically, we use articles from the Associated Press
+and the New York Times. This model is intended to assess the general writing
+quality (grammaticality, word usage) of an input sentence and helps us to
+filter out text snippets which are not sentences (e.g., web page titles).  The
+second model is a domain specific language model. We build a corpus of
+Wikipedia articles for each event type, consisting of documents from a related
+Wikipedia category. E.g. for earthquakes, we collect pages under the category
+\emph{Category:Earthquakes}. This model assigns higher probability to
+sentences that are focused on the given domain.
+
+%For both models, we Finally, we extract the percentage of capitalized words,
+%and sentence length as features. These last two features also help to
+%identify sentences that are less likely to contain relevant content-- overly
+%long and heavily capitalized sentences in our corpus were likely to be long
+%strings of web-page headlines, section headers, and other irrelevant page
+%structure. 
+
+\subsection{Geographic Relevance Features}
+
+Locations are identified using a named entity tagger. For each location in a
+sentence, we obtain its latitude and longitude using the Google Maps API.  We
+then compute its distance to that of the event location.  It is possible for a
+sentence and an event to have multiple locations so we take as features the
+minimum, maximum, and average distance of all sentence-event location pairs.
+Distances are calculated using the Vincenty distance.
+
+\subsection{Temporal Relevance Features}
+
+Our data consists of hourly crawls of online content and so we exploit the
+temporality of corpus by capturing the burstiness of a sentence, i.e.  the
+change in word frequency from one hour to the next.``Bursty'' sentences often
+indicate new and important data. 
+
+Let $D_t$ be the set of web pages at time $t$ and let $s = \{w_1,\ldots,
+w_n\}$ be a sentence from a page $d \in D_t$.  We calculate the 1-hour
+burstiness of sentence $s$ from document $d$ at hour $t$  as \begin{align*}
+\operatorname{b}_1(s,d,t) = \frac{1}{|s|} \sum_{w \in s} \Bigg( &
+\operatorname{tf-idf}_t(w,d)  \\ & \left. - \frac{\sum_{d^\prime \in D_{t-1}:
+w \in d^\prime } \operatorname{tf-idf}_{t-1}(w,d^\prime)}{|\{d^\prime \in
+D_{t-1}: w \in d^\prime\}|} \right) \end{align*}
+
+where \begin{align*} \operatorname{tf-idf}_t(w,d) =&
+\log\left(1+\sum_{w^\prime \in d}1\{w=w^\prime\}  \right)\\ & \times
+\log\left(\frac{|D_t|}{1 + \sum_{d^\prime \in D_t}1\{w \in d^\prime\}}\right).
+\end{align*}
+% 1\{w = w^\prime} %- \operatorname{avg-tf-idf}_{t_{i-1}}(w).
+%\end{align*}
+
+
+We similarly find the sentence's 5-hour burstiness.  In addition to
+burstiness, we also include the sentence's average tf-idf and hours since the
+event in question started as features.
+
+
+\section{Experiments}
+
+We carried out a small set of initial experiments on one event.  We collected
+a subset of pages from the TREC Stream Corpus that were relevant to a 2012
+earthquake off the coast of Guatemala, and further subdivided this collection
+by the hour they were created. For each hour we generated a summary using the
+AP clustering algorithm. 
+
+ We also generated baseline summaries using the $k$-medoids (using the
+ Partitioning Around Medoids algorithm), setting $k = |\mathcal{E}|$ , i.e.
+ the number of exemplar sentences returned by the AP. Because $k$-medoids
+ begins with a random initialization, we took the best (minimum average
+ distance) result of 100 restarts.
+
+Table 1 shows example output of the AP and $k$-medoids generated summaries.
+Sentences are ranked by preference score, although preference has no effect on
+the $k$-medoids algorithm.  Quantitatively, AP exemplar sentences had higher
+predicted sentence quality scores (preferences) than the cluster medoids.
+Qualitatively, the AP method appears to select more general details about the
+earthquake. Looking at the third sentence selection in table 1, we can see
+that $k$-medoids selects a personal experience that was reported. This is
+perhaps less newsworthy or reportable compared to the third sentence in in the
+AP generated summary which reports a notable structure collapse and injuries
+related to the quake.  We believe AP results in a more readable and
+informative summary, although we have yet to perform a rigorous human
+evaluation of the summary output.
+
+
+We evaluated both algorithms with the ROUGE toolkit \cite{lin2004rouge}.
+N-ROUGE works by calculating the n-gram recall and precision of an
+automatically generated summary in reference to a model summary.  We created
+model summaries by taking the gold nugget sentences with timestamps up to and
+including the current system time as the gold summary for that hour.
+%\fdcomment{may be interesting to measure track metrics to measure latency,
+%redundancy, etc.} KM - Ask Chris
+
+Table 2 shows average recall, precision, and F-measure for various orders of
+ROUGE score. AP demonstrated consistently higher precision than our baseline.
+%scores over $k$-medoids (ROUGE evaluations are usually focused on recall).
+While not statistically significant, it is difficult to show significance with
+Rouge using a small test; we hope further tests will confirm this improvement. 
+%   , AP had higher precision on average.
+On average, the AP summaries were slightly shorter than the baseline, which
+would partially explain this difference. It is also possible that our language
+models are biased toward shorter sentences; we are more likely to have seen a
+shorter sentence in the language model input.
+%\fdcomment{is there a theory to why this is happening?}
+We are currently adapting our summarizer to add updates over time, and
+maintaining precision will be important to prevent topic drift.  
+
+
+
+%\begin{table}[h!] \tiny \begin{center} \begin{tabular}{| c p{3.5cm} |} \hline
+%Preference & Sentence\\ \hline 9.010 & The magnitude-7.5 quake, about 20
+%miles deep, was centered off the town of Champerico .People fled buildings in
+%Guatemala City , in Mexico City and in the capital of the Mexican state of
+%Chiapas , across the border from Guatemala\\ \hline 3.007 & "Things fell in
+%my kitchen ." Perez said more than 2,000 soldiers were deployed from a base
+%in San Marcos to help with disaster relief.\\ \hline 3.007 & Ingrid Lopez ,
+%who went to the hospital with a 72-year-old aunt whose legs was crushed by a
+%falling wall, said she had waited hours for an X-ray. \\ \hline 1.007 &
+%Hundreds of people crammed into the hallways of the small town hospital
+%waiting for medical staff to help out hundreds of injured family members,
+%some complaining they were not getting care quickly enough. \\ \hline
+%\end{tabular} \end{center} %  \caption{Example summary using $k$-medoids with
+%100 random restarts} \end{table}
+
+
+
+
+\section{Conclusions and Future Work}
+
+We have developed a summarizer that can generate summaries over time from web
+crawls on disasters. We show that our method of identifying exemplar sentences
+for a summary using AP clustering produces  summaries with higher precision
+    compared to those based on clustering with K-medoids. A key component of
+    our approach is the prediction of salient information using features based
+    on location, temporal changes in topic, and two different language models.
+
+Currently, we run each hour of summarization independently. In order to avoid
+repeating information, we would like to incorporate previously chosen
+exemplars in the preference computation. One possibility would be to
+down-weight a candidate exemplar's preference based on its similarity to
+previous exemplars.
+
+Secondly, we would like to do more intelligent inference of missing
+geographical information since not all sentences contain locations. Currently
+we are using mean values for missing data.
+
+Finally, we would like to experiment with non-symmetric similarity matrices,
+specifically using narrative chains\cite{chambers2009unsupervised}. Under this
+model $S(i,j)$ would express the likelihood that the events in sentence $j$
+precede the events in sentence $i$. We hope such a parameterization would
+promote more causally motivated sentences into exemplar positions, which would
+better describe the disaster event domain.
+
+%
+\bibliographystyle{abbrv}
+%\bibliography{sigproc}  % sigproc.bib is the name of the Bibliography in this
+%case
+\bibliography{kdd.bib}
+% You must have a proper ".bib" file and remember to run: latex bibtex latex
+% latex to resolve all references
+%
+% ACM needs 'a single self-contained file'!
+%
+%APPENDICES are optional \balancecolumns \balancecolumns % GM June 2007 That's
+%all folks!
+\end{document}
