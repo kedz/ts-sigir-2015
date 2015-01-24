@@ -1,37 +1,10 @@
 
-We first begin with some notation. For a given event, let $\corpus$ be the set
-of retrieved documents. A document $\doc \in \corpus$ is an ordered sequence
-of sentences $\{\sent_{1,\doc},\ldots,\sent_{|\doc|,\doc} \}$. 
-Additionally, each document has a timestamp $\dtime(\doc)$. Finally, let 
-$\corpus_{\hour_i}$ be the set of retrieved documents such that 
-$\hour_i \le \dtime(\doc) < \hour_{i+1}$ for all $\doc \in \corpus_{\hour_i}$.
-
-%Our TS system involves ? phases involving sentence level classification, 
-%regression, and clustering. 
-Figure ? outlines our general temporal summarization algorithm. The description
-of our approach is as follows.
-For each event, we iterate over the retrieved 
-documents in hourly chunks, emitting 0 or more updates at each hour.
-At each hour $\hour$, we process each document
-$\doc \in \corpus_{\hour}$. First, we identify where the document content
-actually is; Second, we predict the salience of all content sentences.
-To account for redundancy, the predicted salience is penalized based on the 
-distance of the sentence in question to the previous summary updates.
-
-Finally, we cluster all content sentences 
-for the current hour using the penalized salience predictions to bias the 
-formation
-of clusters around the most salient sentences. For each cluster center, or 
-exemplar, that results, we check that the salience is above a threshold and 
-that it does not belong to a singleton cluster; exemplars that satisfy these
-conditions are emitted as an update.
-Additionally, we maintain the complete set of updates in order to penalize
-salience predictions in the subsequent time steps. 
+Figure \ref{alg:temporal-summarization} outlines our general temporal summarization algorithm.  At each hour, the system processes each document in the batch. It first discards any documents below a predefined relevance threshold (Section \ref{sec:filtering:documents}).  It then discards any sentences from the remaining documents which are unlikely to carry content (Section \ref{sec:filtering:sentences}).  Following this filtering process, the system must decide which of the remaining sentences should be considered an update.  We refer to this as salience prediction and describe a feature-based model for predicting salience (Section \ref{subsec:Predict}).  Because a single sub-event may produce several high-quality-but-redundant sentences within an hour, we employ a cluster-based method for selecting exemplars of high salience sub-events (Section \ref{sec:ap}).  Finally, we employ a final deduplication phase to ensure that we only select novel updates (Section \ref{sec:novelty}).
 
 % \begin{figure}
 % \centering 
 \begin{algorithm}%[H]
- \KwData{$Query$ --- the set of event query words\\ 
+ \KwData{\\$Query$ --- the set of event query words\\ 
         $SC$ --- the stream corpus\\
 
          
@@ -65,6 +38,6 @@ salience predictions in the subsequent time steps.
 %gets \Updates_{cache} \cup \Updates_{\hour}$\;
 
  } 
- \caption{Temporal Summarization Algorithm}
+ \caption{Temporal Summarization Algorithm}\label{alg:temporal-summarization}
 \end{algorithm}
 % \end{figure}

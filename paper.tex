@@ -145,24 +145,8 @@
 % \additionalauthors section.
 
 \maketitle \begin{abstract} 
-Information need is highest during times of crisis; both officials and 
-civilians need effective access to make informed decisions about their 
-safety and the safety of others. However, these situations pose many 
-interesting challenges for the IR systems that support these decisions.
-Specifically, we address event monitoring and updating, a.k.a. the
-temporal summarization task (TS). Given an event query, we monitor streams
-of online news and select important text to present to the user. Updates
-are selected by predicting the salience of the text w.r.t. to the event.
-Our model utilizes a variety of features at the query, document, and corpus
-level. Additionally, these predictions are used to directly bias a clustering
-algorithm for sentence selection, 
-increasing the novelty of the updates. We evaluate our system
-on a varied set of retrospective events using a combination of human 
-judgements
-and automatic evaluation measures, as compared to a baseline system.
-We demonstrate the effect of the various feature groups, and the importance
-of salience prediction w.r.t. update precision when compared to a clustering
-only baseline. 
+During crises such as natural disasters or other human tragedies, information needs of both civilians and responders often require urgent, specialized treatment.  Slow or ineffective information access can significantly impact the safety and health of individuals.  Monitoring and summarizing a text stream during such an event remains a difficult problem.  The temporal summarization task refers to extracting short, sentence-length updates about a seed event from a stream of text data.  We present a system which makes substantial improvements over the state of the art in temporal summarization.  Our approach predicts the salience of sentences with respect to an event and then uses these predictions to directly bias a clustering algorithm for sentence selection, increasing the novelty of the updates. We use novel, disaster-specific features for salience prediction, including geo-locations and language models representing the language typically used to describe different disaster types. 
+We evaluate our system on a standard set of retrospective events using a combination of human judgements and automatic evaluation measures. We demonstrate the effect of different feature groups, and the importance of salience prediction for update precision.
 
 
 \end{abstract}

@@ -5,9 +5,10 @@ In order to evaluate a temporal summarization system, we adopt the simulation-ba
 A temporal summarization system takes as input 
 \begin{enumerate*}[label=\itshape\alph*\upshape)]
   \item a short query $\query$ defining the event to be tracked (e.g. `Hurricane Sandy'), 
+  \item an event category $\eventcategory$ defining the type of event to be tracked (e.g. `hurricane'), 
   \item a stream of time-stamped documents, $(\doc_0, \doc_1,\ldots,\doc_T)$, presented in temporal order, and
 	\item an evaluation time period of interest, $(\stime,\etime)$.  
 \end{enumerate*}
-Throughout the time period of interest, the system must output sentences, known as \emph{updates}, which are \emph{relevant} to the query, \emph{comprehensive} with respect to the event, \emph{novel} to the user, and \emph{timely} with respect to when the update occurred.  We present the evaluation metrics which measure these properties in Section \ref{sec:methods}.  
+While processing documents throughout the time period of interest, the system must output sentences, known as updates, which are \emph{relevant} to the query, \emph{comprehensive} with respect to the event, \emph{novel} to the user, and \emph{timely} with respect to when the update occurred.  Precisely how to measure these properties will be discussed in Section \ref{sec:methods}.  In our version of this problem, we assume that that the system receives one batch of new sentence-segmented documents every hour throughout the period of interest.  
 
-In the ideal version of this problem, the system makes decisions every time it consumes a document $\doc_i$.  In practice, we assume that that we receive batches of new sentence-segmented documents every hour.  
+\fdcomment{include description of nuggets here.}

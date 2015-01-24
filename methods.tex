@@ -1,6 +1,6 @@
 
 \section{Methods}
-
+\label{sec:methods}
 \subsection{Data}\label{sec:data}
 
 Our primary datasets are the TREC 2013/2014 Stream Corpus, 
@@ -103,6 +103,12 @@ as our regression target, yielding 24 models in total. Kernel lengthscale
 parameters are also individually fit for each model.
 When making event-specific predictions, we take the average prediction of the
 23 other models.
+
+\subsubsection{Estimating Language Models}
+We use two trigram language models, trained using the SRILM toolkit \cite{stolcke2002srilm}, taking as features the average log probability (i.e. the sentence's total log probability normalized by sentence length) from each model.  This first model is trained on 4 years (2005-2009) of articles from the Gigaword corpus.  Specifically, we use articles from the Associated Press and the New York Times. The second model is a domain specific language model. We build a corpus of Wikipedia articles for each event type, consisting of documents from a related Wikipedia category. E.g. for earthquakes, we collect pages under the category \emph{Category:Earthquakes}. This model assigns higher probability to sentences that are focused on the given domain.
+
+% For each event, we retrieve all sentences using the document retrieval and content selection steps outlined in the previous selection. We then sample with replacement 200 sentences from this collection, and extract non-lexical features for each sentence to construct our design matrix $\mathbf{X}$. To build our response variables $\mathbf{y}$ we compute the maximum semantic similarity of each input sentence to the gold nugget sentences. We fit a $\operatorname{GP}$ with an RBF kernel to this data, optimizing kernel parameters with the scaled  conjugate gradient method. This sampling procedure is repeated 100 times for each of the ? 2013 TS events, yielding \fdcomment{?} total models. In our salience predictions for the 2014 events, we take the mean prediction of all models.
+
 
 \subsubsection{Redundancy Threshold}
 
