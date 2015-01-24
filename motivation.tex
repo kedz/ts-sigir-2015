@@ -18,7 +18,11 @@ humanitarian assistance.
 
 At times of crisis, however, social media can overwhelm current information
 systems with the quantity of information, much of which is irrelevant,
-unnecessary detail, or out of date. Many approaches have focused on 
+unnecessary detail, or out of date. Many approaches have focused on
+human-in-the-loop approaches \cite{?} to enable people on the ground to update
+crisis interfaces with information about needs. Others have ..
+%KM - Chris - fill this out a bit.
+
 
 
 
@@ -31,20 +35,30 @@ unnecessary detail, or out of date. Many approaches have focused on
 
 
 
-
-Most multi-document summarization approaches involve either sentence 
-clustering or ranking or both to select summary sentences.
+Multi-document summarization offers potential for enabling automatic updates of
+relevant, salient information at regular intervals. It would provide
+information even when human volunteers are unable to and would filter out
+unnecessary and irrelevant detail. 
+Most generic multi-document summarization approaches involve either sentence 
+clustering or ranking sentences according to metrics that measure the salience
+of their words. 
 When the summarization task
-is broad or underspecified, clustering is most appropriate in that the data
-``speaks for itself.'' This is probably most true when summarization is 
-interpreted to mean exploratory data analysis. 
-When there are more constraints on the output, as in many text summarization
-tasks,
-it is often easier to design appropriate features for the ranking approach, 
-either by rule or learning-to-rank. The primary contribution of this paper
+is broad or underspecified,
+%clustering is most appropriate in that the data
+these methods are appropriate as they let the data
+``to speak for itself.''
+%This is probably most true when summarization is 
+%interpreted to mean exploratory data analysis. 
+When there are more constraints on the output, as in query-focused
+summarization or the crisis update task we present here,
+results are more accurate when
+%often easier to design
+appropriate features for the ranking approach are used (e.g., amount of word
+overlap for the query-focused approach).
+%either by rule or learning-to-rank.
+The primary contribution of this paper
 is a framework for combining both of these approaches using affinity
-propagation clustering. Additionally, we provide a task specific evaluation
-of this clustering model on the TREC Temporal Summarization task. 
+propagation clustering as well as disaster-specific features.
 
 
 \ckcomment{Not sure how to present this together, we also essentially evaluate
