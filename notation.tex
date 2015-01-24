@@ -13,6 +13,27 @@
 \DeclareMathOperator{\Updates}{\mathnormal{Updates}}
 
 
+\newcommand{\tsvec}[1]{\mathbf{#1}}
+\newcommand{\tsveci}[2]{#1_{#2}}
+\newcommand{\tsmat}[1]{\mathbf{#1}}
+\newcommand{\tsmatij}[3]{#1_{#2#3}}
+
 \newcommand{\query}[0]{q}
 \newcommand{\stime}[0]{t_s}
 \newcommand{\etime}[0]{t_e}
+
+\newcommand{\features}[0]{\tsvec{x}}
+\newcommand{\featuresi}[1]{\tsveci{x}{#1}}
+
+\newcommand{\kernelMatrix}[0]{\tsmat{K}}
+\newcommand{\kernelMatrixij}[2]{\tsmatij{K}{#1}{#2}}
+
+\newcommand{\numfeatures}[0]{n}
+
+\newcommand{\candidates}[0]{\mathcal{S}}
+\newcommand{\numcandidates}[0]{|\candidates|}
+
+\newcommand{\candidateSimMat}[0]{\tsmat{S}}
+\newcommand{\candidateSimMatij}[2]{\tsmatij{S}{#1}{#2}}
+
+\newcommand{\preferences}[0]{\tsvec{\pi}}

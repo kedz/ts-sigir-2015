@@ -52,67 +52,57 @@ where \begin{align*} \operatorname{tf-idf}_t(w,d) =&
 
 We similarly find the sentence's 5-hour burstiness.  In addition to burstiness, we also include the sentence's average tf-idf and hours since the event in question started as features.
 
-\subsubsection{Gaussian Process Regression}
+\subsubsection{Model}
+We adopt Gaussian process regression in order to predict sentence sentence \cite{rasmussen:gaussian-process-book}.  Gaussian process regressors are a class of data-driven, non-parametric model generalizing the multi-variate Gaussian to the infinite dimensional setting.  Gaussian processes are  general and are state of the art for many regression tasks.  A full treatment of Gaussian process regression is beyond the scope of this article and can be found in standard textbooks.  
 
-\fdcomment{transition to gp description}
 
-A Gaussian process (GP) is a distribution over functions and is a 
-generalization of the multi-variate Gaussian to the infinite dimensional
-setting. That is, we use the observed data to define a distribution over 
-possible functions that generated this data, without having to explicitly 
-parameterize the function---in this sense GPs are considered 
-a non-parametric model.
-
-Formally, let $p(f)$ be a distribution over functions where $f$ is any mapping
-of an input space $\mathcal{X}$ to the reals,
-
-$$f: \mathcal{X} \rightarrow \mathcal{R}.$$ 
-Let the random variable $\mathbf{f} = (f(x_1),\ldots,f(x_n) )$ be
- an $n$-dimensional vector whose elements are evaluations of the function $f$
-at points $x_i \in \mathcal{X}$.
-We say $p(f)$ is a Gaussian process if for any finite subset 
-$\{x_1,\ldots,x_n\} \subset \mathcal{X}$, the marginal distribution over 
-that finite subset $p(\mathbf{f})$ has a multivariate Gaussian distribution.
-A GP is parameterized by a mean function $\mu(\mathbf{x})$ and a 
-covariance function $K(x,x^\prime)$. Generally, the mean function is simply
-set to 0, leaving the distribution to be completely characterized by the
-kernel function on the data.
-
-In the regression setting, we typically have a response variable $y$ that
-is the sum of our model prediction  and 
-some Gaussian noise, i.e. $y = f(x) + \epsilon$ with 
-$\epsilon \sim \mathcal{N}(0, \sigma^2)$. When
-$f \sim \operatorname{GP}(\mathbf{0}, \mathbf{K})$, the
-two distributions
-of principal interest are the marginal likelihood
-$p(\mathbf{y}|\mathbf{X}) = 
-\mathcal{N}(\mathbf{0},\mathbf{K} + \sigma^2\mathbf{I})$ and the predictive
-distribution,
-
-$$p(\mathbf{y_*}|\mathbf{x_*},\mathbf{X},\mathbf{y}) =
-\mathcal{N}(\boldsymbol{\mu}_*, \boldsymbol{\sigma}^2_*) $$
-
-where $\mathbf{x_*}$ is a new or unseen input, $\mathbf{y_*}$ our predicted
-response, and
+Being non-parametric, the Gaussian process relies on a  covariance matrix $\kernelMatrix$, measuring the affinity between pairs of instances, in our case candidate sentences.  In our experiments, we used a radial basis function (RBF) kernel.  Given two featurized sentences, $\features$ and $\features^\prime$, the RBF kernel is defined as,
 \begin{align*}
-\boldsymbol{\mu}_* & = \mathbf{K_*}(\mathbf{K} + \sigma^2\mathbf{I})^{-1}\mathbf{y} \\
-\boldsymbol{\sigma}^2_* & 
-= \mathbf{K}_{**} - \mathbf{K}_*(\mathbf{K} + \sigma^2\mathbf{I})^{-1}
-\mathbf{K}_*^T + \sigma^2\\
-\end{align*}.
-
-Here $\mathbf{K}_* = K(\mathbf{x}_*, \mathbf{X})$, and 
-$\mathbf{K}_{**} = K(\mathbf{x}_*, \mathbf{x}_*)$.
+	\kernelMatrixij{\features}{\features^\prime}&= \sigma^2 \exp\left(- \frac{1}{2} 
+\sum_{i=1}^{\numfeatures} \frac{ (\featuresi{i}-\featuresi{i}^\prime)^2}{\ell_i^2} \right)
+\end{align*}
+where $\sigma$ and the $\ell_i$ are parameters we fit to our observed training data. The $\ell_i$ are feature dependent scaling parameters; once learned, they not only improve the accuracy of the model, but give us some introspection  into which features are more important.
 
 
-GP's are incredibly general, and are state of the art for many regression 
-tasks (?). The reliance on the covariance matrix 
-$\mathbf{K}$ for parameterization opens up the wide world of kernel methods
-for regression, and many varieties of similarity functions can be used.
-In our experiments we used a radial basis function kernel 
-$$K(\mathbf{x},\mathbf{x}^\prime) = \sigma^2 \exp\bigg(- \frac{1}{2} 
-\sum_{i=1}^d \frac{ (x_i-x^\prime_i)^2}{\ell_i^2} \bigg)$$ where 
-$\sigma$ and the $\ell_i$ are parameters we fit to our observed training data.
-The $\ell_i$ are feature dependent scaling parameters; once learned, they not
-only improve the accuracy of the model, but give us some introspection 
-into which features are more important.
+% Formally, let $p(f)$ be a distribution over functions where $f$ is any mapping
+% of an input space $\mathcal{X}$ to the reals,
+%
+% $$f: \mathcal{X} \rightarrow \mathcal{R}.$$
+% Let the random variable $\mathbf{f} = (f(x_1),\ldots,f(x_n) )$ be
+%  an $n$-dimensional vector whose elements are evaluations of the function $f$
+% at points $x_i \in \mathcal{X}$.
+% We say $p(f)$ is a Gaussian process if for any finite subset
+% $\{x_1,\ldots,x_n\} \subset \mathcal{X}$, the marginal distribution over
+% that finite subset $p(\mathbf{f})$ has a multivariate Gaussian distribution.
+% A GP is parameterized by a mean function $\mu(\mathbf{x})$ and a
+% covariance function $K(x,x^\prime)$. Generally, the mean function is simply
+% set to 0, leaving the distribution to be completely characterized by the
+% kernel function on the data.
+%
+% In the regression setting, we typically have a response variable $y$ that
+% is the sum of our model prediction  and
+% some Gaussian noise, i.e. $y = f(x) + \epsilon$ with
+% $\epsilon \sim \mathcal{N}(0, \sigma^2)$. When
+% $f \sim \operatorname{GP}(\mathbf{0}, \mathbf{K})$, the
+% two distributions
+% of principal interest are the marginal likelihood
+% $p(\mathbf{y}|\mathbf{X}) =
+% \mathcal{N}(\mathbf{0},\mathbf{K} + \sigma^2\mathbf{I})$ and the predictive
+% distribution,
+%
+% $$p(\mathbf{y_*}|\mathbf{x_*},\mathbf{X},\mathbf{y}) =
+% \mathcal{N}(\boldsymbol{\mu}_*, \boldsymbol{\sigma}^2_*) $$
+%
+% where $\mathbf{x_*}$ is a new or unseen input, $\mathbf{y_*}$ our predicted
+% response, and
+% \begin{align*}
+% \boldsymbol{\mu}_* & = \mathbf{K_*}(\mathbf{K} + \sigma^2\mathbf{I})^{-1}\mathbf{y} \\
+% \boldsymbol{\sigma}^2_* &
+% = \mathbf{K}_{**} - \mathbf{K}_*(\mathbf{K} + \sigma^2\mathbf{I})^{-1}
+% \mathbf{K}_*^T + \sigma^2\\
+% \end{align*}.
+%
+% Here $\mathbf{K}_* = K(\mathbf{x}_*, \mathbf{X})$, and
+% $\mathbf{K}_{**} = K(\mathbf{x}_*, \mathbf{x}_*)$.
+%
+%
