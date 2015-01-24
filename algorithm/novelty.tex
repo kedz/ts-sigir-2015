@@ -1,10 +1,11 @@
-\subsection{Ensuring Novelty}
+\subsubsection{Ensuring Novelty with Respect to Previous Updates}
 \label{sec:novelty}
-We run AP clustering with our rescaled and penalized sentence similarities
-and preferences. When the clustering has converged we emit all exemplar
-sentences (cluster centers) whose preference is $\lambda$ standard deviations
-above the mean preference for the current time period and who do not belong
-to singleton clusters as updates. These updates and their preferences are 
-retained for penalty calculations in subsequent time steps.
+After we run AP clustering, we have a set of candidates for the current hour.  In order to avoid outputting redundant updates, we computed the semantic similarity between the exemplar sentences and previously output sentences.  We then removed those sentences which were above some similarity threshold.  We selected the threshold by inspecting the distribution of similarities between sentences associated with the same sub-event in the training set and the distribution of similarities between random pairs of sentences.  
 
+% and preferences. When the clustering has converged we emit all exemplar
+% sentences (cluster centers) whose preference is $\lambda$ standard deviations
+% above the mean preference for the current time period and who do not belong
+% to singleton clusters as updates. These updates and their preferences are
+% retained for penalty calculations in subsequent time steps.
+%
 
