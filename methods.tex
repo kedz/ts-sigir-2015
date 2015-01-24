@@ -6,12 +6,22 @@
 Our primary datasets are the TREC 2013/2014 Stream Corpus, 
 a ?tb corpus of hourly 
 web crawls from October 2011
-through mid February 2013 \cite{frank2012building}.\footnote{\url{http://trec-kba.org/kba-stream-corpus-2014.shtml}}
-As per the TS specifications, all summary sentences come from processing this
-corpus in a time aligned manner. While the 2014 corpus encompasses the 
-2013 corpus, we use the 2013 corpus for evaluating events from the 2013 track
-year because sentence ID's used in evaluation changed from year to year.
+through mid February 2013
+\cite{frank2012building}.\footnote{\url{http://trec-kba.org/kba-stream-corpus-2014.shtml}}
+%KM - Keep neutral from Trec
+%As per the TS specifications,
+All summary sentences come from processing this
+corpus in a time aligned manner.
+%KM - Are you using both 2013 and 2014 corpora.
+%KM - Mentioning sentence ids at this point is too low level.
+%KM - I would probably just drop this sentence. since you say above that you
+%use both.
+%While the 2014 corpus encompasses the 
+%2013 corpus, we use the 2013 corpus for evaluating events from the 2013 track
+%year because sentence ID's used in evaluation changed from year to year.
 
+%KM - As far as I can see this is the first time you've mentioned this.
+%KM - This paragraph is not clearly understandable. Is this the training data? 
 For our semantic similarity component (\cref{subsec:semsim}),
 domain specific term-sentence matrices were built using subsections of
 Wikipedia. For each event type we identified one or more related Wikipedia
@@ -19,11 +29,11 @@ categories and collected all pages that were listed under that category.
 For all pages collected, we used the latest possible revision date before the
 start of the Stream Corpus.
 
-We use the same Wikipedia corpora to construct the lanuage models used
+We use the same Wikipedia corpora to construct the language models used
 in our salience prediction model (\cref{subsubsec:lm}). 
 
 \begin{figure*}
-	\begin{center}
+        \begin{center}
 \begin{tabular}{| p{5cm} c c |}
 \hline
 Event & WP Categories & No. Docs/Sents/Words\\
@@ -59,35 +69,75 @@ language models. }
 
 \subsubsection{Events}
 
-We use the event set developed for the TREC Temporal Summarization track 
-for years 2013 and 2014. There were 10 and 15 events respectively. We omit
+%KM - You said this already so I think you can make it simpler. 
+%We use the event set developed for the TREC Temporal Summarization track 
+%for years 2013 and 2014.
+The TREC 2013 and 2014 Stream corpus contains  10 and 15 events respectively. We omit
 one event from the 2013 track because there were no news documents in the 
 corpus during the duration of the event, yielding a final event set of 24 
 events. Meta-data provided for each event includes the name of the event
 as it appears on Wikipedia, a short text query for the event, 
 the type of event, and the 
-duration of the event (the duration for the system 
-to monitor not necessarily the complete timespan of the event). 
-All data except the Wikipedia name is exposed to the TS system to use.  
+duration of the event
+%KM - the below parens is not clear. is ``to monitor'' missing from the above
+%sentence? I think get rid of the parens below.
+%(the duration for the system 
+%to monitor is not necessarily the complete timespan of the event).
+%KM - Let's get rid of all references to ``the TS system'' If you want to have
+%a system name, choose a better one. 
+All data except the Wikipedia name is exposed to
+systems that participate in TREC.
+%the TS system to use.  
 
 \subsubsection{Nuggets}
 For evaluation purposes, important pieces of information, hereafter 
 referred to as nuggets, were extracted from each event's Wikipedia page.
-Assessors graded nuggets by importance, and were also able to timestamp their
-existance using the timestamp of the page's revision history. Nuggets are 
+%KM - What assessors? Was this done by TREC? Make clear. I added ``TREC'' after
+%reading ahead.
+%KM - What do you mean ``graded''? Do you mean they graded your nuggets? Or do
+%you mean they ``ranked'' the nuggets by importance. Please make clear.
+TREC assessors graded nuggets by importance, and were also able to timestamp
+%KM - wrong wording. I've changed.
+%their
+%existance
+when the event represented by each nugget occurred 
+using the timestamp of the page's revision history. Nuggets are 
 usually a short to medium length clause containing an atomic piece of
 information.
 
-\subsubsection{Matches}
+%KM - I changed title to make clearer
+\subsubsection{Gold Standard Matches}
 TREC assessors provided judgements on a subset of participant updates each year
 of the track. Judged updates are matched to one or more nuggets (a real 
 sentence often contains more than one atomic piece of information) or marked
-not relevant. There was not much overlap in the participant update sets so
-overall coverage of relevant sentences in the corpus is small (percent?).
-To expand the judgement corpora, we include all system updates as positive
+not relevant.
+
+%KM - I don't see why overlap in particpant update sets would give you low
+%coverage. In fact, it might you give you broader coverage than if all
+%participants extracted the same sentences.  I removed first portion of the
+%sentence, but you can put back and clarify if you think I interpreted
+%incorrectly. 
+%There was not much overlap in the participant update sets so
+Overall coverage of
+%KM - Shouldn't this be nuggets?
+relevant sentences
+relevant nuggets in the corpus  by participant systems' generated sentences
+is small (percent?).
+%KM - This is complicated. More explanation is needed.
+%KM - The sentence below sounds like how you evaluate your system and not like
+%the judgment corpus.
+%KM not sure this owuld go here. Shouldn't it go in evaluation? Here you would
+%just talk about the corpus
+To evaluate new system output on the same event, we compare it against the
+corpus of matched sentences. Comparing it against the nuggets would not yield
+meaningful results as the nuggets are much smaller than the sentences of the
+corpus.
+Because there are so few matched sentences, we score all new system updates as positive
+%To expand the judgement corpora, we include all system updates as positive
 nugget matches if they are $< .2$ close in Levenshtein distance to a human
 assessed matched update. 
 
+%KM - Got this far.
 \subsection{Experiment Design}
 
 \subsubsection{Salience Models}

@@ -1,5 +1,14 @@
 
-Figure \ref{alg:temporal-summarization} outlines our general temporal summarization algorithm.  At each hour, the system processes each document in the batch. It first discards any documents below a predefined relevance threshold (Section \ref{sec:filtering:documents}).  It then discards any sentences from the remaining documents which are unlikely to carry content (Section \ref{sec:filtering:sentences}).  Following this filtering process, the system must decide which of the remaining sentences should be considered an update.  We refer to this as salience prediction and describe a feature-based model for predicting salience (Section \ref{subsec:Predict}).  Because a single sub-event may produce several high-quality-but-redundant sentences within an hour, we employ a cluster-based method for selecting exemplars of high salience sub-events (Section \ref{sec:ap}).  Finally, we employ a final deduplication phase to ensure that we only select novel updates (Section \ref{sec:novelty}).
+Figure \ref{alg:temporal-summarization} outlines our general temporal
+summarization algorithm.  At each hour, the system processes each document in
+the batch. It first discards any documents below a predefined relevance
+threshold (Section \ref{sec:filtering:documents}).  It then discards any
+sentences from the remaining documents which are unlikely to carry content
+(Section \ref{sec:filtering:sentences}).  Following this filtering process, the
+system must decide which of the remaining sentences should be considered an
+update.  We refer to this as salience prediction and describe a feature-based
+model for predicting salience (Section \ref{subsec:Predict}).  Because a single
+sub-event may produce several high-quality but redundant sentences within an hour, we employ a cluster-based method for selecting exemplars of high salience sub-events (Section \ref{sec:ap}).  Finally, we employ a final deduplication phase to ensure that we only select novel updates (Section \ref{sec:novelty}).
 
 % \begin{figure}
 % \centering 
