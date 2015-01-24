@@ -6,11 +6,41 @@ Sandy, the amount of information produced by traditional news outlets,
 government agencies, relief organizations, and social media can vastly
 overwhelm those trying to monitor the situation. Methods for identifying,
 tracking, and summarizing events from text based input have been explored
-extensively  (e.g.,
+extensively
+%KM - I think we should consider adding other event summarizers. 
+(e.g.,
 \cite{allan1998topic,Filatova&Hatzivassiloglou.04a,Wang&al.11}). However,
-these experiments were not performed in the large and heterogeneous
-environment of the modern web; there is still a need for robust and scalable 
-methods for automatic summarization.
+these experiments were not developed to handle streaming data from  the large and heterogeneous
+environment of the modern web. Neither were they developed to address the
+information needs that arise during  crisis
+situations. 
+%KM - this last sentence sounds somewhat negative.
+%there is still a need for robust and scalable 
+%methods for automatic summarization.
+
+In this paper, we present an update summarization system to track disasters
+across time. Our system predicts sentence salience in the context of a
+large-scale event, such as a disaster,  and integrates these predictions into
+a clustering based multi-document summarization system. We train a regression
+model to predict sentence salience and use these predictions to bias the
+formation of sentence clusters around more salient regions in the input space
+using affinity propagation (AP) clustering.  AP uses the salience predictions
+as well as pairwise similarities among input sentences to identify
+\emph{exemplar} sentences, which we use as our summary output.  Our approach
+differs from other methods of summarization that compute salience by pairwise
+comparisons alone, ignoring features of importance that are intrinsic to the
+sentences themselves.
+
+In addition to the tight integration between clustering and salience
+prediction, our approach also exploits knowledge about disaster to determine
+salience. Thus, salience does not just represent importance within a set of
+documents; it also represents both how typical this sentence is of the input event
+type (i.e., disaster, hurricane, tornado) and whether it specifies information
+about this particular disaster. We use a set of language models, one for each
+disaster type, to measure typicality of the sentence for the current event type. We
+use a feature that measures distance of mentioned location from the center of
+the disaster to represent its likelihood of referring to the input disaster. 
+
 
 
 
@@ -22,33 +52,14 @@ methods for automatic summarization.
 %sentences are not a priori the best candidates for inclusion in an event
 %summary.
 
-In this paper, we detail our participation in the second year of the TREC
-Temporal Summarization (TS) track. Broadly, TS systems are required to monitor
-a time ordered corpus for information about a specific event and ``emit'' 
-updates about that event. Under the current TREC formulation of this task,
-successful TS systems must synthesize techniques from information retrieval,
- extractive multi-document summarization, and update summarization.
-Specifically, we must select updates to emit based on three primary criterion:
-relevance, salience, and redundancy.
 
-As this was our first time participating in TS track, we focused mostly on 
-second and third criterion, relying on the TREC supplied resources for 
-document retrieval and filtering heuristics for relevance.
-Our system predicts sentence salience in the context of a
-large-scale event and integrates these predictions into
-a clustering based multi-document summarization system. We fit a Gaussian 
-Process (GP) regression model to predict sentence salience and use 
-these predictions to bias the
-formation of sentence clusters around more salient regions in the input space
-using affinity propagation (AP) clustering.  AP uses the salience predictions
-as well as pairwise similarities among input sentences to identify
-\emph{exemplar} sentences, which we use as our summary output.  Our approach
-differs from other methods of summarization that compute salience by pairwise
-comparisons alone, ignoring features of importance that are intrinsic to the
-sentences themselves.
 
 The remainder of the paper is organized as follows. We begin with a review of related work in the information retrieval and multi-document summarization literature.  In section
-~\ref{sec:background} we give an overview of the semantic similarity, 
+~\ref{sec:background} we give an overview of the semantic similarity,
+%KM - Chris can you update this so it reflects the contributions. We don't
+%mention semantic similarity. We do mention salience and the disaster specific
+%features. Perhaps we should mention the use of a new approach for semantic
+%similarity? 
 Gaussian process, and affinity propagation algorithms that make up the bulk of
 our TS system. 
 Next we describe the data with which we build our various models.
