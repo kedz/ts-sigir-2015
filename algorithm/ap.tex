@@ -10,7 +10,7 @@ We take a two phase approach to dealing with redundancy.  First, we select a set
 Many existing multi-document summarization systems operate by clustering a set of previously-deemed salient sentences.  Because our salience assessments are based on a model, we cannot assume that values are perfectly reliable.  Therefore using a clustering technique that ignored the uncertainty in the salience prediction may have undesirable outcomes.  
 
 
-To address the uncertain in salience predictions, we adopted an algorithm known as affinity propagation (AP) \cite{dueck2007non}.  AP is a message passing algorithm that identifies both exemplar data points and assignments of each point to an exemplar.  This is done iteratively by passing \emph{responsibility} and \emph{availability} messages between data points that quantify the fitness of one data point to represent another, and the fitness of a data point to be represented based on the choices of other data points respectively.
+To address the uncertainty in salience predictions, we adopted an algorithm known as affinity propagation (AP) \cite{dueck2007non}.  AP is a message passing algorithm that identifies both exemplar data points and assignments of each point to an exemplar.  This is done iteratively by passing \emph{responsibility} and \emph{availability} messages between data points that quantify the fitness of one data point to represent another, and the fitness of a data point to be represented based on the choices of other data points respectively.
 
 AP is parameterized by an $\numcandidates\times \numcandidates$ similarity matrix $\candidateSimMat$ and an $\numcandidates\times 1$ preference vector $\preferences$, derived from our salience predictions.  $\candidateSimMat$ is a real-valued matrix where $\candidateSimMatij{i}{j}$ is the \emph{semantic} similarity of the $i$-th data point to the $j$-th candidate sentence.  Note that this matrix, whose construction is described below, is different from our feature-based kernel matrix $\kernelMatrix$, in that it measures the similarity of the content as opposed to the properties of the content.   The vector $\pi$ is a real-valued vector where $\preferences$ expresses our preference that the $i$-th data point can serve as an exemplar a priori of other data points. 
 
@@ -36,7 +36,18 @@ AP has several useful properties that comport well with the temporal summarizati
 
 % \subsubsubsection{Semantic Similarity}
 % \label{subsec:semsim}
-The AP algorithm requires two data structures: the semantic similarity matrix $\candidateSimMat$ and the preference vector $\preferences$.  In order to construct $\candidateSimMat$, we use the weighted textual matrix factorization (WTMF) model of \cite{guo2012simple}. This  model can be thought of as a variant of latent semantic analysis \cite{deerwester:lsa},  where strings, sentences in our case, are projected into a lower dimensional space.  We then use the cosine similarity of embedded vectors in this space to define entries in $\candidateSimMat$.  The preference vector $\preferences$ is constructed by using salience scores rescaled to lie within the  range $(-3, -2)$.  \fdcomment{not sure how much we have to justify this.}
+The AP algorithm requires two data structures: the semantic similarity matrix
+$\candidateSimMat$ and the preference vector $\preferences$.  In order to
+construct $\candidateSimMat$, we use the weighted textual matrix factorization
+(WTMF) model of \cite{guo2012simple}. This  model can be thought of as a
+variant of latent semantic analysis \cite{deerwester:lsa},  where strings,
+sentences in our case, are projected into a lower dimensional space.  We then
+use the cosine similarity of embedded vectors in this space to define entries
+in $\candidateSimMat$.
+%KM - Include advantage. Tried below
+This approach allows us to measure semantic similarity as opposed to simple
+word overlap.
+The preference vector $\preferences$ is constructed by using salience scores rescaled to lie within the  range $(-3, -2)$.  \fdcomment{not sure how much we have to justify this.}
 
 
 
