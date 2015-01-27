@@ -54,16 +54,25 @@ We want our model to be predictive across different kinds of events so we avoid 
 \fdcomment{can we enumerate all of these?}
 
 \paragraph{Basic Features}
+%KM - Would be good to have quick justification of these features. I added a
+%sentence. Feel free to edit or remove.
 
 We employ several basic features that have been used previously in supervised models to rank sentence salience \cite{kupiec1995trainable,conroy2001using}. These include sentence length, the number of capitalized words normalized by sentence length, document position, number of named entities.  
+Since training is one on grammatical English, some of these features help
+to downweight sentences that are ungrammatical (e.g., have too many capitalized words or are too short).
+Others help to more heavily weight important sentences (e.g., that appear in
+prominent positions such as paragraph initial or article initial).
 
 \paragraph{Query Features}
 
 Query features measure the relationship between the sentence and the event query and type.  These include the number of query words present in the sentence in addition to the number of event type synonyms, hypernyms, and hyponyms as found in WordNet \cite{miller1995wordnet}.  For example, for event type \emph{earthquake},  we match sentence terms ``quake'', ``temblor'', ``seism'', and ``aftershock''.
-
-
 \paragraph{Language Model Features}\label{subsubsec:lm}
 Language models allow us to measure the likelihood of a sentence having been produced from a particular source.  We consider two types of language model features.  The first model is estimated from a corpus of generic news articles.  This model is intended to assess the general writing quality (grammaticality, word usage) of an input sentence and helps us to filter out text snippets which are not sentences (e.g., web page titles).  The second model is estimated from text specific to our event types.  For example, the language model for event type `earthquake' is estimated from Wikipedia pages under the category \emph{Category:Earthquakes}.  These models are intended to detect sentences similar to those appearing in summaries of other events in the same category (e.g. most earthquake summaries are likely to include higher probability for ngrams including the token `magnitude').  
+%KM - Note: Someplace the exact list of event types should appear. Probably not
+%here.
+%KM - I note you have it in a later section but it is labeled as data you use
+%to train language models and semantic similarity. I think it would be good to
+%have up front in definition of task.
 
 
 %For both models, we Finally, we extract the percentage of capitalized words,
@@ -76,6 +85,8 @@ Language models allow us to measure the likelihood of a sentence having been pro
 \paragraph{Geographic Relevance Features}
 
 Locations are identified using a named entity tagger. For each location in a sentence, we obtain its latitude and longitude using the a publicly available geolocation service.  We then compute its distance to that of the event location.  It is possible for a sentence and an event to have multiple locations so we take as features the minimum, maximum, and average distance of all sentence-event location pairs.  Distances are calculated using the Vincenty distance. 
+%KM - Probably should say how you determine event location. Some events move.
+%KM - In your figure you only include one distance.
 
 \paragraph{Temporal Relevance Features}
 
@@ -99,12 +110,21 @@ where \begin{align*} \operatorname{tf-idf}_t(w,d) =&
 We similarly find the sentence's 5-hour burstiness.  In addition to burstiness, we also include the sentence's average tf-idf and hours since the event in question started as features.
 
 \subsubsection{Model}
-We adopt Gaussian process regression in order to predict sentence sentence \cite{rasmussen:gaussian-process-book}.  Gaussian process regressors are a class of data-driven, non-parametric model generalizing the multi-variate Gaussian to the infinite dimensional setting.  Gaussian processes are  general and are state of the art for many regression tasks.  A full treatment of Gaussian process regression is beyond the scope of this article and can be found in standard textbooks.  
+%KM - I think one of the words ``sentence'' below should be something else, btu
+%not sure what you meant. Ah.. I think ``salience''?
+%We adopt Gaussian process regression in order to predict sentence sentence
+We adopt Gaussian process regression in order to predict sentence salience
+\cite{rasmussen:gaussian-process-book}.  Gaussian process regressors are a
+class of data-driven, non-parametric model generalizing the multi-variate
+Gaussian to the infinite dimensional setting.  Gaussian processes are general
+and are state of the art for many regression tasks.  A full treatment of
+Gaussian process regression is beyond the scope of this article and can be
+found in standard textbooks.
 
 
 Being non-parametric, the Gaussian process relies on a  covariance matrix $\kernelMatrix$, measuring the affinity between pairs of instances, in our case candidate sentences.  In our experiments, we used a radial basis function (RBF) kernel.  Given two featurized sentences, $\features$ and $\features^\prime$, the RBF kernel is defined as,
 \begin{align*}
-	\kernelMatrixij{\features}{\features^\prime}&= \sigma^2 \exp\left(- \frac{1}{2} 
+        \kernelMatrixij{\features}{\features^\prime}&= \sigma^2 \exp\left(- \frac{1}{2} 
 \sum_{i=1}^{\numfeatures} \frac{ (\featuresi{i}-\featuresi{i}^\prime)^2}{\ell_i^2} \right)
 \end{align*}
 where $\sigma$ and the $\ell_i$ are parameters we fit to our observed training data. The $\ell_i$ are feature dependent scaling parameters; once learned, they not only improve the accuracy of the model, but give us some introspection  into which features are more important.
