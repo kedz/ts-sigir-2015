@@ -20,20 +20,56 @@ corpus in a time aligned manner.
 %2013 corpus, we use the 2013 corpus for evaluating events from the 2013 track
 %year because sentence ID's used in evaluation changed from year to year.
 
-%KM - As far as I can see this is the first time you've mentioned this.
-%KM - This paragraph is not clearly understandable. Is this the training data?
-%KM - Also confusing here is that you alternate between what TREC provides and
-%what you do. Perhaps use different sections for TREC and for you.
-For our semantic similarity component (\cref{subsec:semsim}),
-domain specific term-sentence matrices were built using subsections of
-Wikipedia. For each event type we identified one or more related Wikipedia
-categories and collected all pages that were listed under that category.
+
+
+\subsubsection{Events}
+
+%KM - You said this already so I think you can make it simpler. 
+%We use the event set developed for the TREC Temporal Summarization track 
+%for years 2013 and 2014.
+The TREC 2013 and 2014 Stream corpus contains  10 and 15 events respectively. We omit
+one event from the 2013 track because there were no news documents in the 
+corpus during the duration of the event, yielding a final event set of 24 
+events. Meta-data provided for each event includes the name of the event
+as it appears on Wikipedia, a short text query for the event, 
+the type of event, and the 
+duration of the event.
+%KM - the below parens is not clear. is ``to monitor'' missing from the above
+%sentence? I think get rid of the parens below.
+%(the duration for the system 
+%to monitor is not necessarily the complete timespan of the event).
+%KM - Let's get rid of all references to ``the TS system'' If you want to have
+%a system name, choose a better one. 
+All data except the Wikipedia name is exposed to
+systems that participate in TREC.
+%the TS system to use.
+
+\subsubsection{Wikipedia}
+
+\kmcomment{
+ As far as I can see this is the first time you've mentioned this.
+ This paragraph is not clearly understandable. Is this the training data?
+ Also confusing here is that you alternate between what TREC provides and
+ what you do. This absolutely must be clear. Are these wikipedia pages provided
+ by TREC or do you create a wikipedia corpus on your own?}
+
+For each event type we identified one or more related Wikipedia
+categories and collected all pages that were listed under that category for use
+as training data.
 For all pages collected, we used the latest possible revision date before the
-start of the Stream Corpus.
+start of the Stream Corpus. 
 
-We use the same Wikipedia corpora to construct the language models used
-in our salience prediction model (\cref{subsubsec:lm}). 
-
+We use the  Wikipedia corpora to construct the language models used
+in our salience prediction model (\cref{subsubsec:lm}). For each of the five
+event types shown in Fig.~\ref{fig:wikipedia}, we used all data in the pages
+shown to build a language model. The amount of words per event type varied from
+6 million to 250 million.
+\kmcomment{moved this to the end since it is less of a priority}
+We used the same corpus to train our semantic similarity component
+(\cref{subsec:semsim}. 
+Disaster specific term-sentence matrices were built using subsections of
+Wikipedia.
+\kmcomment{I don't think you ever mention term-sentence matrices earlier.}
 \begin{figure*}
         \begin{center}
 \begin{tabular}{| p{5cm} c c |}
@@ -73,32 +109,11 @@ Port\_Said\_Stadium\_riot \newline
 \end{tabular}
 \caption{Domain specific Wikipedia corpora for semantic similarity and 
 language models. }
+\label{fig:wikipedia}
 \end{center}
 \end{figure*} 
 
 
-
-\subsubsection{Events}
-
-%KM - You said this already so I think you can make it simpler. 
-%We use the event set developed for the TREC Temporal Summarization track 
-%for years 2013 and 2014.
-The TREC 2013 and 2014 Stream corpus contains  10 and 15 events respectively. We omit
-one event from the 2013 track because there were no news documents in the 
-corpus during the duration of the event, yielding a final event set of 24 
-events. Meta-data provided for each event includes the name of the event
-as it appears on Wikipedia, a short text query for the event, 
-the type of event, and the 
-duration of the event.
-%KM - the below parens is not clear. is ``to monitor'' missing from the above
-%sentence? I think get rid of the parens below.
-%(the duration for the system 
-%to monitor is not necessarily the complete timespan of the event).
-%KM - Let's get rid of all references to ``the TS system'' If you want to have
-%a system name, choose a better one. 
-All data except the Wikipedia name is exposed to
-systems that participate in TREC.
-%the TS system to use.  
 
 \subsubsection{Nuggets}
 For evaluation purposes, important pieces of information, hereafter 
@@ -117,9 +132,17 @@ usually a short to medium length clause containing an atomic piece of
 information.
 %KM - I think an example of a nugget here could help.
 
-%KM - I changed title to make clearer
-\subsubsection{Gold Standard Matches}
-TREC assessors provided judgements on a subset of participant updates each year
+\kmcomment{ I changed title to make clearer}
+\subsubsection{Gold Standard} %Matches}
+
+A gold standard dataset consisting of full sentences from the TREC datastream
+was constructed to use for scoring of the system we describe here. It would be
+difficult to automatically match full sentences against the nuggets identified
+by TREC assessors given the substantial difference in length; each nugget
+typically appears as a clause or phrase in the sentence.
+
+TREC assessors provided judgements on a subset of participant updates (i.e.,
+full sentences)  each year
 of the track. Judged updates are matched to one or more nuggets (a real 
 sentence often contains more than one atomic piece of information) or marked
 not relevant.
@@ -134,7 +157,12 @@ Overall coverage of
 %KM - Shouldn't this be nuggets?
 %relevant sentences
 relevant nuggets in the corpus  by participant systems' generated sentences
-is small (percent?).
+is small (percent?). Thus we augmented the pool of previous participant system
+output with judgments on new system output using Amazon Mechanical Turk. For
+each sentence produced by our system and by our baselines, we asked turkers to
+indicate which of the nuggets were conveyed by the sentence. For each hit, we
+provided one sentence and five nuggets. For each nugget, they had to answer a
+yes-no question indicating whether it was conveyed by the full sentence.
 %KM - This is complicated. More explanation is needed.
 %KM - The sentence below sounds like how you evaluate your system and not like
 %the judgment corpus.
@@ -146,6 +174,8 @@ meaningful results as the nuggets are much smaller than the sentences of the
 corpus.
 %KM - Let's discuss where these different things go. I think scoring should
 %probably go in the evaluation section.
+\kmcomment{I think this sentence should go in the evaluation section. This
+  subsection is about data.}
 Because there are so few matched sentences, we score all new system updates as positive
 %To expand the judgement corpora, we include all system updates as positive
 nugget matches if they are $< .2$ close in Levenshtein distance to a human
