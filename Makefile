@@ -14,4 +14,6 @@ clean:
 		$(PROJECT).bbl \
 		$(PROJECT).blg \
 		$(PROJECT).log \
-		$(PROJECT).pdf
+		$(PROJECT).pdf \
+        docfreq.pdf \
+        docfreq.pdf_tex
