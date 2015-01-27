@@ -2,6 +2,52 @@
 \label{subsec:Predict}
 Once the input has been filtered down to a higher quality set of candidate updates, we can rank sentences according to their salience.  We adopt a model-based approach to predicting salience: a good model should predict higher values for sentences that are more likely to appear in a human generated summary of the event.   The response variable we try to predict is a sentence's semantic similarity \cite{guo:wtmf} to the gold nugget sentences, i.e. we want to predict the similarity to a gold nugget when the gold nugget is not known.  If sentence is very similar to a nugget, then it is a better candidate for emission as an update compared to a sentence that is not similar to any nuggets.
 
+\begin{figure}[t!]
+\begin{tabular}{| l |} 
+\hline
+\textbf{Basic Features}\\
+$\cdot$ Sent. position (normalized by doc. length) \\
+$\cdot$ Sent. length \\
+$\cdot$ Ratio of punc. to non-punc. chars. \\
+$\cdot$ Ratio of caps. to non-caps. chars. \\
+$\cdot$ Ratio of lowercase to other chars. \\
+$\cdot$ Ratio of uppercase to other chars. \\
+$\cdot$ \# of caps. words (normalized by \# of words)\\
+$\cdot$ \# of Person, Location, Org. Date, Number,\\
+$\;\;$ Ordinal, Percent, Money, Set, Misc  N.E. tags \\
+$\;\;$ (normalized by \# of words)\\
+\hline
+\textbf{Query Features}\\
+$\cdot$ \% of query words covered by sent.\\
+$\cdot$ Total query matches.\\
+$\cdot$ Total event-type synonyms/hypernyms/hyponyms\\
+$\;\;$ coverage.\\
+$\cdot$ Total event-type synonyms/hypernyms/hyponyms\\
+$\;\;$ matches.\\
+\hline
+\textbf{Language Model Features}\\
+$\cdot$ Avg. token log probability (domain lang. model)\\
+$\cdot$ Avg. token log probability (background lang. model)\\
+\hline
+\textbf{Geo-tag Features}\\
+$\cdot$ Median document distance to nearest location \\
+$\;\;$ cluster (current hour).\\
+$\cdot$ Median document distance to nearest location \\
+$\;\;$ clusters (previous hour).\\
+$\cdot$ Distance of first location in doc. to nearest location \\
+$\;\;$ cluster (current hour).\\
+$\cdot$ Distance of first location in doc. to nearest location \\
+$\;\;$ cluster (previous hour).\\
+\hline
+\textbf{Temporal Features}\\
+$\cdot$ Avg. tf-idf at current time.\\
+$\cdot$ Change in avg. tf-idf since previous hour (up to\\
+$\;\;$  24 hours).\\
+$\cdot$ Time since query/event start.\\
+\hline
+\end{tabular}
+\caption{Salience model features.}
+\end{figure}
 
 \subsubsection{Features}
 We want our model to be predictive across different kinds of events so we avoid lexical features.  Instead, we extract a variety of features including language model scores, geographic relevance, and temporal relevance from each sentence.  These features are used to fit a Gaussian process regression model that can predict the similarity of a sentence to a gold summary \cite{preotiuc2013temporal}.  
