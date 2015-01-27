@@ -7,8 +7,30 @@ A temporal summarization system takes as input
   \item a short query $\query$ defining the event to be tracked (e.g. `Hurricane Sandy'), 
   \item an event category $\eventcategory$ defining the type of event to be tracked (e.g. `hurricane'), 
   \item a stream of time-stamped documents, $(\doc_0, \doc_1,\ldots,\doc_T)$, presented in temporal order, and
-	\item an evaluation time period of interest, $(\stime,\etime)$.  
+        \item an evaluation time period of interest, $(\stime,\etime)$.  
 \end{enumerate*}
-While processing documents throughout the time period of interest, the system must output sentences, known as updates, which are \emph{relevant} to the query, \emph{comprehensive} with respect to the event, \emph{novel} to the user, and \emph{timely} with respect to when the update occurred.  Precisely how to measure these properties will be discussed in Section \ref{sec:methods}.  In our version of this problem, we assume that that the system receives one batch of new sentence-segmented documents every hour throughout the period of interest.  
+While processing documents throughout the time period of interest, the system
+must output sentences, known as updates, which are \emph{relevant} to the
+query, \emph{comprehensive} with respect to the event, \emph{novel} to the
+user, and \emph{timely} with respect to when the update occurred.  Precisely
+how to measure these properties will be discussed in Section \ref{sec:methods}.
+In our version of this problem, we assume that that the system receives one
+batch of new sentence-segmented documents every hour throughout the period of
+interest.
+
+We address  disaster types such as terrorism and mass shootings (e.g.,
+the 2012 shooting in Aurora, Col.), natural disasters (e.g., Hurricane Sandy),
+accidents (e.g., the 2012 Pakistan garment factory fire), astronomical
+disasters (e.g,. the Chelyabinsk comet in Russia), and social activism (e.g.,
+the Arab spring).
+\kmcomment{This was as best as I could do on this. These are the example
+  categories from the wikipedia page. However you refer in the language model
+  description to the event type earthquake which is more specific. Also, in the
+  TREC data you refer to event types that are specified in the metadata. So I'm
+  wondering how many different categories you have and where they come from.}
 
 \fdcomment{include description of nuggets here.}
+\kmcomment{We should jointly discuss what goes in data and what goes in problem
+  definition. I have moved event types here because I think knowing how many
+  types and examples of them would be helpful upfront. I think where nuggets
+  and wikipedia pages go is questionable.}
