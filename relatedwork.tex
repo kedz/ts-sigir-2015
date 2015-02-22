@@ -1,27 +1,73 @@
-\section{Related Work}
 \label{sec:relatedwork}
+
 A principal concern in extractive multi-document summarization is the
 selection of salient sentences for inclusion in summary output
-\cite{nenkova2012survey}.  This has often been approached as a ranking
-problem.
-%We broadly conceptualize this decision as either an intrinsic or extrinsic
-%sentence evaluation process. Intrinsic approaches evaluate sentences
-%individually, possibly by predicting the impact on summary quality using
-%sentece level features. 
+\cite{nenkova2012survey}. 
+%We conceptualize 
+Existing approaches generally fall into  %falling into
+one of three categories, each with specific tradeoffs with respect to update 
+summarization. 
+
+First, centrality-focused approaches (including graph,
+cluster, and centroid methods) are very natural for retrospective analysis in
+the sense that they let the data "speak for itself." 
+These methods equate salience with centrality, either to the input or some other
+aggregate object (i.e. a cluster center or input centroid).
+However, they rely
+chiefly on
+redundancy. When applied to an unfolding event, there may not exist enough
+redundant content at the event onset for these methods to exploit.
+Once the event onset has passed, however, the redundancy reduction of these 
+methods is quite beneficial.
+
+The second category, predictive approaches,
+includes ranking and classification based methods.
 Sentences have been ranked by the average word probability, average tf-idf
 score, and the number of topically related words (topic-signatures in the
 summarization literature)
 \cite{nenkova2005impact,hovy1998automated,lin2000automated}. The first two
 statistics are easily computable from the input sentences, while the third
-only requires an additional, generic background corpus.  Another ranking
-approach, centroid summarization, involves creating an average bag of words
-(BOW) vector, the centroid, from the input sentences and ranking sentences by
-their similarity to the centroid \cite{radev2004centroid}.  Graph
-\cite{erkan2004lexrank} and clustering
-\cite{hatzivassiloglou2001simfinder,mckeown1999towards,siddharthan2004syntactic}
-based approaches, on the other hand, make use of pair-wise similarity
-comparisons amongst input sentences.  In these models, salient sentences are
-more central to the input or cluster, respectively.
+only requires an additional, generic background corpus.  
+In classification based methods, model features are
+usually derived from human generated summaries, and are non-lexical in nature
+(e.g., sentence starting position, number of topic-signatures, number of
+unique words). Seminal work in this area has employed naive
+Bayes and logistic regression classifiers to identify sentences for summary
+inclusion \cite{kupiec1995trainable,conroy2001using}. 
+While these methods are less dependent on redundancy, the expressiveness of
+their features is limited. Our model expands on these basic features to 
+account for geographic, temporal, and language model features.
+
+The last category includes probabilistic, information theoritic, and set cover
+approaches. While these methods are generally focused on producing diverse
+summaries, they are difficult to adapt to the streaming setting, where 
+we do not necessarily have a fixed summary length and the corpus to be
+summarized contains many irrelevent sentences, i.e. there are large
+portions of the corpora that we specificly want to avoid. 
+
+
+
+
+% This has often been approached as a ranking
+%problem.
+%We broadly conceptualize this decision as either an intrinsic or extrinsic
+%sentence evaluation process. Intrinsic approaches evaluate sentences
+%individually, possibly by predicting the impact on summary quality using
+%sentece level features. 
+%Sentences have been ranked by the average word probability, average tf-idf
+%score, and the number of topically related words (topic-signatures in the
+%summarization literature)
+%\cite{nenkova2005impact,hovy1998automated,lin2000automated}. The first two
+%statistics are easily computable from the input sentences, while the third
+%only requires an additional, generic background corpus.  Another ranking
+%approach, centroid summarization, involves creating an average bag of words
+%(BOW) vector, the centroid, from the input sentences and ranking sentences by
+%their similarity to the centroid \cite{radev2004centroid}.  Graph
+%\cite{erkan2004lexrank} and clustering
+%\cite{hatzivassiloglou2001simfinder,mckeown1999towards,siddharthan2004syntactic}
+%based approaches, on the other hand, make use of pair-wise similarity
+%comparisons amongst input sentences.  In these models, salient sentences are
+%more central to the input or cluster, respectively.
 
 %identify salient regions of the input space while simultaneously coping with
 %redundancy.  Graph-based algorithms have been used to rank sentences
@@ -36,13 +82,6 @@ more central to the input or cluster, respectively.
 %important sentence nodes. In both clustering and graph-based approaches,
 %sentence salience is largely determined by the pairwise relations between
 %sentences.
-
-Supervised learning has also been applied to this task. Model features are
-usually derived from human generated summaries, and are non-lexical in nature
-(e.g., sentence starting position, number of topic-signatures, number of
-unique words, word frequencies). Seminal work in this area has employed naive
-Bayes and logistic regression classifiers to identify sentences for summary
-inclusion \cite{kupiec1995trainable,conroy2001using}. 
 
 %\fdadd{
 Several researchers have recognized the importance of summarization during

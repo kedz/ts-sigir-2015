@@ -1,4 +1,3 @@
-\section{Motivation}
 
 %KM If we are short on space, not sure how much this section is needed as it's
 %somewhat repetitive of intro.
@@ -24,9 +23,6 @@ crisis interfaces with information about needs. Others have ..
 %KM - Chris - fill this out a bit.
 
 
-
-
-
 %KM - PRobably should make a little more inclusive, there are graph based
 %models that use methods such lexical similarity to build the graph,
 %probabilistic methods (e.g., based on word probabilities, regression or
@@ -34,51 +30,86 @@ crisis interfaces with information about needs. Others have ..
 %modeling and select sentences for each topic.
 
 
-
 Multi-document summarization offers potential for enabling automatic updates of
 relevant, salient information at regular intervals. It would provide
 information even when human volunteers are unable to and would filter out
 unnecessary and irrelevant detail. 
-Most generic multi-document summarization approaches involve either sentence 
-clustering or ranking sentences according to metrics that measure the salience
-of their words. 
-When the summarization task
-is broad or underspecified,
-%clustering is most appropriate in that the data
-these methods are appropriate as they let the data
-``to speak for itself.''
-%This is probably most true when summarization is 
-%interpreted to mean exploratory data analysis. 
-When there are more constraints on the output, as in query-focused
-summarization or the crisis update task we present here,
-results are more accurate when
-%often easier to design
-appropriate features for the ranking approach are used (e.g., amount of word
-overlap for the query-focused approach).
-%either by rule or learning-to-rank.
-The primary contribution of this paper
-is a framework for combining both of these approaches using affinity
-propagation clustering as well as disaster-specific features.
 
-\begin{figure}
-\begin{tabular}{| p{8cm} |}
-\hline
-\textbf{Event: Hurricane Sandy}\\
-\includesvg[width=\columnwidth]{docfreq}\\
-\textbf{Example Nuggets:}\\
-$\cdot$ October 22nd Sandy strengthened from a tropical depression into a tropical storm\\
-$\cdot$ could turn towards Bermuda or go straight to the Eastern U.S.\\
-$\cdot$ 11 pm Oct 24 winds 50 mph\\
-%$\cdot$ 11 pm Oct 24 moving NNE at 9 knots\\
-$\cdot$ More than 1,000 people went to shelters in Jamaica\\
-\hline
-\end{tabular}
-\end{figure}
+We conceptualize the space of existing summarization approaches as falling into
+one of three categories, each with specific tradeoffs with respect to update 
+summarization. First, centrality-focused approaches (including graph,
+cluster, and centroid methods) are very natural for retrospective analysis in
+the sense that they let the data "speak for itself." However, they rely
+chiefly on
+redundancy. When applied to an unfolding event, there may not exist enough
+redundant content at the event onset for these methods to exploit.
+Once the event onset has passed, however, the redundancy reduction of these 
+methods is quite beneficial.
+
+The second category, predictive approaches,
+includes ranking and classification based methods.
+These methods do not control for redundancy as well as the first group, 
+and will most likely be overwhelmed by web-scale summarization.
+On the other hand, these methods are not dependent on redundancy.
+
+The last category includes probabilistic, information theoritic, and set cover
+approaches. While these methods are generally focused on producing diverse
+summaries, they are difficult to adapt to the streaming setting, where 
+we do not necessarily have a fixed summary length and the corpus to be
+summarized contains many irrelevent sentences, i.e. there are large
+portions of the corpora that we specificly want to avoid. 
+
+Our main contribution is a framework for combining the strengths of the 
+centrality-based methods and predictive methods using salience predictions (we 
+prefer the term salience over rank) to bias cluster formation around high 
+salience sentences.% by combining regression with AP clustering.
+By algorithmically making the trade off between redundancy
+signals and salience signals, we mitigate the effect of 
+different input sizes. 
+When input is small, individual characteristics
+of the input determine centrality; when input is large, neighbor similarity 
+becomes more important.
+
+Second, we validate this method with the application to the update
+summarization
+task. We experiment on events of dramatically different scope and duration,
+and demonstrate improved average performance on ROUGE. Even within events
+the document streams can have widely varying levels of volume, corresponding
+to the day/night cycle (see fig. ?? for an example).
+
+Finally, we present an analysis of our feature representation for salience
+disaster domain. While we focus on a particular domain, the feature templates
+themselves are generally applicable to streaming/update summarization.
 
 
-\ckcomment{Not sure how to present this together, we also essentially evaluate
-a salience model by feature ablation for the TS task, but this feels very specific compared to the general framework idea.}
+%Most generic multi-document summarization approaches involve either sentence 
+%clustering or ranking sentences according to metrics that measure the salience
+%of their words. 
+%When the summarization task
+%is broad or underspecified,
+%these methods are appropriate as they let the data
+%``to speak for itself.''
+%When there are more constraints on the output, as in query-focused
+%summarization or the crisis update task we present here,
+%results are more accurate when
+%appropriate features for the ranking approach are used (e.g., amount of word
+%overlap for the query-focused approach).
+%
+%The primary contribution of this paper
+%is a framework for combining both of these approaches using affinity
+%propagation clustering as well as disaster-specific features.
 
-\fdcomment{I guess I think we need to two things in this section (and/or introduction).  1. explain why the problem matters.  2. explain why our approach is compelling.  }
-
-\fdcomment{if easy to generate, would be good to have a single figure for an event that includes 1. the query, 2. the distribution of (filtered) document volume over time, and 3. a sample of the gold nuggets.  this provides the reader with a visual explanation of the problem, the solution, and the difficulty}
+%\begin{figure}
+%\begin{tabular}{| p{8cm} |}
+%\hline
+%\textbf{Event: Hurricane Sandy}\\
+%\includesvg[width=\columnwidth]{docfreq}\\
+%\textbf{Example Nuggets:}\\
+%$\cdot$ October 22nd Sandy strengthened from a tropical depression into a tropical storm\\
+%$\cdot$ could turn towards Bermuda or go straight to the Eastern U.S.\\
+%$\cdot$ 11 pm Oct 24 winds 50 mph\\
+%%$\cdot$ 11 pm Oct 24 moving NNE at 9 knots\\
+%$\cdot$ More than 1,000 people went to shelters in Jamaica\\
+%\hline
+%\end{tabular}
+%\end{figure}

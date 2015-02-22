@@ -1,35 +1,71 @@
-\section{Introduction}
 \label{sec:introduction}
-During crises, information is critical for first responders and those caught
-in the event.  When the event is significant, as in the case of Hurricane
-Sandy, the amount of information produced by traditional news outlets,
+During crises, information is critical for first responders,
+ crisis management organizations, and those caught in the event.  
+When the event is significant, as in the case of Hurricane
+Sandy, the amount of content produced by traditional news outlets,
 government agencies, relief organizations, and social media can vastly
-overwhelm those trying to monitor the situation. Methods for identifying,
+overwhelm those trying to monitor the situation. 
+Crisis informatics\cite{?} is dedicated to finding methods for sharing the
+right information in a timely fashion with relief organizations during a major crisis. 
+Research in this field has focused on
+human-in-the-loop approaches ranging from on the ground information gathering to
+crowdsourced reporting and disaster management.
+
+Multi-document summarization offers potential for enabling automatic updates of
+relevant, salient information at regular intervals. It would provide
+information even when human volunteers are unable to and would filter out
+unnecessary and irrelevant detail. 
+While methods for identifying,
 tracking, and summarizing events from text based input have been explored
 extensively
 %KM - I think we should consider adding other event summarizers. 
 (e.g.,
-\cite{allan1998topic,Filatova&Hatzivassiloglou.04a,Wang&al.11}). However,
-these experiments were not developed to handle streaming data from  the large and heterogeneous
-environment of the modern web. Neither were they developed to address the
-information needs that arise during  crisis
-situations. 
+\cite{allan1998topic,Filatova&Hatzivassiloglou.04a,Wang&al.11}), 
+these experiments were not developed to handle streaming data from the large
+and heterogeneous environment of the modern web. 
+These methods also rely heavily on redundancy which is suboptimal for time
+sensitive domains where there is a high cost in delaying information.
+ 
+
+
+%\cite{?} to enable people on the ground to update
+%crisis interfaces with information about needs. Others have used crowd
+%sourcing \cite{?}, 
+
+
+%At times of crisis, however, social media can overwhelm current information
+%systems with the quantity of information, much of which is irrelevant,
+%unnecessary detail, or out of date. 
+
+
+
+%Neither were they developed to address the
+%information needs that arise during  crisis
+%situations. 
 %KM - this last sentence sounds somewhat negative.
 %there is still a need for robust and scalable 
 %methods for automatic summarization.
 
-In this paper, we present an update summarization system to track disasters
+In this paper, we present an update summarization system to track events
 across time. Our system predicts sentence salience in the context of a
-large-scale event, such as a disaster,  and integrates these predictions into
-a clustering based multi-document summarization system. We train a regression
-model to predict sentence salience and use these predictions to bias the
-formation of sentence clusters around more salient regions in the input space
-using affinity propagation (AP) clustering.  AP uses the salience predictions
-as well as pairwise similarities among input sentences to identify
-\emph{exemplar} sentences, which we use as our summary output.  Our approach
-differs from other methods of summarization that compute salience by pairwise
-comparisons alone, ignoring features of importance that are intrinsic to the
-sentences themselves.
+large-scale event, such as a disaster, and integrates these predictions into
+a clustering based multi-document summarization system. 
+Our system is better able to adapt to
+dynamic changes in input volume which adversely 
+effect methods of summarization that use either pairwise
+comparisons as a proxy for salience or predict salience but
+ignore redundancy in the input alone.
+
+%We train a regression
+%model to predict sentence salience and use these predictions to bias the
+%formation of sentence clusters around more salient regions in the input space
+%using affinity propagation (AP) clustering.  We adapt AP to incorporate
+%the salience predictions
+%as well as pairwise similarities among input sentences to identify
+%\emph{exemplar} sentences, which we use as our summary output.  
+
+%ignoring features of importance that are intrinsic to the
+%sentences themselves.
 
 %KM - Chris - add a short overview on the kinds of things we measure and
 %results so people are encouraged to read ahead. Keep it general.
@@ -37,34 +73,34 @@ sentences themselves.
 In addition to the tight integration between clustering and salience
 prediction, our approach also exploits knowledge about disaster to determine
 salience. Thus, salience does not just represent importance within a set of
-documents; it also represents both how typical this sentence is of the input event
+documents; it also represents both how typical this sentence is of the input 
+event
 type (i.e., disaster, hurricane, tornado) and whether it specifies information
-about this particular disaster. We use a set of language models, one for each
-disaster type, to measure typicality of the sentence for the current event type. We
-use a feature that measures distance of mentioned location from the center of
-the disaster to represent its likelihood of referring to the input disaster. 
+about this particular disaster. 
+Our feature representation includes a set of language models, one for each
+disaster type, to measure typicality of the sentence for the current event 
+type, the distance of mentioned locations from the center of
+the disaster, and the change in word frequencies over the time of the event.
+% to represent its likelihood of referring to the input disaster. 
+%We also utilize the change in word frequencies as we process the stream 
+%to measure the changing importance of updates over time.
+
+Our approach achieves suprerior ROUGE scores compared to multiple baselines.
+Additionally, we introduce a novel method for determining the 
+coverage of atomic facts in a summary, and show our system's
+superiority on this metric. 
+
+The remainder of the paper is organized as follows.
+We begin with a review of related work
+in the information retrieval and multi-document
+summarization literature. (Rest of outline goes here...)
+
+%Our main contributions are three fold. First, we present a straightforward 
+%framework for 
+%combining prior beliefs with a clustering algorithm. Second, we demonstrate
+%the empirical effectiveness of this approach on the update summarization
+%task. Finally, we present a novel feature represention for sentence salience
+%in the crisis/disaster domain.
 
 
 
-
-%Previous work on generating event descriptions and/or multi-document
-%summarization has relied on clustering algorithms to find representative
-%sentences appropriate for an event summary.  These methods impose a metric
-%space on the text data that can make it difficult to incorporate external
-%sources of information elegantly -- in this paper we argue that centroid
-%sentences are not a priori the best candidates for inclusion in an event
-%summary.
-
-
-
-The remainder of the paper is organized as follows. We begin with a review of related work in the information retrieval and multi-document summarization literature.  In section
-~\ref{sec:background} we give an overview of the semantic similarity,
-%KM - Chris can you update this so it reflects the contributions. We don't
-%mention semantic similarity. We do mention salience and the disaster specific
-%features. Perhaps we should mention the use of a new approach for semantic
-%similarity? 
-Gaussian process, and affinity propagation algorithms that make up the bulk of
-our TS system. 
-Next we describe the data with which we build our various models.
-Then in section~\ref{sec:approach} we give a high level sketch
-of our system, and then explain each component in detail. 
