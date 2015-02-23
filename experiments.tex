@@ -1,0 +1,100 @@
+We evaluate our system on two metrics: ROUGE \cite{?}, the most common automatic
+summarization method and a modified method adapted 
+from the Text Retrieval Conference Temporal Summarization (TREC-TS) track \cite{?}.
+
+\subsection{Dataset}
+
+Both evaluations make use of the TREC TS data from 2013 and 2014. 
+This data includes 25 events and event metadata (e.g., a user
+search query for the event, the event type, and event time frame).
+Additionally, TREC assessors constructed a set of ground truth facts, or 
+nuggets, for each event. The events took place from 20??-20?? and had 
+an associated Wikipedia (WP) page. The WP pages were edited and updated 
+concurrently with the events, so the diffs between revisions produce a similar
+ouput to the ideal update summarization system. Assessors analyzed the diffs
+and selected phrases that were important enough to include in an update 
+summary.  
+For the document stream, we use the news portion of the
+ 2014 TREC Stream Corpus.
+The documents from this corpus come from hourly crawls of the web covering 
+ ?, 20?? to ?, 20??. \ckcomment{Need to mention we further filtered the corpus}
+
+\subsection{Training and Testing}
+
+Of the 25 events in the TREC TS data, 24 are covered by the Stream Corpus.
+From these 24, we set aside three events to use as a development set.
+All system salience and similarity threshold parameters are tuned on the
+development set.
+
+We train a salience model for each event using 1000 sentences randomly sampled
+from the event's document stream. Kernel length scale parameters  for each
+feature group are fit to maximize
+the model's log likelihood using ???.
+At test time, we predict a sentence's salience using the average predictions
+of the 23 other models---essentially 24 fold cross validation approach.   
+
+\subsection{ROUGE Evaluation}
+
+ROUGE measures the ngram overlap between a model (i.e. human) summary 
+and an automatically generated system summary. 
+Model summaries for each event were constructed by concatenating the event's 
+nuggets. 
+See figure~\ref{fig:test} for an example model summary excerpt.
+Generally, ROUGE evaluation assumes both model and system summaries
+are of a bounded length. Since our systems are summarizing events over a span
+of two weeks time, the total length of our system output is much longer than
+the model. To address this, for each system/event pair, we sample with replacement
+1000 random summaries of length less than or equal to the model summary 
+(truncating the last sentence when neccessary). The final ROUGE score for the 
+system are the average scores from these 1000 samples.
+
+Because we are interested in system performance over time, we also evaluate 
+systems at 12 hour intervals using the same regime as above. 
+The model summaries in this case are retrospective, and so we can see how quickly
+each system takes to achieve its maximum performance.
+
+\subsection{Nugget Evaluation}
+We also modify the evaluation used in the TREC TS track, 
+where systems were evaluated on the containment of event nuggets. 
+We match each system update to 0 or more nuggets, where an update matches
+a nugget if their semantic similarity is above a threshold.  
+Summaries are then evaluated on the precision and recall of the matches.
+More formally,
+\[ \mathrm{Prec.} = \frac{|S_n|}{|S|} \;\;\; \mathrm{Recall} = \frac{|S_n|}{|N|}\] 
+where S is the set of system updates, $S_n$ is the set of nuggets mapped updates in $S$,
+$N$ is the set of event nuggets, and $|\cdot|$ is the size of the set.
+A precision of 1 indicates that every sentence contains one unique nugget.
+Because an update can map to more than one nugget, it is possible to receive a precision greater than 1. 
+A recall of 1 indicates that the summary has cover all nugget information for the event; the maximum
+attainable recall is 1.
+Determining 
+an optimal threshold is difficult so we evaluate at threshold values ranging
+from .5 to 1, where values closer to 1 are more conservative estimates of
+performance. 
+
+
+\subsection{Model Comparisons}
+
+Our proposed model using AP+Salience is compared against several variants and baselines. All thresholds
+are tuned on the development set.
+
+\textbf{AP+Salience Time Ranked} : This model is everywhere the same as AP+Salience except at the update selection stage, 
+where the algorithm selects exemplars in temporal order rather than salience order. 
+
+\textbf{AP} : In this model we use the AP clustering algorithm without the salience predictions.
+The preferences are chosen as the median value of the ? matrix, as is commonly used with AP \cite{?}.
+The update selection procedes in time order. As in the AP+Salience model we tune a similarity threshold,
+and ignore exemplar sentences whose maximum similarity to a previous update is above the threshold.
+
+\textbf{Rank by Salience} : In this model we rank the sentences by salience and select the updates at each hour that are
+above a salience threshold and are below a similarity threshold (similar to the AP+Salience model). 
+
+\textbf{Hierarchichal Agglomerative Clustering (HAC)} : We also provide another clustering baseline, HAC using ?-linkage. 
+This method was chosen over other clustering approaches because the number of clusters 
+is not an explicit hyper parameter. To produce flat clusters from the hierarchical clustering, we flatten the HAC dendrogram
+using the cophenetic distance criteria, i.e. observations in each flat cluster have no greater a cophenetic distance than a threshold.
+Cluster centers are determined to be the sentence with highest cosine similariy to the flat cluster mean.
+Cluster centers are examined in time order and are added to the summary if their similarity to previous updates is below a similarity threshold
+(like the previous models).
+
+
