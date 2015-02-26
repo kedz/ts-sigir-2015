@@ -1,0 +1,25 @@
+For the document stream, we use the news portion of the
+ 2014 Trec KBA Stream Corpus.
+The documents from this corpus come from hourly crawls of the web covering 
+ ?, 20?? to ?, 20??. \ckcomment{Need to mention we further filtered the corpus}
+
+Our experiments also make use of the Trec Temporal Summarization (TS) Track
+ data from 2013 and 2014. 
+This data includes 25 events and event metadata (e.g., a user
+search query for the event, the event type, and event evaluation timeframe).  
+All events occurred during the time span of the Trec KBA Stream Corpus.
+
+Along with the metadata, NIST assessors constructed a set of ground truth nuggets for each event. 
+Nuggets are brief and important text snippets that represent sub-events that should be conveyed
+by an ideal update summary (see Figure~\ref{fig:nuggets} for examples).
+In order
+to accomplish this, for each event, assessors were provided with the
+revision history of the Wikipedia page associated with the event.  
+For example, 
+the revision history for the Wikipedia page for `Hurricane Sandy' will 
+contain text additions including those related to individual nuggets.  The assessment
+task involves reviewing the Wikipedia revisions in the evaluation timeframe 
+and marking the text additions capturing a new, unique nugget.  More detail
+on this process can be found in the track description \cite{?}.
+
+

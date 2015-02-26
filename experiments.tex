@@ -1,31 +1,13 @@
-We evaluate our system on two metrics: ROUGE \cite{?}, the most common automatic
-summarization method and a modified method adapted 
-from the Text Retrieval Conference Temporal Summarization (TREC-TS) track \cite{?}.
+We evaluate our system on two metrics: ROUGE \cite{?}, a common automatic
+summarization method and an evaluation of system expected gain 
+and comprehensiveness---metrics adapted 
+from the Trec TS track \cite{?}.
 
-\subsection{Dataset}
-
-Both evaluations make use of the TREC TS data from 2013 and 2014. 
-This data includes 25 events and event metadata (e.g., a user
-search query for the event, the event type, and event timeframe).  All events
-occurred during the span of the corpus.
-
-NIST assessors constructed a set of ground truth nuggets for each event. In order
-to accomplish this, for each event, assessors were provided with the
-revision history of the Wikipedia page associated with the.  For example, 
-the revision history for the Wikipedia page for `Hurricane Sandy' will 
-contain text additions including those related to individual nuggets.  The assessment
-task involves reviewing the Wikipedia revisions in the evaluation timeframe 
-and marking the text additions capturing a new, unique nugget.  More detail
-on this process can be found in the track description \cite{?}.
-
-For the document stream, we use the news portion of the
- 2014 TREC Stream Corpus.
-The documents from this corpus come from hourly crawls of the web covering 
- ?, 20?? to ?, 20??. \ckcomment{Need to mention we further filtered the corpus}
 
 \subsection{Training and Testing}
 
-Of the 25 events in the TREC TS data, 24 are covered by the Stream Corpus.
+Of the 25 events in the TREC TS data, 24 are covered by the news portion 
+of the Trec KBA Stream Corpus.
 From these 24, we set aside three events to use as a development set.
 All system salience and similarity threshold parameters are tuned on the
 development set.
@@ -34,8 +16,10 @@ We train a salience model for each event using 1000 sentences randomly sampled
 from the event's document stream. Kernel length scale parameters  for each
 feature group are fit to maximize
 the model's log likelihood using ???.
+
+We perform a leave-one-out evaluation of each event.
 At test time, we predict a sentence's salience using the average predictions
-of the 23 other models---essentially a leave-one-out approach.   
+of the 23 other models.   
 
 \subsection{ROUGE Evaluation}
 
@@ -54,19 +38,25 @@ system are the average scores from these 1000 samples.
 
 Because we are interested in system performance over time, we also evaluate 
 systems at 12 hour intervals using the same regime as above. 
-The model summaries in this case are retrospective, and so we can see how quickly
-each system takes to achieve its maximum performance.
+The model summaries in this case are retrospective, 
+and so we can see how quickly
+each system is able to achieve its maximum performance.
 
-\subsection{Average Gain and Comprehensiveness}
+\subsection{Expected Gain and Comprehensiveness}
 
- 
-We treat the event's nuggets as unique units of information.
+NIST developed a series metrics for evaluating update summarization systems
+as part of the Trec TS track.
+We present results on two of these metrics, the expected gain and 
+comprehensiveness.
+
+\textbf{Expected Gain } We treat the event's nuggets as unique units of 
+information.
 When a system adds an update to its summary, it is potentially adding some
 of this nugget information. It would be instructive to know how much unique
 and novel information each update is adding on average to the summary.
 To that end, we define
 
-\[ \mathrm{Avg. Gain} = \frac{|S_n|}{|S|}% \;\;\; \mathrm{Recall} = \frac{|S_n|}{|N|}
+\[ \mathrm{\mathbb{E}[Gain]} = \frac{|S_n|}{|S|}% \;\;\; \mathrm{Recall} = \frac{|S_n|}{|N|}
 \] 
 where $S$ is the set of system updates, 
 $S_n$ is the set of nuggets contained in $S$, and $|\cdot|$ is the number of
@@ -75,12 +65,16 @@ To compute the set $S_n$ we match each system update to 0 or more nuggets,
 where an update matches a nugget if their semantic similarity is above 
 a threshold. $S_n$ results from the unique set of nuggets matched.
 Because an update can map to more than one nugget, it is possible to receive an
-average gain greater than 1. An average gain of 1 would indicate that every
+expected gain greater than 1; values greater than one can be thought of as a 
+compression ration, i.e. an expected gain of 10 indicates the average update
+contains 10 unique nuggets on average and that the summary is a 10~:~1 
+compression of the nugget information.
+An expected gain of 1 would indicate that every
 sentence was both relevant and contained a unique piece of information.
 
 
 
-Additionally, we can use the nuggets to measure the completeness of an update 
+\textbf{Comprehensiveness } Additionally, we can use the nuggets to measure the completeness of an update 
 summary. We define
 
 \[ \mathrm{Comprehensiveness} = \frac{|S_n|}{|N|}\]
@@ -90,12 +84,15 @@ A comprehensiveness of 1 indicates that the summary has cover
 all nugget information for the event; the maximum
 attainable comprehensiveness is 1.
 
+Update-nugget matches are computed automatically, where a
+match exists if the semantic similarity of the update/nugget pair is above 
+a threshold.
 Determining an optimal threshold to count matches is difficult so 
 we evaluate at 
 threshold values ranging
 from .5 to 1, where values closer to 1 are more conservative estimates of
 performance.
-A qualitative assessment of matches 
+A manual inspection of matches 
 suggests that semantic similarity values around .7 produce reasonable matches.
 For example, the nugget 
 \begin{blockquote}
@@ -110,34 +107,59 @@ of North and South Carolina\end{blockquote}
 \noindent
 with a similarity of .7. 
 The average semantic similarity of manual matches performed 
-by TREC assessors was considerably lower at approximately .25, increasing
-our confidence in the automatic matches in the .5-1 range.
+by NIST assessors was considerably lower at approximately .25, increasing
+our confidence in the automatic matches in the .5--1 range.
 
-An assessment of manual matchings done by TREC 
-assessors revealed that the average cosine similarity 
 
 \subsection{Model Comparisons}
 
 Our proposed model using AP+Salience is compared against several variants and baselines. All thresholds
 are tuned on the development set.
 
-\textbf{AP+Salience Time Ranked} : This model is everywhere the same as AP+Salience except at the update selection stage, 
-where the algorithm selects exemplars in temporal order rather than salience order. 
+\textbf{Affinity Propagation only (AP) } The purpose of this model
+is to directly measure the effect of integrating salience and clustering by providing a baseline that uses the identical 
+clustering component, but without the salience information.
+In this model, input sentences are apriori equally likely to be exemplars;
+%clustering algorithm without the salience predictions.
+the salience values are uniformly set as the median value of the 
+input similarity scores, as is commonly used in the AP literature \cite{?}.
+After clustering a sentence batch, the exemplars are examined in order
+of increasing time since event start and selected as updates if their
+maximum similarity to the previous updates is less than $\lambda_{sim}$,
+as in the novelty filtering stage of AP+Salience.
 
-\textbf{AP} : In this model we use the AP clustering algorithm without the salience predictions.
-The preferences are chosen as the median value of the ? matrix, as is commonly used with AP \cite{?}.
-The update selection procedes in time order. As in the AP+Salience model we tune a similarity threshold,
-and ignore exemplar sentences whose maximum similarity to a previous update is above the threshold.
-
-\textbf{Rank by Salience} : In this model we rank the sentences by salience and select the updates at each hour that are
-above a salience threshold and are below a similarity threshold (similar to the AP+Salience model). 
-
-\textbf{Hierarchichal Agglomerative Clustering (HAC)} : We also provide another clustering baseline, HAC using ?-linkage. 
-This method was chosen over other clustering approaches because the number of clusters 
-is not an explicit hyper parameter. To produce flat clusters from the hierarchical clustering, we flatten the HAC dendrogram
+\textbf{Hierarchichal Agglomerative Clustering (HAC)} : We provide another clustering baseline, single-linkage hierarchichal agglomerative clustering.
+We include this baseline to show that AP+Salience is not just an improvement
+over AP but centrality driven methods in general.
+HAC was chosen over other clustering approaches because the number of clusters 
+is not an explicit hyper-parameter. To produce flat clusters from the hierarchical clustering, we flatten the HAC dendrogram
 using the cophenetic distance criteria, i.e. observations in each flat cluster have no greater a cophenetic distance than a threshold.
 Cluster centers are determined to be the sentence with highest cosine similariy to the flat cluster mean.
-Cluster centers are examined in time order and are added to the summary if their similarity to previous updates is below a similarity threshold
-(like the previous models).
+Cluster centers are examined in time order and are added to the summary if their similarity to previous updates is below a similarity threshold $\lambda_{sim}$ as is done in the AP model.
 
+\textbf{Rank by Salience (RS)} 
+We also isolate the impact of our salience model in order to demonstrate 
+the that the fusion of clustering and salience prediction improves over
+predicting salience alone.
+In this model we predict the salience of sentences as in step 1 for 
+AP+Salience. %However, rather than clustering, we simply rank the sentences
+%by salience.
+We omit the clustering phase (step 2).
+Updates are selected identically to step 3 of AP+Salience, proceeding 
+in order of decreasing salience, selecting updates that are above a salience 
+threshold $\lambda_{sal}$ and below a similarity threshold $\lambda_{sim}$
+with respect to the previously selected updates.
+
+
+\textbf{AP+Salience Time Ranked (AP+SalienceTR)} Our final model is identical 
+to the
+AP+Salience model except at the novelty filter stage.
+Within the novelty filtering stage, 
+AP+Salience inspects exemplars in order of decreasing salience when computing
+similarity to previous updates. Because the order in which we add updates
+affects future similarity calculations, we evaluate an alternate ordering 
+scheme (AP+SalienceTR) where exemplars are selected in order of increasing 
+time since event start. The purpose of this model is to give preference to 
+more recent updates, since timelyness is one of the desirable traits of our update
+summaries.
 
