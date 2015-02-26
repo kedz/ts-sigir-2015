@@ -1,27 +1,76 @@
-In order to evaluate an update summarization system, we adopt the simulation-based approach used in the TREC Temporal Summarization (TS) Track.  We provide a brief overview of the problem.  Details on the formulation can be found in the track overview paper \cite{aslam2013trec}.  
+%In order to evaluate an update summarization system, we adopt the simulation-based approach used in the TREC Temporal Summarization (TS) Track.  We provide a brief overview of the problem.  Details on the formulation can be found in the track overview paper \cite{aslam2013trec}.  
 
 An update summarization system takes as input 
 \begin{enumerate*}[label=\itshape\alph*\upshape)]
-  \item a short query $\query$ defining the event to be tracked (e.g. `Hurricane Sandy'), 
-  \item an event category $\eventcategory$ defining the type of event to be tracked (e.g. `hurricane'), 
-  \item a stream of time-stamped documents, $(\doc_0, \doc_1,\ldots,\doc_T)$,
-  presented in temporal order, and \item an evaluation time period of interest,
-      $(\stime,\etime)$.  \end{enumerate*} While processing documents
+  \item a short query defining the event to be tracked (e.g. `Hurricane Sandy'), 
+  \item an event category defining the type of event to be tracked (e.g. `hurricane'), 
+  \item a stream of time-stamped documents %, $(\doc_0, \doc_1,\ldots,\doc_T)$,
+  presented in temporal order, and \item an evaluation time period of interest.
+    %  $(\stime,\etime)$.  
+      \end{enumerate*} While processing documents
       throughout the time period of interest, the system must output sentences,
-      known as updates, which are \emph{relevant} to the query,
-      \emph{comprehensive} with respect to the event, \emph{novel} to the user,
-      and \emph{timely} with respect to when the update occurred.  Precisely
-      how to measure these properties will be discussed in Section
-      \ref{sec:methods}.  In our version of this problem, we assume that that
-      the system receives one batch of new sentence-segmented documents every
-      hour throughout the period of interest.
+      known as updates.
+      Updates should not only be relevant to the event but also salient,
+      i.e. worthy of
+      reporting.
+      For most domains, updates also need to be 
+      timely and novel, i.e. users need to be informed of changes in the 
+      event as quickly as possible.
+      Finally, in aggregate the updates must comprehensively summarize the 
+      event.
 
-We address disaster types such as terrorism and mass shootings (e.g., the 2012
-shooting in Aurora, Col.), natural disasters (e.g., Hurricane Sandy), accidents
-(e.g., the 2012 Pakistan garment factory fire), and social activism (e.g., the
-Arab spring). The size and scope of the events varies considerably. Hurricane
-Sandy, for example, effected multiple countries over weeks while the
-2012 Aurora shooting was contained to a single location spanning several hours.
+In order to quantify the salience of a sentence with respect to an event,
+we assume the event can be represented as a set of atomic facts, or nuggets.
+Nuggets are brief and important text snippets that should be conveyed
+by an ideal update summary (see Figure~\ref{fig:nuggets} for examples).
+\setlength{\fboxsep}{10pt}
+\begin{figure}
+    \fbox{\parbox{6.9cm}{
+        $\cdot$ hurricane force wind warnings are in effect from Rhode Island Sound to Chincoteague Bay\\
+        
+$\cdot$ Obama declared an emergency in Maryland and signed an order authorized the Federal Emergency Management Agency to aid in disaster relief\\
+
+        $\cdot$ over 5000 commercial airline flights scheduled for October 28 and October 29 were cancelled
+ }}
+ \caption{Example nuggets from Hurricane Sandy.\label{fig:nuggets}}
+\end{figure}
+
+Given an update $u$ and a set of nuggets $N$ we define the salience of 
+$u$ as,
+\[\operatorname{salience}(u) = \operatorname{max}_{n \in N} 
+\operatorname{sim}(u, n) \]
+where $\operatorname{sim}(\cdot)$ is the semantic similarity \cite{?} (i.e.
+the cosine similarity of latent vectors associated with the update and 
+nugget text). Since we will not have nuggets for new events, we train
+a regression model to predict salience using features derived from 
+the updates themselves
+and the document stream.
+
+
+
+     % \ref{sec:methods}.  In our version of this problem, we assume that that
+     % the system receives one batch of new sentence-segmented documents every
+     % hour throughout the period of interest.
+\subsection{Update Summarization}
+
+Our system archictecture follows a simple pipeline design where each
+stage provides an additional level of processing or filtering of the input
+sentences.
+At the highest level, we begin with an empty update summary $U$.
+At each hour we receive a new batch of sentences $b_t$ from the stream
+and perform the following actions:
+\begin{enumerate}
+    \item predict the salience of sentences in $b_t$ (Section~\ref{sec:salpred}),
+  \item select a set of exemplar sentences (by combining clustering with 
+      salience predictions) (Section~\ref{sec:exsel}),
+  \item add the most novel and salient exemplars to $U$ (Section~\ref{sec:upsel}).
+\end{enumerate}
+
+The resultant list of updates $U$ is our summary of the event.
+Step 2 uses the affinity propagation algorithm to incorporate the salience
+predictions from step 1. For this reason we dub our summarization 
+system the \textbf{AP+Salience} model.
+
 
 %\kmcomment{This was as best as I could do on this. These are the example
 %    categories from the wikipedia page. However you refer in the language model
@@ -37,59 +86,74 @@ Sandy, for example, effected multiple countries over weeks while the
 %    them would be helpful upfront. I think where nuggets and wikipedia pages go
 %is questionable.}
 
-Figure \ref{alg:temporal-summarization} outlines our general update
-summarization algorithm.  At each hour, the system processes each input 
-sentence batch $S_t$.
-We predict the salience $P$ for all input sentences $s\in S_t$.
-Next, we cluster $S_t$ using the AP clustering algorithm, biased by $P$,
-obtaining a set of exemeplar sentences $E$. Finally we select a subset of $E$
-to be updates and add those to our set of summary updates $U$.
-
-\begin{algorithm}%[H]
- \KwData{ 
-     $S_{\stime}, S_{\stime+1},\ldots,S_{\etime} $ --- time ordered sentence
-     batches\\
- \KwResult{U --- a list of updates, i.e. the update summary} 
-}
- ~\\
- Initialize empty list $U$ of updates\\
-    \For{$t \gets \stime,\ldots,\etime $}{
-        $P \gets \operatorname{PredictSalience}(S_t)$\\
-        $E \gets \operatorname{APCluster}(P, S_t)$ \\
-        $U_t \gets \operatorname{SelectUpdates}(E,P,U)$\\
-        $U \gets U \cup U_t$
-}
- \caption{Temporal Summarization Algorithm}\label{alg:temporal-summarization}
-\end{algorithm}
+%Figure \ref{alg:temporal-summarization} outlines our general update
+%summarization algorithm.  At each hour, the system processes each input 
+%sentence batch $S_t$.
+%We predict the salience $P$ for all input sentences $s\in S_t$.
+%Next, we cluster $S_t$ using the AP clustering algorithm, biased by $P$,
+%obtaining a set of exemeplar sentences $E$. Finally we select a subset of $E$
+%to be updates and add those to our set of summary updates $U$.
+%
+%\begin{algorithm}%[H]
+% \KwData{ 
+%     $S_{\stime}, S_{\stime+1},\ldots,S_{\etime} $ --- time ordered sentence
+%     batches\\
+% \KwResult{U --- a list of updates, i.e. the update summary} 
+%}
+% ~\\
+% Initialize empty list $U$ of updates\\
+%    \For{$t \gets \stime,\ldots,\etime $}{
+%        $P \gets \operatorname{PredictSalience}(S_t)$\\
+%        $E \gets \operatorname{APCluster}(P, S_t)$ \\
+%        $U_t \gets \operatorname{SelectUpdates}(E,P,U)$\\
+%        $U \gets U \cup U_t$
+%}
+% \caption{Temporal Summarization Algorithm}\label{alg:temporal-summarization}
+%\end{algorithm}
 
 \subsection{Salience Prediction}
-
+\label{sec:salpred}
 
 \subsubsection{Model}
-%KM - I think one of the words ``sentence'' below should be something else, btu
-%not sure what you meant. Ah.. I think ``salience''?
-%We adopt Gaussian process regression in order to predict sentence sentence
-We adopt Gaussian process regression in order to predict sentence salience
-\cite{rasmussen:gaussian-process-book}.  Gaussian process regressors are a
+
+Nuggets represent ground truth data which would not be available at test time;
+we need to find some function $f : \mathbb{R}^d \rightarrow \mathbb{R}$ 
+such that 
+\[ \operatorname{salience}(s) = f(x_s) \]
+where $x_s$ is a $d$-dimensional feature vector for sentence $s$. 
+Given that we have many thousands of sentences of varying relevance to each
+event in our stream and salience scores are derived in an unsupervised fashion
+(assuming event nuggets are known), we can generate large amounts of training
+data for our model by simply sampling sentences 
+from the stream and computing the maximum
+semantic similarity to the nugget set.
+
+To learn $f$ and predict salience,
+we adopt Gaussian process (GP) regression 
+\cite{rasmussen:gaussian-process-book}.  GP regressors are a
 class of data-driven, non-parametric model generalizing the multi-variate
-Gaussian to the infinite dimensional setting.  Gaussian processes are general
-and are state of the art for many regression tasks.  A full treatment of
-Gaussian process regression is beyond the scope of this article and can be
-found in standard textbooks.
+Gaussian to the infinite dimensional setting.  GP's are general
+and are state of the art for many regression tasks.  
+%A full treatment of
+%Gaussian process regression is beyond the scope of this article and can be
+%found in standard textbooks.
 
 
-As a non-parametric, the Gaussian process relies on a  covariance matrix $\kernelMatrix$, measuring the affinity between pairs of instances, in our case candidate sentences.  In our experiments, we used a radial basis function (RBF) kernel.  Given two featurized sentences, $\features$ and $\features^\prime$, the RBF kernel is defined as,
+GP's are non-parametric and rely on a covariance matrix $\kernelMatrix$, measuring the similarity between pairs of instances, in our 
+case sentences.  In our experiments, we used a radial basis 
+function (RBF) kernel.  Given two featurized sentences, 
+$\features$ and $\features^\prime$, the RBF kernel is defined as,
 \begin{align*}
         \kernelMatrixij{\features}{\features^\prime}&= \sigma^2 \exp\left(- \frac{1}{2} 
 \sum_{i=1}^{\numfeatures} \frac{ (\featuresi{i}-\featuresi{i}^\prime)^2}{\ell_i^2} \right)
 \end{align*}
 where $\sigma$ and the $\ell_i$ are parameters we fit to our observed training data. The $\ell_i$ are feature dependent scaling parameters; once learned, they not only improve the accuracy of the model, but give us some introspection  into which features are more important.
+Kernel matrices are also closed under addition, i.e. the sum of kernels
+is also a kernel; we exploit this fact by organizing our features into 
+meaningful groups with their own RBF kernel using the sum of their kernels 
+to parameterize the model.
 
-\subsubsection{Training Data}
-\ckcomment{Explain how we train the model here...}
-%In order to train the salience model, we need to quantify the notion of salience. We assume for each event we have a set of atomic facts, or nuggets.
 
-%
 \begin{figure}[t!]
 \begin{tabular}{| l |} 
 \hline
@@ -140,14 +204,15 @@ $\cdot$ Time since query/event start.\\
 \end{figure}
 
 \subsubsection{Features}
-We want our model to be predictive across different kinds of events so we avoid lexical features.  Instead, we extract a variety of features including language model scores, geographic relevance, and temporal relevance from each sentence.  These features are used to fit a Gaussian process regression model that can predict the similarity of a sentence to a gold summary \cite{preotiuc2013temporal}.  
+We want our model to be predictive across different kinds of events so we avoid lexical features.  Instead, we extract a variety of features including language model scores, geographic relevance, and temporal relevance from each sentence.  
+%These features are used to fit a Gaussian process regression model that can predict the similarity of a sentence to a gold summary \cite{preotiuc2013temporal}.  
 
 \paragraph{Basic Features}
 %KM - Would be good to have quick justification of these features. I added a
 %sentence. Feel free to edit or remove.
 
 We employ several basic features that have been used previously in supervised models to rank sentence salience \cite{kupiec1995trainable,conroy2001using}. These include sentence length, the number of capitalized words normalized by sentence length, document position, number of named entities.  
-Since training is one on grammatical English, some of these features help
+Since training is done on grammatical English, some of these features help
 to downweight sentences that are ungrammatical (e.g., have too many capitalized words or are too short).
 Others help to more heavily weight important sentences (e.g., that appear in
 prominent positions such as paragraph initial or article initial).
@@ -244,7 +309,64 @@ We similarly find the sentence's 5-hour burstiness.  In addition to burstiness, 
 %
 %
 
-\subsection{Affinity Propagation Clustering}
-\ckcomment{Explain AP and how salience gets plugged in here}
+\subsection{Exemplar Selection}
+\label{sec:exsel}
+
+We combine the output of our salience prediction model with the affinity
+propagation algorithm to identify a set of exemplar sentences 
+for each input batch. 
+Affinity propagation (AP) is a clustering algorithm
+that identifies a subset of datapoints as exemplars and forms clusters
+by assigning the remaining points to one of the exemplars. AP can be seen
+as a generalization of other $k$-centers algorithms that attempts to 
+maximize the net similarity objective 
+\[ \mathcal{S} = \sum_{i : i \neq e_i}^n \operatorname{sim}(i,e_i) 
++ \sum_{i : i = e_i}^n \operatorname{pref}(e_i)  \]
+where $e_i$ is the exemplar of the $i$-th data point, and functions
+$\operatorname{sim}$ and $\operatorname{pref}$ express the pairwise similarity
+of data points and the apriori preference of a data point to be an exemplar
+respectively. There are very 
+few restrictions on the nature of the similarities and preferences
+other than that they be real-valued.
+
+AP has several useful properties and interpretations. Chiefly, the number
+of clusters $k$ is not a model hyper-parameter. Given that our task requires
+clustering many batches of streaming data, searching for an optimal $k$ 
+would be computationally prohibitive. With AP, $k$ is determined by the
+similarities and preferences of the data. Generally lower preferences will
+result in fewer clusters.  
+
+
+In our summarization system we use the output of our salience model as 
+the preferences, i.e.
+$\operatorname{salience}(s) = \operatorname{pref}(s)$; for the similarity 
+function we use semantic similarity. Recall that $\operatorname{salience}(s)$
+is a prediction of the semantic similarity of $s$ to information about the 
+event be summarized, i.e. the set of event nuggets.
+Intuitively, when maximizing objective function $\mathcal{S}$, AP must balance
+between best representing the input data and representing the most salient
+input. Additionally, when the level of input is high but the salience
+predictions are low, the preference term will guide AP toward a solution
+with fewer clusters; vice-versa when input is very salient on average but
+the volume of input is low. The adaptive nature of our model differentiates
+our method from most out update summarization systems.
+
+
+
+
 \subsection{Update Selection}
-\ckcomment{Explain thresholds}
+\label{sec:upsel}
+
+After exemplar sentences have been identified, two more filters are applied 
+before updating the summary. The exemplars are examined
+sequencially in order of highest salience. First, a salience threshold 
+is applied, and any exemplars whose salience is less than
+$\lambda_{sal}$ are discarded. Second, a similarity threshold 
+is applied, where the exemplar is discarded if its
+maximum semantic similarity to any previous updates in the summary is
+greater than $\lambda_{sim}$. If the exemplar passes these two filters,
+it is selected as an update and added to the summary.
+
+
+
+

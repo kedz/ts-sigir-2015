@@ -13,6 +13,25 @@ precision early on.
 
 \subsection{Nugget Evaluation}
 
+Figure~\ref{fig:nuggets} shows the average gain across a range of 
+similarity thresholds, where thresholds closer to 1 are more conservative
+estimates. The ranking of the systems remains relatively constant across the 
+sweep with 
+AP+Salience and AP+Salience TR attaining comparable performance, as well
+as beating all baseline systems.
+Predicting salience in general is helpful for keeping a summary on topic as
+the Rank by salience approach out performs the clustering only approaches
+on average gain.
+
+When looking at the comprehensiveness of the summaries AP outperforms
+both AP+Salience variants. The compromise encoded in the AP+Salience objective
+function, between being representitive and being salient, is seen clearly here
+where the performance of the AP+Salience methods is lower bounded by 
+the salience focused Rank
+system and upper bounded by the clustering only AP system.
+
+
+
 \subsection{Feature Ablation}
 
 
@@ -75,8 +94,15 @@ Rank & 0.031  &    0.037 &  0.034 \\
 \label{tab:rouge}
 \end{table}
 
-\begin{figure*}
-  \includegraphics[width=\textwidth]{rouge-time.png}
+\begin{figure}
+  \includegraphics[width=3.2in,height=5in]{rouge-time.png}
 \caption{System ROUGE-1 performance over time.}
 \label{fig:trouge}
-\end{figure*}
+\end{figure}
+
+\begin{figure}
+  \includegraphics[width=3.2in,height=5in]{nugget-metrics.png}
+\caption{Nugget performance.}
+\label{fig:nperf}
+\end{figure}
+

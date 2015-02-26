@@ -31,7 +31,7 @@ from the event's document stream. Kernel length scale parameters  for each
 feature group are fit to maximize
 the model's log likelihood using ???.
 At test time, we predict a sentence's salience using the average predictions
-of the 23 other models---essentially 24 fold cross validation approach.   
+of the 23 other models---essentially a leave-one-out approach.   
 
 \subsection{ROUGE Evaluation}
 
@@ -53,25 +53,64 @@ systems at 12 hour intervals using the same regime as above.
 The model summaries in this case are retrospective, and so we can see how quickly
 each system takes to achieve its maximum performance.
 
-\subsection{Nugget Evaluation}
-We also modify the evaluation used in the TREC TS track, 
-where systems were evaluated on the containment of event nuggets. 
-We match each system update to 0 or more nuggets, where an update matches
-a nugget if their semantic similarity is above a threshold.  
-Summaries are then evaluated on the precision and recall of the matches.
-More formally,
-\[ \mathrm{Prec.} = \frac{|S_n|}{|S|} \;\;\; \mathrm{Recall} = \frac{|S_n|}{|N|}\] 
-where S is the set of system updates, $S_n$ is the set of nuggets mapped updates in $S$,
-$N$ is the set of event nuggets, and $|\cdot|$ is the size of the set.
-A precision of 1 indicates that every sentence contains one unique nugget.
-Because an update can map to more than one nugget, it is possible to receive a precision greater than 1. 
-A recall of 1 indicates that the summary has cover all nugget information for the event; the maximum
-attainable recall is 1.
-Determining 
-an optimal threshold is difficult so we evaluate at threshold values ranging
-from .5 to 1, where values closer to 1 are more conservative estimates of
-performance. 
+\subsection{Average Gain and Comprehensiveness}
 
+ 
+We treat the event's nuggets as unique units of information.
+When a system adds an update to its summary, it is potentially adding some
+of this nugget information. It would be instructive to know how much unique
+and novel information each update is adding on average to the summary.
+To that end, we define
+
+\[ \mathrm{Avg. Gain} = \frac{|S_n|}{|S|}% \;\;\; \mathrm{Recall} = \frac{|S_n|}{|N|}
+\] 
+where $S$ is the set of system updates, 
+$S_n$ is the set of nuggets contained in $S$, and $|\cdot|$ is the number of
+elements in the set.
+To compute the set $S_n$ we match each system update to 0 or more nuggets, 
+where an update matches a nugget if their semantic similarity is above 
+a threshold. $S_n$ results from the unique set of nuggets matched.
+Because an update can map to more than one nugget, it is possible to receive an
+average gain greater than 1. An average gain of 1 would indicate that every
+sentence was both relevant and contained a unique piece of information.
+
+
+
+Additionally, we can use the nuggets to measure the completeness of an update 
+summary. We define
+
+\[ \mathrm{Comprehensiveness} = \frac{|S_n|}{|N|}\]
+
+where $N$ is the set of event nuggets.
+A comprehensiveness of 1 indicates that the summary has cover 
+all nugget information for the event; the maximum
+attainable comprehensiveness is 1.
+
+Determining an optimal threshold to count matches is difficult so 
+we evaluate at 
+threshold values ranging
+from .5 to 1, where values closer to 1 are more conservative estimates of
+performance.
+A qualitative assessment of matches 
+suggests that semantic similarity values around .7 produce reasonable matches.
+For example, the nugget 
+\begin{blockquote}
+watches and warnings in effect for much of the Mid-Atlantic states and 
+southern New England 
+\end{blockquote}
+\noindent
+matches with the update 
+\begin{blockquote}
+A tropical storm warning remains in effect for much of the coasts 
+of North and South Carolina\end{blockquote}
+\noindent
+with a similarity of .7. 
+The average semantic similarity of manual matches performed 
+by TREC assessors was considerably lower at approximately .25, increasing
+our confidence in the automatic matches in the .5-1 range.
+
+An assessment of manual matchings done by TREC 
+assessors revealed that the average cosine similarity 
 
 \subsection{Model Comparisons}
 

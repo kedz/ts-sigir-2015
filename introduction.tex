@@ -5,90 +5,68 @@ When the event is significant, as in the case of Hurricane
 Sandy, the amount of content produced by traditional news outlets,
 government agencies, relief organizations, and social media can vastly
 overwhelm those trying to monitor the situation. 
-Crisis informatics\cite{?} is dedicated to finding methods for sharing the
-right information in a timely fashion with relief organizations during a major crisis. 
+Crisis informatics \cite{?} is dedicated to finding methods for sharing the
+right information in a timely fashion during such an event.
 Research in this field has focused on
-human-in-the-loop approaches ranging from on the ground information gathering to
-crowdsourced reporting and disaster management.
+human-in-the-loop approaches ranging from on the ground information 
+gathering to crowdsourced reporting and disaster management.
 
-Multi-document summarization offers potential for enabling automatic updates of
-relevant, salient information at regular intervals. It would provide
-information even when human volunteers are unable to and would filter out
-unnecessary and irrelevant detail. 
+Multi-document summarization has the potential to assist the crisis 
+informatics community. 
+Automatic summarization could deliver
+relevant and salient information at regular intervals, 
+even when human volunteers are unable to. 
+Perhaps more importantly it could help filter out
+unnecessary and irrelevant detail when the volume of incoming information
+is large. 
 While methods for identifying,
 tracking, and summarizing events from text based input have been explored
 extensively
 %KM - I think we should consider adding other event summarizers. 
 (e.g.,
 \cite{allan1998topic,Filatova&Hatzivassiloglou.04a,Wang&al.11}), 
-these experiments were not developed to handle streaming data from the large
-and heterogeneous environment of the modern web. 
+these experiments were not developed to handle streaming data from a
+ heterogeneous environment at web scale. 
 These methods also rely heavily on redundancy which is suboptimal for time
 sensitive domains where there is a high cost in delaying information.
- 
-
-
-%\cite{?} to enable people on the ground to update
-%crisis interfaces with information about needs. Others have used crowd
-%sourcing \cite{?}, 
-
-
-%At times of crisis, however, social media can overwhelm current information
-%systems with the quantity of information, much of which is irrelevant,
-%unnecessary detail, or out of date. 
-
-
-
-%Neither were they developed to address the
-%information needs that arise during  crisis
-%situations. 
-%KM - this last sentence sounds somewhat negative.
-%there is still a need for robust and scalable 
-%methods for automatic summarization.
 
 In this paper, we present an update summarization system to track events
 across time. Our system predicts sentence salience in the context of a
 large-scale event, such as a disaster, and integrates these predictions into
 a clustering based multi-document summarization system. 
-Our system is better able to adapt to
+Not only does incorporating salience produce more relevant summaries,
+our system is better able to adapt to
 dynamic changes in input volume which adversely 
-effect methods of summarization that use either pairwise
-comparisons as a proxy for salience or predict salience but
-ignore redundancy in the input alone.
+effect methods that use redundancy as a proxy for salience. 
+%or predict salience but
+%ignore redundancy in the input alone.
 
-%We train a regression
-%model to predict sentence salience and use these predictions to bias the
-%formation of sentence clusters around more salient regions in the input space
-%using affinity propagation (AP) clustering.  We adapt AP to incorporate
-%the salience predictions
-%as well as pairwise similarities among input sentences to identify
-%\emph{exemplar} sentences, which we use as our summary output.  
-
-%ignoring features of importance that are intrinsic to the
-%sentences themselves.
-
-%KM - Chris - add a short overview on the kinds of things we measure and
-%results so people are encouraged to read ahead. Keep it general.
 
 In addition to the tight integration between clustering and salience
-prediction, our approach also exploits knowledge about disaster to determine
+prediction, our approach also exploits knowledge about the event to determine
 salience. Thus, salience does not just represent importance within a set of
-documents; it also represents both how typical this sentence is of the input 
+documents; it also represents both how typical a sentence is of the  
 event
-type (i.e., disaster, hurricane, tornado) and whether it specifies information
-about this particular disaster. 
+type (i.e., industrial accident, hurricane, riot) and whether it specifies 
+information
+about this particular event. 
 Our feature representation includes a set of language models, one for each
-disaster type, to measure typicality of the sentence for the current event 
-type, the distance of mentioned locations from the center of
-the disaster, and the change in word frequencies over the time of the event.
+event type, to measure the typicality of the sentence with regard to the 
+current event, the distance of mentioned locations from the center of
+the event, and the change in word frequencies over the time of the event.
+While we ground these features in the domain of disaster, their templates
+are generally applicable to many update summarization domains.
 % to represent its likelihood of referring to the input disaster. 
 %We also utilize the change in word frequencies as we process the stream 
 %to measure the changing importance of updates over time.
 
-Our approach achieves suprerior ROUGE scores compared to multiple baselines.
-Additionally, we introduce a novel method for determining the 
-coverage of atomic facts in a summary, and show our system's
-superiority on this metric. 
+Our approach achieves a statistically significant improvement in 
+ ROUGE scores compared to multiple baselines.
+Additionally, we introduce novel methods for estimating the average information
+gain each update provides and how completely the update summary covers 
+the event it is tracking; our system's updates contain more relevant
+information on average than the competeing baselines.
+
 
 The remainder of the paper is organized as follows.
 We begin with a review of related work
