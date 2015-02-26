@@ -21,7 +21,7 @@ An update summarization system takes as input
 
 In order to quantify the salience of a sentence with respect to an event,
 we assume the event can be represented as a set of atomic facts, or nuggets.
-Nuggets are brief and important text snippets that should be conveyed
+Nuggets are brief and important text snippets that represent sub-event that should be conveyed
 by an ideal update summary (see Figure~\ref{fig:nuggets} for examples).
 \setlength{\fboxsep}{10pt}
 \begin{figure}
@@ -39,12 +39,12 @@ Given an update $u$ and a set of nuggets $N$ we define the salience of
 $u$ as,
 \[\operatorname{salience}(u) = \operatorname{max}_{n \in N} 
 \operatorname{sim}(u, n) \]
-where $\operatorname{sim}(\cdot)$ is the semantic similarity \cite{?} (i.e.
+where $\operatorname{sim}(\cdot)$ is the semantic similarity such as
 the cosine similarity of latent vectors associated with the update and 
-nugget text). Since we will not have nuggets for new events, we train
-a regression model to predict salience using features derived from 
-the updates themselves
-and the document stream.
+nugget text \cite{?}. % We train
+% a regression model to predict salience using features derived from
+% the updates themselves
+% and the document stream.
 
 
 
@@ -53,7 +53,7 @@ and the document stream.
      % hour throughout the period of interest.
 \subsection{Update Summarization}
 
-Our system archictecture follows a simple pipeline design where each
+Our system architecture follows a simple pipeline design where each
 stage provides an additional level of processing or filtering of the input
 sentences.
 At the highest level, we begin with an empty update summary $U$.
@@ -68,8 +68,8 @@ and perform the following actions:
 
 The resultant list of updates $U$ is our summary of the event.
 Step 2 uses the affinity propagation algorithm to incorporate the salience
-predictions from step 1. For this reason we dub our summarization 
-system the \textbf{AP+Salience} model.
+predictions from step 1. We refer to this summarization 
+system as the \textbf{AP+Salience} model.
 
 
 %\kmcomment{This was as best as I could do on this. These are the example
@@ -359,7 +359,7 @@ our method from most out update summarization systems.
 
 After exemplar sentences have been identified, two more filters are applied 
 before updating the summary. The exemplars are examined
-sequencially in order of highest salience. First, a salience threshold 
+sequentially in order of highest salience. First, a salience threshold 
 is applied, and any exemplars whose salience is less than
 $\lambda_{sal}$ are discarded. Second, a similarity threshold 
 is applied, where the exemplar is discarded if its
