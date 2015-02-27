@@ -13,6 +13,9 @@ $\mathrm{System}$ & $\mathrm{Recall}$ & $\mathrm{Prec.}$ & $\mathrm{F}_1$\\
 Full System & $0.282$ & $0.344$ & $0.306$ \\
 No Basic    & $0.263$ & $0.380^\dagger$ & $0.294$ \\
 No LM       & $0.223^\dagger$ & $0.361$ & $0.254^\dagger$ \\
+No Time  & $0.297^\dagger$ & $0.367^{\dagger\dagger}$ & $0.322^\dagger$ \\ 
+No Geo   & $0.232^{\dagger\dagger}$ & $0.381$ & $0.265^\dagger$ \\  
+No Query & $0.251$ & $0.377$ & $0.280$ \\ 
 \hline % inserts single-line
 \end{tabular}
 ~\\[1ex]
@@ -28,6 +31,9 @@ $\mathrm{System}$ & $\mathrm{Recall}$ & $\mathrm{Prec.}$ & $\mathrm{F}_1$\\[0.5e
 Full System & $0.045$ & $0.056$ & $0.049$ \\
 No Basic    & $0.046$ & $0.068^{\dagger\dagger}$ & $0.051^\dagger$ \\
 No LM       & $0.033^\dagger$ & $0.056$ & $0.038^\dagger$ \\
+No Time  & $0.052^{\dagger\dagger}$ & $0.064^{\dagger\dagger}$ & $0.056^{\dagger\dagger}$ \\
+No Geo   & $0.037^\dagger$ & $0.065$ & $0.042$ \\
+No Query & $0.043$ & $0.068^\dagger$ & $0.048$ \\
 \hline % inserts single-line
 \end{tabular}
 \caption{Feature ablation ROUGE performance. 
@@ -38,6 +44,8 @@ full model at the $\alpha=.01$ level.
     } % title name of the table
 \label{tab:farouge}
 \end{table}
+
+
 
 
 
