@@ -4,22 +4,22 @@
 \textbf{Basic Features}\\
 $\cdot$ Sent. position (normalized by doc. length) \\
 $\cdot$ Sent. length \\
-$\cdot$ Ratio of punc. to non-punc. chars. \\
-$\cdot$ Ratio of caps. to non-caps. chars. \\
-$\cdot$ Ratio of lowercase to other chars. \\
-$\cdot$ Ratio of uppercase to other chars. \\
+$\cdot$ Ratio of punc./caps./lower/upper to \\
+$\;\;$ other chars. \\
+%$\cdot$ Ratio of caps. to non-caps. chars. \\
+%$\cdot$ Ratio of lowercase to other chars. \\
+%$\cdot$ Ratio of uppercase to other chars. \\
 $\cdot$ \# of caps. words (normalized by \# of words)\\
-$\cdot$ \# of Person, Location, Org. Date, Number,\\
-$\;\;$ Ordinal, Percent, Money, Set, Misc  N.E. \\
-$\;\;$ tags (normalized by \# of words)\\
+$\cdot$ \# of Person, Location, Org., etc.\\
+$\;\;$ (normalized by \# of words)\\
+%$\;\;$ Ordinal, Percent, Money, Set, Misc  N.E. \\
 \hline
 \textbf{Query Features}\\
-$\cdot$ \% of query words covered by sent.\\
-$\cdot$ Total query matches.\\
+$\cdot$ \% of query words coverage/matches\\
 $\cdot$ Total event-type synonyms/hypernyms/ \\
-$\;\;$ hyponyms coverage.\\
-$\cdot$ Total event-type synonyms/hypernyms/ \\
-$\;\;$ hyponyms matches.\\
+$\;\;$ hyponyms coverage/matches.\\
+%$\cdot$ Total event-type synonyms/hypernyms/ \\
+%$\;\;$ hyponyms matches.\\
 \hline
 \textbf{Language Model Features}\\
 $\cdot$ Avg. token log probability (domain lang. \\
@@ -29,13 +29,13 @@ $\;\;$ lang. model)\\
 \hline
 \textbf{Geo-tag Features}\\
 $\cdot$ Median document distance to nearest  \\
-$\;\;$ location cluster (current hour).\\
-$\cdot$ Median document distance to nearest  \\
-$\;\;$ location clusters (previous hour).\\
+$\;\;$ location cluster (current hour/prev. hour).\\
+%$\cdot$ Median document distance to nearest  \\
+%$\;\;$ location clusters (previous hour).\\
 $\cdot$ Distance of first location in doc. to nearest \\
-$\;\;$ location cluster (current hour).\\
-$\cdot$ Distance of first location in doc. to nearest \\
-$\;\;$ location cluster (previous hour).\\
+$\;\;$ location cluster (current hour/prev. hour).\\
+%$\cdot$ Distance of first location in doc. to nearest \\
+%$\;\;$ location cluster (previous hour).\\
 \hline
 \textbf{Temporal Features}\\
 $\cdot$ Avg. tf-idf at current time.\\

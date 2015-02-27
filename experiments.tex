@@ -65,10 +65,11 @@ To compute the set $S_n$ we match each system update to 0 or more nuggets,
 where an update matches a nugget if their semantic similarity is above 
 a threshold. $S_n$ results from the unique set of nuggets matched.
 Because an update can map to more than one nugget, it is possible to receive an
-expected gain greater than 1; values greater than one can be thought of as a 
-compression ration, i.e. an expected gain of 10 indicates the average update
-contains 10 unique nuggets on average and that the summary is a 10~:~1 
-compression of the nugget information.
+expected gain greater than 1.
+%values greater than one can be thought of as a 
+%compression ration, i.e. an expected gain of 10 indicates the average update
+%contains 10 unique nuggets on average and that the summary is a 10~:~1 
+%compression of the nugget information.
 An expected gain of 1 would indicate that every
 sentence was both relevant and contained a unique piece of information.
 
@@ -150,16 +151,16 @@ threshold $\lambda_{sal}$ and below a similarity threshold $\lambda_{sim}$
 with respect to the previously selected updates.
 
 
-\fdcomment{consider removing AP+SalienceTR}
-\textbf{AP+Salience Time Ranked (AP+SalienceTR)} Our final model is identical 
-to the
-AP+Salience model except at the novelty filter stage.
-Within the novelty filtering stage, 
-AP+Salience inspects exemplars in order of decreasing salience when computing
-similarity to previous updates. Because the order in which we add updates
-affects future similarity calculations, we evaluate an alternate ordering 
-scheme (AP+SalienceTR) where exemplars are selected in order of increasing 
-time since event start. The purpose of this model is to give preference to 
-more recent updates, since timelyness is one of the desirable traits of our update
-summaries.
-
+%\fdcomment{consider removing AP+SalienceTR}
+%\textbf{AP+Salience Time Ranked (AP+SalienceTR)} Our final model is identical 
+%to the
+%AP+Salience model except at the novelty filter stage.
+%Within the novelty filtering stage, 
+%AP+Salience inspects exemplars in order of decreasing salience when computing
+%similarity to previous updates. Because the order in which we add updates
+%affects future similarity calculations, we evaluate an alternate ordering 
+%scheme (AP+SalienceTR) where exemplars are selected in order of increasing 
+%time since event start. The purpose of this model is to give preference to 
+%more recent updates, since timelyness is one of the desirable traits of our update
+%summaries.
+%

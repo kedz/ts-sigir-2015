@@ -1,0 +1,44 @@
+\begin{table}[h]
+\centering
+% centering table
+\begin{tabular}{l c c c}
+% creating 10 columns
+\multicolumn{4}{c}{ROUGE-1}\\
+\hline
+\hline
+% inserting double-line
+$\mathrm{System}$ & $\mathrm{Recall}$ & $\mathrm{Prec.}$ & $\mathrm{F}_1$\\
+[0.5ex]
+\hline
+Full System & $0.282$ & $0.344$ & $0.306$ \\
+No Basic    & $0.263$ & $0.380^\dagger$ & $0.294$ \\
+No LM       & $0.223^\dagger$ & $0.361$ & $0.254^\dagger$ \\
+\hline % inserts single-line
+\end{tabular}
+~\\[1ex]
+~\\
+\begin{tabular}{l c c c}
+% creating 10 columns
+\multicolumn{4}{c}{ROUGE-2}\\
+\hline
+\hline
+% inserting double-line
+$\mathrm{System}$ & $\mathrm{Recall}$ & $\mathrm{Prec.}$ & $\mathrm{F}_1$\\[0.5ex]
+\hline
+Full System & $0.045$ & $0.056$ & $0.049$ \\
+No Basic    & $0.046$ & $0.068^{\dagger\dagger}$ & $0.051^\dagger$ \\
+No LM       & $0.033^\dagger$ & $0.056$ & $0.038^\dagger$ \\
+\hline % inserts single-line
+\end{tabular}
+\caption{Feature ablation ROUGE performance. 
+    $\dagger$ indicates statistically significant difference from 
+full model at the $\alpha=.05$ level.
+    $\dagger\dagger$ indicates statistically significant difference from 
+full model at the $\alpha=.01$ level.
+    } % title name of the table
+\label{tab:farouge}
+\end{table}
+
+
+
+
