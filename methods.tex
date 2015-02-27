@@ -7,17 +7,35 @@ Our update summarization system takes as input
   \item a stream of time-stamped documents %, $(\doc_0, \doc_1,\ldots,\doc_T)$,
   presented in temporal order, and \item an evaluation time period of interest.
     %  $(\stime,\etime)$.  
-      \end{enumerate*} While processing documents
-      throughout the time period of interest, the system outputs sentences,
-      which we refer to as updates.
-      Updates should not only be relevant to the event but also salient,
-      i.e. worthy of
-      reporting.
-      For most domains, updates also need to be 
-      timely and novel, i.e. users need to be informed of changes in the 
-      event as quickly as possible.
-      Finally, in aggregate the updates must comprehensively summarize the 
-      event.
+\end{enumerate*} 
+While processing documents
+throughout the time period of interest, the system outputs sentences
+from these documents likely to be useful to query issuer.  We refer
+to these selected sentences as \emph{updates}.
+
+In order to measure the usefulness of a system's updates, we consider
+the degree to which the system output reflects the different
+aspects of an event.  Events are often composed of a variety of sub-events.  
+For example, the Hurricane Sandy
+event includes sub-events related to the storm making landfall,
+the ensuing flooding, the many transportation issues, amongst many
+others.  An ideal system would update the user about each of these
+sub-events as they occur, with low latency.  In order to use
+language consistent with previous literature, we refer to these
+sub-events as the \emph{nuggets} associated with an event.  Nuggets are
+defined as a fine-grained atomic sub-event associated with an event.  
+We present several example nuggets associated with the Hurricane
+Sandy event in Figure \ref{fig:nuggets}.  We describe how these 
+nuggets are found in Section \ref{sec:data}.
+
+% Updates should not only be relevant to the event but also salient,
+% i.e. worthy of
+% reporting.
+% For most domains, updates also need to be
+% timely and novel, i.e. users need to be informed of changes in the
+% event as quickly as possible.
+% Finally, in aggregate the updates must comprehensively summarize the
+% event.
 
 \begin{figure}
 \setlength{\fboxsep}{10pt}
@@ -32,14 +50,15 @@ Our update summarization system takes as input
 \end{figure}
 
 
-
-In order to quantify the salience of an update with respect to an event,
-we match the update to its most similar event nugget.
-%we assume the event can be represented as a set of atomic facts, or nuggets.
-Formally, given an update $u$ and a set of nuggets $N$ we define the salience of 
-$u$ as,
-\[\operatorname{salience}(u) = \operatorname{max}_{n \in N} 
-\operatorname{sim}(u, n) \]
+Throughout our treatment of our algorithm, the \emph{salience} 
+of an update captures the degree to which it reflects an 
+event's nuggets.  Assuming that we have a text representation 
+of our nuggets, the salience of an update $u$  with respect to a set of nuggets $N$ is
+defined as,
+\begin{align}
+\operatorname{salience}(u) = \operatorname{max}_{n \in N} 
+\operatorname{sim}(u, n) \ref{eq:salience}
+\end{align}
 where $\operatorname{sim}(\cdot)$ is the semantic similarity such as
 the cosine similarity of latent vectors associated with the update and 
 nugget text \cite{?}. % We train
@@ -62,15 +81,15 @@ At each hour we receive a new batch of sentences $b_t$ from the stream
 and perform the following actions:
 \begin{enumerate}
     \item predict the salience of sentences in $b_t$ (Section~\ref{sec:salpred}),
-  \item select a set of exemplar sentences (by combining clustering with 
-      salience predictions) (Section~\ref{sec:exsel}),
+  \item select a set of exemplar sentences  in $b_t$ by combining clustering with 
+      salience predictions (Section~\ref{sec:exsel}),
   \item add the most novel and salient exemplars to $U$ (Section~\ref{sec:upsel}).
 \end{enumerate}
 
 The resultant list of updates $U$ is our summary of the event.
-Step 2 uses the affinity propagation algorithm to incorporate the salience
-predictions from step 1. We refer to this summarization 
-system as the \textbf{AP+Salience} model.
+% Step 2 uses the affinity propagation algorithm to incorporate the salience
+% predictions from step 1. We refer to this summarization
+% system as the \textbf{AP+Salience} model.
 
 
 %\kmcomment{This was as best as I could do on this. These are the example
@@ -120,11 +139,10 @@ system as the \textbf{AP+Salience} model.
 When evaluating our summarization system
 we do not have access to event nuggets. However, we can use the nuggets
 in our training data to learn a model to predict salience for sentences
-from new events.
+in new events.
 For each event in our training data, we sample a set of sentences and  each 
-sentence's salience is computed, i.e. we compute the maximum semantic 
-similarity to the event's nuggets.
-We now have a training set of set sentences and the target values 
+sentence's salience is computed according to Equation \ref{eq:salience}.
+This results in training set of set sentences and the target values 
 (their salience) to predict.
 
 In order to fit a regression model, the sentences are represented as feature
@@ -179,6 +197,9 @@ and subcategories listed under a related Wikipedia category.
 For example, the language model for event type `earthquake' is estimated 
 from Wikipedia pages under the category \emph{Category:Earthquakes}.  
 
+\fdcomment{stress here that this technique can be applied in situations beyond crisis; any situation where the
+expected summary is similar to some previously seen target or some side information.}
+
 These models are intended to detect sentences similar to those appearing in 
 summaries of other events in the same category 
 (e.g. most earthquake summaries are likely to include higher probability for 
@@ -205,16 +226,19 @@ as a feature.
 %structure. 
 
 \paragraph{Geographic Relevance Features}
-
+\fdcomment{need introduction here.  what are geographic features?}
 There are two challenges to using geographic features. First we do not 
 know where the event is and second most sentences do not contain references
 to a location.
 We address the first issue by extracting all locations from sentences at the
 current hour and looking up their latitude and 
-longitude using a publicly available geolocation service. Since the document
+longitude using a publicly available geolocation service. 
+\fdcomment{is this all documents in the bucket or the filtered set?  is it a biased sample?}
+Since the document
 stream contains documents that are at least somewhat relevant to the event,
 we assume in aggregate the locations should give us a rough area of interest.
 The locations are clustered (using affinity propagation and uniform salience)
+\fdcomment{affinity propagation undefined}
 and we treat the resulting cluster centers
 as the event locations for the current time.
 
@@ -230,14 +254,15 @@ compute these distances to event locations from the previous hour.
 
 
 \paragraph{Temporal Relevance Features}
-
+\fdcomment{motivate burstiness; explain what it is before using the expression.}
 Our data consists of hourly crawls of online content and so we exploit the temporality of corpus by capturing the burstiness of a sentence, i.e.  the change in word frequency from one hour to the next.``Bursty'' sentences often indicate new and important data. 
 
 We compute the IDF for each hour in our data stream. 
 For each sentence, the average TFIDF for the current hour $t$ is taken as a 
 feature. Additionally, we use the difference in average TFIDF from time $t$
 to $t-i$ for $i = \{1, \ldots, 24\}$ to measure how the TFIDF scores for the 
-sentence have changed over the last 24 hours.
+sentence have changed over the last 24 hours. \fdcomment{unclear.  is it just changing the IDF part of the 
+items in the average?}
 
 The final temporal feature is the hours since the event started.
 %difference 

@@ -45,7 +45,7 @@ each system is able to achieve its maximum performance.
 \subsection{Expected Gain and Comprehensiveness}
 
 NIST developed a series metrics for evaluating update summarization systems
-as part of the Trec TS track.
+as part of the TREC TS track.
 We present results on two of these metrics, the expected gain and 
 comprehensiveness.
 
@@ -112,9 +112,8 @@ our confidence in the automatic matches in the .5--1 range.
 
 
 \subsection{Model Comparisons}
-
-Our proposed model using AP+Salience is compared against several variants and baselines. All thresholds
-are tuned on the development set.
+We refer to our complete model as \textbf{AP+Salience}.  We compare this model again several variants and baselines intended to measure the contribution of different components. All thresholds
+for all runs are tuned on the development set.
 
 \textbf{Affinity Propagation only (AP) } The purpose of this model
 is to directly measure the effect of integrating salience and clustering by providing a baseline that uses the identical 
@@ -151,6 +150,7 @@ threshold $\lambda_{sal}$ and below a similarity threshold $\lambda_{sim}$
 with respect to the previously selected updates.
 
 
+\fdcomment{consider removing AP+SalienceTR}
 \textbf{AP+Salience Time Ranked (AP+SalienceTR)} Our final model is identical 
 to the
 AP+Salience model except at the novelty filter stage.

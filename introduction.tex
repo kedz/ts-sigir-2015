@@ -34,8 +34,9 @@ In this paper, we present an update summarization system to track events
 across time. Our system predicts sentence salience in the context of a
 large-scale event, such as a disaster, and integrates these predictions into
 a clustering based multi-document summarization system. 
-Not only does incorporating salience produce more relevant summaries,
-our system is better able to adapt to
+We demonstrate that combining salience with clustering produces more relevant summaries
+compared to baselines using clustering alone.  We believe this is
+because our system is better able to adapt to
 dynamic changes in input volume which adversely 
 effect methods that use redundancy as a proxy for salience. 
 %or predict salience but
@@ -54,8 +55,8 @@ Our feature representation includes a set of language models, one for each
 event type, to measure the typicality of the sentence with regard to the 
 current event, the distance of mentioned locations from the center of
 the event, and the change in word frequencies over the time of the event.
-While we ground these features in the domain of disaster, their templates
-are generally applicable to any update summarization task where queries can be classified into types.
+While we ground these features in the domain of disaster, this approach is generally applicable to any update summarization task where queries can be categorized by the 
+expected similarity of their ideal summaries.
 % to represent its likelihood of referring to the input disaster. 
 %We also utilize the change in word frequencies as we process the stream 
 %to measure the changing importance of updates over time.
