@@ -10,7 +10,7 @@ summarization.
 
 First, centrality-focused approaches (including graph \cite{erkan2004lexrank},
 cluster \cite{hatzivassiloglou2001simfinder}, and centroid \cite{radev2004centroid} methods) are very natural for retrospective analysis in
-the sense that they let the data "speak for itself." 
+the sense that they let the data ``speak for itself.'' 
 These methods equate salience with centrality, either to the input or some other
 aggregate object (i.e. a cluster center or input centroid).
 However, they rely
@@ -86,28 +86,34 @@ portions of the corpora that we specificly want to avoid.
 
 %\fdadd{
 Several researchers have recognized the importance of summarization during
-natural disasters.  Guo \textit{et al.} developed a system for detecting
+natural disasters.  \cite{qi:temporal-summarization} developed a system for detecting
 novel, relevant, and comprehensive sentences immediately after a natural
-disaster \cite{qi:temporal-summarization}.  The method uses a model of
-sentence relevance and novelty in order to select appropriate updates.
-Training data for regression targets is automatically generated from
-retrospective Wikipedia data.  The system is evaluated on news documents
-related to 197 natural and human disasters from 2009 to 2011 using variants of
-ROUGE modified to capture novelty, relevance, and comprehensiveness
-\cite{lin2004rouge}.  Wang and Li present a clustering-based approach to
-efficiency detect important updates during natural disasters
-\cite{wang:update-summarization}.  The algorithm works by hierarchically
+disaster.  
+%The method uses a model of
+%sentence relevance and novelty in order to select appropriate updates.
+%Training data for regression targets is automatically generated from
+%retrospective Wikipedia data.  The system is evaluated on news documents
+%related to 197 natural and human disasters from 2009 to 2011 using variants of
+%ROUGE modified to capture novelty, relevance, and comprehensiveness
+%\cite{lin2004rouge}.  
+\cite{wang:update-summarization} present a clustering-based approach to
+efficiency detect important updates during natural disasters.  
+The algorithm works by hierarchically
 clustering sentences online, allowing the system to output a more expressive
-narrative structure than Guo \textit{et al.}.  The method is evaluated on
-official press releases related to Hurricane Wilma  in 2005 using ROUGE score
-between the system summary and a manually generated target summary. In addition
-to natural disasters, we evaluate our system on a variety of event types 
- such as terrorism and mass shootings (e.g., the 2012
-shooting in Aurora, Col.), accidents
-(e.g., the 2012 Pakistan garment factory fire), and social activism (e.g., the
-Arab spring). The size and scope of the events varies considerably. Hurricane
-Sandy, for example, affected multiple countries over weeks while the
-2012 Aurora shooting was contained to a single location spanning several hours.
+narrative structure than \cite{qi:temporal-summarization}.  
+Our system attempts to unify these system's approaches 
+(predictive ranking and clustering respectively). 
+%The method is evaluated on
+%official press releases related to Hurricane Wilma  in 2005 using ROUGE score
+%between the system summary and a manually generated target summary. 
+%In addition
+%to natural disasters, we evaluate our system on a variety of event types 
+% such as terrorism and mass shootings (e.g., the 2012
+%shooting in Aurora, Col.), accidents
+%(e.g., the 2012 Pakistan garment factory fire), and social activism (e.g., the
+%Arab spring). The size and scope of the events varies considerably. Hurricane
+%Sandy, for example, affected multiple countries over weeks while the
+%2012 Aurora shooting was contained to a single location spanning several hours.
 
 
 

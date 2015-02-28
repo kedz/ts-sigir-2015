@@ -6,8 +6,8 @@ Table~\ref{tab:rouge} shows our results for system output samples against the fu
 %shows our results for the evaluation using ROUGE. 
 %AP+Salience shows improvement on ngram precision and recall over the 
 %baselines. 
-This improvement is statistically significant for all ngram and longest common substring
-precision, recall, and F-measure
+This improvement is statistically significant for all ngram
+precision, recall, and F-measures
 at the $\alpha = .01$ level
 using the Wilcoxon signed-rank test. 
 
@@ -15,6 +15,7 @@ using the Wilcoxon signed-rank test.
     \includegraphics[]{rouge-time.eps}
 \caption{System ROUGE-1 performance over time.}
 \label{fig:trouge}
+\vspace{-14pt}
 \end{figure}
 
 
@@ -37,6 +38,7 @@ from topic drift.
   \includegraphics[]{nuggets-metrics.eps}
 \caption{Expected Gain and Comprehensiveness performance.}
 \label{fig:nperf}
+\vspace{-12pt}
 \end{figure}
 
 Figure~\ref{fig:nperf} shows the expected gain across a range of 
@@ -70,7 +72,7 @@ case this is enough to cause a statistically significant increase
 in F-measure over the full model. In other words, the generic features
 actually lead to an inferior model when we can incorporate more appropriate
 domain specific features.
-This result mirrors Sparck Jones' claim that summarization should be in service of a purpose~\cite{?}.
+%This result mirrors Sparck Jones' claim that summarization should be in service of a purpose~\cite{?}.
 
 Removing the language model and geographic relevance features leads to a
 statistically significant drop in ROUGE-1 F1 scores. Unfortunately,

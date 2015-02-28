@@ -23,8 +23,7 @@ While methods for identifying,
 tracking, and summarizing events from text based input have been explored
 extensively
 %KM - I think we should consider adding other event summarizers. 
-(e.g.,
-\cite{allan1998topic,Filatova&Hatzivassiloglou.04a,Wang&al.11}), 
+\cite{allan1998topic,Filatova&Hatzivassiloglou.04a,Wang&al.11}, 
 these experiments were not developed to handle streaming data from a
  heterogeneous environment at web scale. 
 These methods also rely heavily on redundancy which is suboptimal for time
@@ -36,7 +35,7 @@ large-scale event, such as a disaster, and integrates these predictions into
 a clustering based multi-document summarization system. 
 We demonstrate that combining salience with clustering produces more relevant summaries
 compared to baselines using clustering alone.  
-We suggest that this
+Our experiments suggest that this
 because our system is better able to adapt to
 dynamic changes in input volume which adversely 
 effect methods that use redundancy as a proxy for salience. 
@@ -49,14 +48,14 @@ prediction, our approach also exploits knowledge about the event to determine
 salience. Thus, salience does not just represent importance within a set of
 documents; it also represents both how typical a sentence is of the  
 event
-type (i.e., industrial accident, hurricane, riot) and whether it specifies 
+type (e.g., industrial accident, hurricane, riot) and whether it specifies 
 information
 about this particular event. 
 Our feature representation includes a set of language models, one for each
 event type, to measure the typicality of the sentence with regard to the 
 current event, the distance of mentioned locations from the center of
 the event, and the change in word frequencies over the time of the event.
-While we ground these features in the domain of disaster, this approach is generally applicable to any update summarization task where queries can be categorized by the 
+While we evaluate these features in the domain of disaster, this approach is generally applicable to any update summarization task where queries can be categorized by the 
 expected similarity of their ideal summaries.
 %While we ground these features in the domain of disaster, this approach is generally applicable to any update summarization task where queries can be categorized by the 
 %expected similarity of their ideal summaries.
