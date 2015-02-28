@@ -1,4 +1,4 @@
-We evaluate our system on two metrics: ROUGE \cite{lin2004rouge}, a common automatic
+We evaluate our system on two metrics: ROUGE \cite{lin2004rouge}, an automatic
 summarization method and an evaluation of system expected gain 
 and comprehensiveness---metrics adapted 
 from the TREC TS track \cite{aslam2013trec}.
@@ -24,7 +24,7 @@ of the 23 other models.
 
 \subsection{ROUGE Evaluation}
 
-ROUGE measures the ngram overlap between a model (i.e. human) summary 
+ROUGE measures the ngram overlap between a model summary 
 and an automatically generated system summary. 
 Model summaries for each event were constructed by concatenating the event's 
 nuggets. 
@@ -34,7 +34,7 @@ are of a bounded length. Since our systems are summarizing events over a span
 of two weeks time, the total length of our system output is much longer than
 the model. To address this, for each system/event pair, we sample with replacement
 1000 random summaries of length less than or equal to the model summary 
-(truncating the last sentence when neccessary). The final ROUGE score for the 
+(truncating the last sentence when neccessary). The final ROUGE scores for the 
 system are the average scores from these 1000 samples.
 
 Because we are interested in system performance over time, we also evaluate 
@@ -42,13 +42,13 @@ systems at 12 hour intervals using the same regime as above.
 The model summaries in this case are retrospective, 
 %and so we can see how quickly
 %each system is able to achieve its maximum performance.
-and this evaluation reveals how quickly each system is able to cover  information in the summary.
+and this evaluation reveals how quickly systems can cover  information in the model.
 
 
 \subsection{Expected Gain and Comprehensiveness}
 
 %NIST developed a series metrics for evaluating update summarization systems
-NIST developed a series of metrics for evaluating update summarization systems
+NIST developed metrics for evaluating update summarization systems
 as part of the TREC TS track.
 We present results on two of these metrics, the expected gain and 
 comprehensiveness.
@@ -85,11 +85,11 @@ summary. We define
 \[ \mathrm{Comprehensiveness} = \frac{|S_n|}{|N|}\]
 
 where $N$ is the set of event nuggets.
-A comprehensiveness of 1 indicates that the summary has cover 
+A comprehensiveness of 1 indicates that the summary has covered
 all nugget information for the event; the maximum
 attainable comprehensiveness is 1.
 
-Update-nugget matches are computed automatically, where a
+Update-nugget matches are computed automatically; a
 match exists if the semantic similarity of the update/nugget pair is above 
 a threshold.
 Determining an optimal threshold to count matches is difficult so 
@@ -112,12 +112,12 @@ suggests that semantic similarity values around .7 produce reasonable matches.
 %\noindent
 %with a similarity of .7. 
 The average semantic similarity of manual matches performed 
-by NIST assessors was considerably lower at approximately .25, increasing
+by NIST assessors was much lower at approximately .25, increasing
 our confidence in the automatic matches in the .5--1 range.
 
 
 \subsection{Model Comparisons}
-We refer to our complete model as \textbf{AP+Salience}.  We compare this model again several variants and baselines intended to measure the contribution of different components. All thresholds
+We refer to our complete model as \textbf{AP+Salience}.  We compare this model against several variants and baselines intended to measure the contribution of different components. All thresholds
 for all runs are tuned on the development set.
 
 \textbf{Affinity Propagation only (AP) } The purpose of this model

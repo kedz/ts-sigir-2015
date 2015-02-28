@@ -11,7 +11,7 @@ Our update summarization system takes as input
 \end{enumerate*} 
 While processing documents
 throughout the time period of interest, the system outputs sentences
-from these documents likely to be useful to query issuer.  We refer
+from these documents likely to be useful to the query issuer.  We refer
 to these selected sentences as \emph{updates}.
 
 In order to measure the usefulness of a system's updates, we consider
@@ -31,7 +31,7 @@ defined as a fine-grained atomic sub-event associated with an event.
 We present 2 example nuggets associated with the Hurricane
 Sandy event 
 in Figure \ref{fig:nuggets}. Note that each event has anywhere from 50 to
-several hunder nuggets in total.
+several hundred nuggets in total.
 We describe how these 
 nuggets are found in Section \ref{sec:data}.
 
@@ -79,25 +79,24 @@ The resultant list of updates $U$ is our summary of the event.
 
 \subsubsection{Features}
 \label{sec:features}
-We want our model to be predictive of sentence salience across different event instances so we avoid lexical features.  Instead, we extract a variety of features including language model scores, geographic relevance, and temporal relevance from each sentence.  
+We want our model to be predictive of sentence salience across different event instances so we avoid lexical features.  Instead, we extract features such as language model scores, geographic relevance, and temporal relevance from each sentence.  
 
-\paragraph{Basic Features}
+\textbf{Basic Features}
 We employ several basic features that have been used previously in supervised models to rank sentence salience \cite{kupiec1995trainable,conroy2001using}. These include sentence length, the number of capitalized words normalized by sentence length, document position, number of named entities.  
 The data stream comprises text extracted from raw html documents;
-these features help to downweight sentences that are not actually article 
+these features help to downweight sentences that are not 
 content (e.g. web page titles, links to other content) or
 more heavily weight important sentences (e.g., that appear in
 prominent positions such as paragraph initial or article initial).
 
-\paragraph{Query Features}
-
+\textbf{Query Features}
 Query features measure the relationship between the sentence and the event query and type.  These include the number of query words present in the sentence in addition to the number of event type synonyms, hypernyms, and hyponyms as found in WordNet \cite{miller1995wordnet}.  
 For example, for event type \emph{earthquake},  we match sentence terms 
 ``quake'', ``temblor'', ``seism'', and ``aftershock''.
 
-\paragraph{Language Model Features}\label{subsubsec:lm}
-Language models allow us to measure the likelihood of a sentence having been 
-produced from a particular source.  We consider two types of language model 
+\textbf{Language Model Features}\label{subsubsec:lm}
+Language models allow us to measure the likelihood of producing a sentence 
+from a particular source.  We consider two types of language model 
 features.  The first model is estimated from a corpus of generic news 
 articles (we used the 1995-2010 Associated Press section of the 
 Gigaword corpus \cite{graff2003english}).  
@@ -123,7 +122,7 @@ domains that have related text corpora.
 
 
 We use the SRILM toolkit \cite{stolcke2002srilm} to implement a 5-gram Kneser-Ney model for both
-the background language and model and the event specific language models.
+the background language model and the event specific language models.
 For each sentence we use the average token log probability under each model
 as a feature.
 
@@ -135,7 +134,7 @@ as a feature.
 %have up front in definition of task.
 
 
-\paragraph{Geographic Relevance Features}
+\textbf{Geographic Relevance Features}
 %\fdcomment{need introduction here.  what are geographic features?}
 The disasters in our corpus are all phenomena that
 affect some part of the word. 
@@ -173,12 +172,12 @@ compute these distances to event locations from the previous hour.
 
 
 
-\paragraph{Temporal Relevance Features}
+\textbf{Temporal Relevance Features}
 %\fdcomment{motivate burstiness; explain what it is before using the expression.}
 As we track events over time, it is likely that the coverage of the event 
 may die down, only to spike back up when there is a breaking development.
-Alternatively, words that were salient initially may become background context,
-and over time lose their importance.
+%Alternatively, words that were salient initially may become background context,
+%and over time lose their importance.
 Identifying terms that are ``bursty,'' i.e. suddenly peaking in usage,
 can help to locate novel sentences that are part of the most recent reportage
 and have yet to fall into the background.
@@ -379,7 +378,7 @@ is applied, where the exemplar is ignored if its
 maximum semantic similarity to any previous updates in the summary is
 greater than $\lambda_{sim}$.
 
-Exemplars that pass these thresholds are added selected as updates and added
+Exemplars that pass these thresholds are selected as updates and added
 to the summary.
 
 
