@@ -8,8 +8,8 @@ Existing approaches generally fall into  %falling into
 one of three categories, each with specific tradeoffs with respect to update 
 summarization. 
 
-First, centrality-focused approaches (including graph,
-cluster, and centroid methods) are very natural for retrospective analysis in
+First, centrality-focused approaches (including graph \cite{erkan2004lexrank},
+cluster \cite{hatzivassiloglou2001simfinder}, and centroid \cite{radev2004centroid} methods) are very natural for retrospective analysis in
 the sense that they let the data "speak for itself." 
 These methods equate salience with centrality, either to the input or some other
 aggregate object (i.e. a cluster center or input centroid).
@@ -38,7 +38,8 @@ While these methods are less dependent on redundancy, the expressiveness of
 their features is limited. Our model expands on these basic features to 
 account for geographic, temporal, and language model features.
 
-The last category includes probabilistic, information theoritic, and set cover
+The last category includes probabilistic \cite{haghighi2009exploring}, 
+information theoritic, and set cover \cite{lin2011class}
 approaches. While these methods are generally focused on producing diverse
 summaries, they are difficult to adapt to the streaming setting, where 
 we do not necessarily have a fixed summary length and the corpus to be
@@ -92,13 +93,13 @@ sentence relevance and novelty in order to select appropriate updates.
 Training data for regression targets is automatically generated from
 retrospective Wikipedia data.  The system is evaluated on news documents
 related to 197 natural and human disasters from 2009 to 2011 using variants of
-Rouge modified to capture novelty, relevance, and comprehensiveness
+ROUGE modified to capture novelty, relevance, and comprehensiveness
 \cite{lin2004rouge}.  Wang and Li present a clustering-based approach to
 efficiency detect important updates during natural disasters
 \cite{wang:update-summarization}.  The algorithm works by hierarchically
 clustering sentences online, allowing the system to output a more expressive
 narrative structure than Guo \textit{et al.}.  The method is evaluated on
-official press releases related to Hurricane Wilma  in 2005 using Rouge score
+official press releases related to Hurricane Wilma  in 2005 using ROUGE score
 between the system summary and a manually generated target summary. In addition
 to natural disasters, we evaluate our system on a variety of event types 
  such as terrorism and mass shootings (e.g., the 2012

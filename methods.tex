@@ -1,3 +1,4 @@
+\label{sec:methods}
 %In order to evaluate an update summarization system, we adopt the simulation-based approach used in the TREC Temporal Summarization (TS) Track.  We provide a brief overview of the problem.  Details on the formulation can be found in the track overview paper \cite{aslam2013trec}.  
 
 Our update summarization system takes as input 
@@ -20,16 +21,21 @@ For example, the Hurricane Sandy
 event includes sub-events related to the storm making landfall,
 the ensuing flooding, the many transportation issues, amongst many
 others.  An ideal system would update the user about each of these
-sub-events as they occur, with low latency.  In order to use
-language consistent with previous literature, we refer to these
+sub-events as they occur, with low latency.  
+%In order to use
+%language consistent with previous literature, 
+We refer to these
 sub-events as the \emph{nuggets} associated with an event.  Nuggets are
 defined as a fine-grained atomic sub-event associated with an event.  
+%An example nugget for Hurricane Sandy might be ``Sandy on course for the Jersey Shore.''
 We present several example nuggets associated with the Hurricane
-Sandy event in Figure \ref{fig:nuggets}.  We describe how these 
+Sandy event 
+in Figure \ref{fig:nuggets}.  
+We describe how these 
 nuggets are found in Section \ref{sec:data}.
 
 
-\input{nugget_examples.tex}
+%\input{nugget_examples.tex}
 
 Throughout our treatment of our algorithm, the \emph{salience} 
 of an update captures the degree to which it reflects an 
@@ -42,7 +48,7 @@ defined as,
 \end{align}
 where $\operatorname{sim}(\cdot)$ is the semantic similarity such as
 the cosine similarity of latent vectors associated with the update and 
-nugget text \cite{?}. 
+nugget text \cite{guo2012simple}. 
 
 \subsection{Update Summarization}
 
@@ -66,38 +72,12 @@ The resultant list of updates $U$ is our summary of the event.
 \subsection{Salience Prediction}
 \label{sec:salpred}
 
-\subsubsection{Model}
-
-When evaluating our summarization system
-we do not have access to event nuggets. However, we can use the nuggets
-in our training data to learn a model to predict salience for sentences
-in new events.
-For each event in our training data, we sample a set of sentences and  each 
-sentence's salience is computed according to Equation \ref{eq:salience}.
-This results in training set of set sentences and the target values 
-(their salience) to predict.
-
-In order to fit a regression model, the sentences are represented as feature
-vectors (described in Section~\ref{sec:features}).
-We fit a Gaussian process (GP) regression model to this data.
-\cite{rasmussen:gaussian-process-book}.  GP regressors are a
-class of data-driven, non-parametric model generalizing the multi-variate
-Gaussian to the infinite dimensional setting.  
-%GP's are general
-%and are state of the art for many regression tasks.  
-GP's are non-parametric and rely on a covariance matrix $\kernelMatrix$, measuring the similarity between pairs of instances, in our 
-case sentences.  In our experiments, we used a radial basis 
-function (RBF) kernel.  
-Our features fall naturally into five groups and we use a separate RBF kernel
-for each, using the sum of each feature group kernel as the final input
-to the GP model.
-
 %include feature table
-\input{feature_table.tex}
+%\input{feature_table.tex}
 
 \subsubsection{Features}
 \label{sec:features}
-We want our model to be predictive across different event instances so we avoid lexical features.  Instead, we extract a variety of features including language model scores, geographic relevance, and temporal relevance from each sentence.  
+We want our model to be predictive of sentence salience across different event instances so we avoid lexical features.  Instead, we extract a variety of features including language model scores, geographic relevance, and temporal relevance from each sentence.  
 
 \paragraph{Basic Features}
 We employ several basic features that have been used previously in supervised models to rank sentence salience \cite{kupiec1995trainable,conroy2001using}. These include sentence length, the number of capitalized words normalized by sentence length, document position, number of named entities.  
@@ -118,7 +98,7 @@ Language models allow us to measure the likelihood of a sentence having been
 produced from a particular source.  We consider two types of language model 
 features.  The first model is estimated from a corpus of generic news 
 articles (we used the 1995-2010 Associated Press section of the 
-Gigaword corpus).  
+Gigaword corpus \cite{graff2003english}).  
 This model is intended to assess the general writing quality (grammaticality, word usage) of an input sentence and helps our model to select sentences
 written in the newswire style.  
 
@@ -143,7 +123,7 @@ domains that have related text corpora.
 
 
 
-We use the SRILM toolkit to implement a 5-gram Kneser-Ney model for both
+We use the SRILM toolkit \cite{stolcke2002srilm} to implement a 5-gram Kneser-Ney model for both
 the background language and model and the event specific language models.
 For each sentence we use the average token log probability under each model
 as a feature.
@@ -210,7 +190,7 @@ feature. Additionally, we use the difference in average TFIDF from time $t$
 to $t-i$ for $i = \{1, \ldots, 24\}$ to measure how the TFIDF scores for the 
 sentence have changed over the last 24 hours, i.e. we keep the sentence
 term frequencies fixed and compute the difference in IDF. Large changes
-in the is value indicate the sentence contains bursty terms.
+in IDF value indicate the sentence contains bursty terms.
 %\fdcomment{unclear.  is it just changing the IDF part of the 
 %items in the average?}
 We also use the time (in hours) since the event started as a feature.
@@ -280,15 +260,58 @@ We also use the time (in hours) since the event started as a feature.
 %
 %
 
+\subsubsection{Model}
+
+At run-time
+our summarization system
+does not have access to event nuggets to compute sentence salience. 
+However, we can use the nuggets
+in our training data to train a model to predict salience for sentences
+in new events.
+For each event in our training data, we sample a set of sentences and  each 
+sentence's salience is computed according to Equation \ref{eq:salience}.
+This results in a training set of sentences and the target values 
+(their salience) to predict.
+
+
+Now that we have a feature representation for the sentences, we can use
+any off the shelf regression technique to predict salience.
+We opt to use a Gaussian process (GP) regression model
+\cite{rasmussen:gaussian-process-book} with a Radial Basis Function (RBF) 
+kernel.  
+Our features fall naturally into five groups and we use a separate RBF kernel
+for each, using the sum of each feature group RBF kernel as the final input
+to the GP model.
+%GP regressors are a
+%class of data-driven, non-parametric model generalizing the multi-variate
+%Gaussian to the infinite dimensional setting.  
+
+%When evaluating
+%In order to fit a regression model, the sentences are represented as feature
+%vectors (described in Section~\ref{sec:features}).
+%GP's are general
+%and are state of the art for many regression tasks.  
+%GP's are non-parametric and rely on a covariance matrix $\kernelMatrix$, measuring the similarity between pairs of instances, in our 
+%case sentences.  In our experiments, we used a radial basis 
+%function (RBF) kernel.  
+
+
+
 \subsection{Exemplar Selection}
 \label{sec:exsel}
 
-We combine the output of our salience prediction model with the affinity
-propagation algorithm to identify a set of exemplar sentences 
-for each input batch. 
+Once we have predicted the salience for a batch of sentences, we must
+now select a set of update candidates, i.e. sentences that are both salient
+and representative of the current batch.
+To accomplish this, we combine the output of our 
+salience prediction model with the affinity
+propagation algorithm 
+%to identify a set of exemplar sentences 
+%for each input batch. 
 Affinity propagation (AP) is a clustering algorithm
 that identifies a subset of datapoints as exemplars and forms clusters
-by assigning the remaining points to one of the exemplars. AP attempts to 
+by assigning the remaining points to one of the exemplars 
+\cite{frey2007clustering}. AP attempts to 
 maximize the net similarity objective 
 \[ \mathcal{S} = \sum_{i : i \neq e_i}^n \operatorname{sim}(i,e_i) 
 + \sum_{i : i = e_i}^n \operatorname{salience}(e_i)  \]
@@ -329,7 +352,7 @@ input. Additionally, when the level of input is high but the salience
 predictions are low, the preference term will guide AP toward a solution
 with fewer clusters; vice-versa when input is very salient on average but
 the volume of input is low. The adaptive nature of our model differentiates
-our method from most out update summarization systems.
+our method from most other update summarization systems.
 
 
 
@@ -337,13 +360,17 @@ our method from most out update summarization systems.
 \subsection{Update Selection}
 \label{sec:upsel}
 
-\textbf{Salience Filter } To 
+The exemplar sentences from the exemplar selection stage are the most 
+salient and representative of the input for the current hour. However,
+we need to reconcile these sentences with updates from the previous hour
+to ensure that the most salient and least redundant  updates are selected.
+To 
 ensure that only the most salient updates are selected we apply a minimum
 salience threshold;
 after exemplar sentences have been identified, any exemplars whose salience is 
 less than $\lambda_{sal}$ are removed from consideration. 
 
-\textbf{Novelty Filter } Next,
+ Next,
 to prevent adding updates that are redundant, we filter out exemplars
 that are too similar to previous updates.
 The exemplars are examined

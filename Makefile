@@ -4,7 +4,7 @@ SRC=$(PROJECT).tex $(ALGOSRC) algorithms.tex introduction.tex methods.tex motiva
 TARGET=$(PROJECT).pdf
 $(TARGET):$(SRC)
 	pdflatex --shell-escape $(SRC)
-	bibtex $(PROJECT)
+	bibtex acl2015.aux
 	pdflatex --shell-escape $(SRC)
 	pdflatex --shell-escape $(SRC)
 

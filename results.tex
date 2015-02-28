@@ -2,16 +2,25 @@
 \subsection{ROUGE}
 \input{rouge_cum.tex}
 
-Table~\ref{tab:rouge} shows our results for the retrospective evaluation using ROUGE. 
-AP+Salience shows improvement on ngram precision and recall over the 
-baselines. This improvement is statistically significant for all ngram and longest common substring
+Table~\ref{tab:rouge} shows our results for system output samples against the full summary of nuggets using ROUGE. 
+%shows our results for the evaluation using ROUGE. 
+%AP+Salience shows improvement on ngram precision and recall over the 
+%baselines. 
+This improvement is statistically significant for all ngram and longest common substring
 precision, recall, and F-measure
 at the $\alpha = .01$ level
 using the Wilcoxon signed-rank test. 
 
+\begin{figure}
+    \includegraphics[]{rouge-time.eps}
+\caption{System ROUGE-1 performance over time.}
+\label{fig:trouge}
+\end{figure}
+
+
 AP+Salience maintains its performance above the baselines over time as well. Figure~\ref{fig:trouge}
 shows the ROUGE-1 scores over time. 
-We emphasize the difference in unigram precision (bigram precision is not shown but it follows
+We show the difference in unigram precision (bigram precision is not shown but it follows
 similar curve).
 Within the initial days of the event, AP+Salience is able to take the lead over the over 
 systems in ngram precision. 
@@ -24,6 +33,11 @@ from topic drift.
 
 
 \subsection{Expected Gain and Comprehensiveness}
+\begin{figure}
+  \includegraphics[]{nuggets-metrics.eps}
+\caption{Expected Gain and Comprehensiveness performance.}
+\label{fig:nperf}
+\end{figure}
 
 Figure~\ref{fig:nperf} shows the expected gain across a range of 
 similarity thresholds, where thresholds closer to 1 are more conservative
@@ -55,19 +69,15 @@ increase in both unigram and bigram precision; in the bigram
 case this is enough to cause a statistically significant increase
 in F-measure over the full model. In other words, the generic features
 actually lead to an inferior model when we can incorporate more appropriate
-domain specific features. \ckcomment{Kathy: maybe we should mention Spark Jones here about the idea that there is no such thing as generic summarization?}
+domain specific features.
+This result mirrors Sparck Jones' claim that summarization should be in service of a purpose~\cite{?}.
+
+Removing the language model and geographic relevance features leads to a
+statistically significant drop in ROUGE-1 F1 scores. Unfortunately,
+this is not the case for the temporal relevance features. We surmise that
+these features are too strongly correlated with each other, 
+i.e. the differences in TFIDF between hours are definitely not IID variables. 
 
 
 
-\begin{figure}
-    \includegraphics[]{rouge-time.eps}
-\caption{System ROUGE-1 performance over time.}
-\label{fig:trouge}
-\end{figure}
-
-\begin{figure}
-  \includegraphics[]{nuggets-metrics.eps}
-\caption{Avg. Gain and Comprehensiveness performance.}
-\label{fig:nperf}
-\end{figure}
 

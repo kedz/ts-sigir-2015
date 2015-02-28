@@ -1,21 +1,22 @@
-We evaluate our system on two metrics: ROUGE \cite{?}, a common automatic
+We evaluate our system on two metrics: ROUGE \cite{lin2004rouge}, a common automatic
 summarization method and an evaluation of system expected gain 
 and comprehensiveness---metrics adapted 
-from the Trec TS track \cite{?}.
+from the TREC TS track \cite{aslam2013trec}.
 
 
 \subsection{Training and Testing}
 
 Of the 25 events in the TREC TS data, 24 are covered by the news portion 
-of the Trec KBA Stream Corpus.
+of the TREC KBA Stream Corpus.
 From these 24, we set aside three events to use as a development set.
 All system salience and similarity threshold parameters are tuned on the
-development set.
+development set to maximize ROUGE-2 F1 scores.
 
 We train a salience model for each event using 1000 sentences randomly sampled
-from the event's document stream. Kernel length scale parameters  for each
-feature group are fit to maximize
-the model's log likelihood using ???.
+from the event's document stream. 
+%Kernel length scale parameters  for each
+%feature group are fit to maximize
+%the model's log likelihood using ???.
 
 We perform a leave-one-out evaluation of each event.
 At test time, we predict a sentence's salience using the average predictions
@@ -27,7 +28,7 @@ ROUGE measures the ngram overlap between a model (i.e. human) summary
 and an automatically generated system summary. 
 Model summaries for each event were constructed by concatenating the event's 
 nuggets. 
-See figure~\ref{fig:test} for an example model summary excerpt.
+%See figure~\ref{fig:test} for an example model summary excerpt.
 Generally, ROUGE evaluation assumes both model and system summaries
 are of a bounded length. Since our systems are summarizing events over a span
 of two weeks time, the total length of our system output is much longer than
@@ -39,12 +40,15 @@ system are the average scores from these 1000 samples.
 Because we are interested in system performance over time, we also evaluate 
 systems at 12 hour intervals using the same regime as above. 
 The model summaries in this case are retrospective, 
-and so we can see how quickly
-each system is able to achieve its maximum performance.
+%and so we can see how quickly
+%each system is able to achieve its maximum performance.
+and this evaluation reveals how quickly each system is able to cover  information in the summary.
+
 
 \subsection{Expected Gain and Comprehensiveness}
 
-NIST developed a series metrics for evaluating update summarization systems
+%NIST developed a series metrics for evaluating update summarization systems
+NIST developed a series of metrics for evaluating update summarization systems
 as part of the TREC TS track.
 We present results on two of these metrics, the expected gain and 
 comprehensiveness.
@@ -95,18 +99,18 @@ from .5 to 1, where values closer to 1 are more conservative estimates of
 performance.
 A manual inspection of matches 
 suggests that semantic similarity values around .7 produce reasonable matches.
-For example, the nugget 
-\begin{blockquote}
-watches and warnings in effect for much of the Mid-Atlantic states and 
-southern New England 
-\end{blockquote}
-\noindent
-matches with the update 
-\begin{blockquote}
-A tropical storm warning remains in effect for much of the coasts 
-of North and South Carolina\end{blockquote}
-\noindent
-with a similarity of .7. 
+%For example, the nugget 
+%\begin{blockquote}
+%watches and warnings in effect for much of the Mid-Atlantic states and 
+%southern New England 
+%\end{blockquote}
+%\noindent
+%matches with the update 
+%\begin{blockquote}
+%A tropical storm warning remains in effect for much of the coasts 
+%of North and South Carolina\end{blockquote}
+%\noindent
+%with a similarity of .7. 
 The average semantic similarity of manual matches performed 
 by NIST assessors was considerably lower at approximately .25, increasing
 our confidence in the automatic matches in the .5--1 range.
@@ -122,7 +126,7 @@ clustering component, but without the salience information.
 In this model, input sentences are apriori equally likely to be exemplars;
 %clustering algorithm without the salience predictions.
 the salience values are uniformly set as the median value of the 
-input similarity scores, as is commonly used in the AP literature \cite{?}.
+input similarity scores, as is commonly used in the AP literature \cite{frey2007clustering}.
 After clustering a sentence batch, the exemplars are examined in order
 of increasing time since event start and selected as updates if their
 maximum similarity to the previous updates is less than $\lambda_{sim}$,

@@ -5,11 +5,11 @@ When the event is significant, as in the case of Hurricane
 Sandy, the amount of content produced by traditional news outlets,
 government agencies, relief organizations, and social media can vastly
 overwhelm those trying to monitor the situation. 
-Crisis informatics \cite{?} is dedicated to finding methods for sharing the
+Crisis informatics \cite{palen2010vision} is dedicated to finding methods for sharing the
 right information in a timely fashion during such an event.
 Research in this field has focused on
 human-in-the-loop approaches ranging from on the ground information 
-gathering to crowdsourced reporting and disaster management.
+gathering to crowdsourced reporting and disaster management \cite{starbird2013working}.
 
 Multi-document summarization has the potential to assist the crisis 
 informatics community. 
@@ -35,7 +35,8 @@ across time. Our system predicts sentence salience in the context of a
 large-scale event, such as a disaster, and integrates these predictions into
 a clustering based multi-document summarization system. 
 We demonstrate that combining salience with clustering produces more relevant summaries
-compared to baselines using clustering alone.  We believe this is
+compared to baselines using clustering alone.  
+We suggest that this
 because our system is better able to adapt to
 dynamic changes in input volume which adversely 
 effect methods that use redundancy as a proxy for salience. 
@@ -57,6 +58,8 @@ current event, the distance of mentioned locations from the center of
 the event, and the change in word frequencies over the time of the event.
 While we ground these features in the domain of disaster, this approach is generally applicable to any update summarization task where queries can be categorized by the 
 expected similarity of their ideal summaries.
+%While we ground these features in the domain of disaster, this approach is generally applicable to any update summarization task where queries can be categorized by the 
+%expected similarity of their ideal summaries.
 % to represent its likelihood of referring to the input disaster. 
 %We also utilize the change in word frequencies as we process the stream 
 %to measure the changing importance of updates over time.
@@ -72,7 +75,10 @@ information on average than the competeing baselines.
 The remainder of the paper is organized as follows.
 We begin with a review of related work
 in the information retrieval and multi-document
-summarization literature. (Rest of outline goes here...)
+summarization literature. Section~\ref{sec:methods} outlines the details
+of our salience and summarization models. Next we describe our
+data (Section~\ref{sec:data}) and experiments (Section~\ref{sec:exper}). Finally,
+we discuss our results (Section~\ref{sec:results}) and conclude the paper.
 
 %Our main contributions are three fold. First, we present a straightforward 
 %framework for 
