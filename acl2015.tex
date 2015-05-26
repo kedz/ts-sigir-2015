@@ -36,9 +36,9 @@
 \usepackage{titlesec}
 
 
-\titlespacing\section{0pt}{4pt plus 0pt minus 6pt}{4pt plus 0pt minus 4pt}
-\titlespacing\subsection{0pt}{4pt plus 0pt minus 6pt}{4pt plus 0pt minus 4pt}
-\titlespacing\subsubsection{0pt}{4pt plus 0pt minus 6pt}{4pt plus 0pt minus 4pt}
+%\titlespacing\section{0pt}{4pt plus 0pt minus 6pt}{4pt plus 0pt minus 4pt}
+%\titlespacing\subsection{0pt}{4pt plus 0pt minus 6pt}{4pt plus 0pt minus 4pt}
+%\titlespacing\subsubsection{0pt}{4pt plus 0pt minus 6pt}{4pt plus 0pt minus 4pt}
 %\setlength\titlebox{5cm}
 
 % You can expand the titlebox if you need extra space
@@ -54,18 +54,20 @@
   \noindent\ignorespaces}{%
   \par\medskip}
 
-\title{Unnamed Summarization Project}
+\title{Predicting Salient Updates for Disaster Summarization}
 
-%\author{First Author \\
+\author{Chris Kedzie \and Kathleen McKeown\\
+Columbia University\\
+Department of Computer Science\\
+%  Affiliation / Address line 3 \\
+{\tt \{kedzie, kathy\}@cs.columbia.edu} \\\And
 %  Affiliation / Address line 1 \\
 %  Affiliation / Address line 2 \\
 %  Affiliation / Address line 3 \\
-%  {\tt email@domain} \\\And
-%  Second Author \\
-%  Affiliation / Address line 1 \\
-%  Affiliation / Address line 2 \\
-%  Affiliation / Address line 3 \\
-%  {\tt email@domain} \\}
+ Fernando Diaz\\
+ Microsoft Research\\
+  {\tt fdiaz@microsoft.com} \\ 
+  }
 
 \date{}
 
@@ -80,7 +82,7 @@ during such an event remains a difficult problem.
 We present a system for update summarization which predicts the salience of 
 sentences with respect to an event and then uses these
 predictions to directly bias a clustering algorithm for sentence selection,
-increasing the novelty of the updates. We use novel, disaster-specific features
+increasing the quality of the updates. We use novel, disaster-specific features
 for salience prediction, including geo-locations and language models
 representing the language of disaster.
 Our evaluation on a standard set of retrospective events using ROUGE shows 

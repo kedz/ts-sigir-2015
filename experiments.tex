@@ -123,7 +123,7 @@ for all runs are tuned on the development set.
 \textbf{Affinity Propagation only (AP) } The purpose of this model
 is to directly measure the effect of integrating salience and clustering by providing a baseline that uses the identical 
 clustering component, but without the salience information.
-In this model, input sentences are apriori equally likely to be exemplars;
+In this model, input sentences are \textit{apriori} equally likely to be exemplars;
 %clustering algorithm without the salience predictions.
 the salience values are uniformly set as the median value of the 
 input similarity scores, as is commonly used in the AP literature \cite{frey2007clustering}.
@@ -132,7 +132,7 @@ of increasing time since event start and selected as updates if their
 maximum similarity to the previous updates is less than $\lambda_{sim}$,
 as in the novelty filtering stage of AP+Salience.
 
-\textbf{Hierarchichal Agglomerative Clustering (HAC)} : We provide another clustering baseline, single-linkage hierarchichal agglomerative clustering.
+\textbf{Hierarchichal Agglomerative Clustering (HAC)} We provide another clustering baseline, single-linkage hierarchichal agglomerative clustering.
 We include this baseline to show that AP+Salience is not just an improvement
 over AP but centrality driven methods in general.
 HAC was chosen over other clustering approaches because the number of clusters 
@@ -143,7 +143,7 @@ Cluster centers are examined in time order and are added to the summary if their
 
 \textbf{Rank by Salience (RS)} 
 We also isolate the impact of our salience model in order to demonstrate 
-the that the fusion of clustering and salience prediction improves over
+that the fusion of clustering and salience prediction improves over
 predicting salience alone.
 In this model we predict the salience of sentences as in step 1 for 
 AP+Salience. %However, rather than clustering, we simply rank the sentences

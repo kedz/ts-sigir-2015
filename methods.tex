@@ -19,9 +19,9 @@ the degree to which the system output reflects the different
 aspects of an event.  Events are often composed of a variety of sub-events.  
 For example, the Hurricane Sandy
 event includes sub-events related to the storm making landfall,
-the ensuing flooding, the many transportation issues, amongst many
+the ensuing flooding, the many transportation issues, among many
 others.  An ideal system would update the user about each of these
-sub-events as they occur, with low latency.  
+sub-events as they occur. %, with low latency.  
 %In order to use
 %language consistent with previous literature, 
 We refer to these
@@ -30,8 +30,11 @@ defined as a fine-grained atomic sub-event associated with an event.
 %An example nugget for Hurricane Sandy might be ``Sandy on course for the Jersey Shore.''
 We present 2 example nuggets associated with the Hurricane
 Sandy event 
-in Figure \ref{fig:nuggets}. Note that each event has anywhere from 50 to
-several hundred nuggets in total.
+in Figure \ref{fig:nuggets}. 
+Note that each event has anywhere from 50 to
+several hundred nuggets in total in our gold dataset.
+%Note that each event has anywhere from 50 to
+%several hundred nuggets in total.
 We describe how these 
 nuggets are found in Section \ref{sec:data}.
 
@@ -82,7 +85,7 @@ The resultant list of updates $U$ is our summary of the event.
 We want our model to be predictive of sentence salience across different event instances so we avoid lexical features.  Instead, we extract features such as language model scores, geographic relevance, and temporal relevance from each sentence.  
 
 \textbf{Basic Features}
-We employ several basic features that have been used previously in supervised models to rank sentence salience \cite{kupiec1995trainable,conroy2001using}. These include sentence length, the number of capitalized words normalized by sentence length, document position, number of named entities.  
+We employ several basic features that have been used previously in supervised models to rank sentence salience \cite{kupiec1995trainable,conroy2001using}. These include sentence length, the number of capitalized words normalized by sentence length, document position, and number of named entities.  
 The data stream comprises text extracted from raw html documents;
 these features help to downweight sentences that are not 
 content (e.g. web page titles, links to other content) or
@@ -90,7 +93,10 @@ more heavily weight important sentences (e.g., that appear in
 prominent positions such as paragraph initial or article initial).
 
 \textbf{Query Features}
-Query features measure the relationship between the sentence and the event query and type.  These include the number of query words present in the sentence in addition to the number of event type synonyms, hypernyms, and hyponyms as found in WordNet \cite{miller1995wordnet}.  
+Query features measure the relationship between the sentence and the event 
+query and type.  These include the number of query words present in the 
+sentence in addition to the number of event type synonyms, hypernyms, and 
+hyponyms using WordNet \cite{miller1995wordnet}.  
 For example, for event type \emph{earthquake},  we match sentence terms 
 ``quake'', ``temblor'', ``seism'', and ``aftershock''.
 
@@ -137,13 +143,13 @@ as a feature.
 \textbf{Geographic Relevance Features}
 %\fdcomment{need introduction here.  what are geographic features?}
 The disasters in our corpus are all phenomena that
-affect some part of the word. 
+affect some part of the world. 
 Where possible, we would like to capture a sentence's proximity to the event,
 i.e. when a sentence references a location, it should be close to the 
 area of the disaster. 
 
 There are two challenges to using geographic features. First we do not 
-know where the event is and second most sentences do not contain references
+know where the event is, and second, most sentences do not contain references
 to a location.
 We address the first issue by extracting all locations from 
 documents relevant to the event at the
@@ -158,10 +164,27 @@ and we treat the resulting cluster centers
 as the event locations for the current time.
 
 
-To address the second issue, 
-we compute features for the document as a whole and all
-sentences from that document receive the same feature value.
-
+%\ckcomment{(Paragraphs in blue should replace last two paragraphs in geo relevance section)\\
+The second issue arises from the fact that the majority of sentences in our 
+data do not contain explict references to locations, i.e. a sequence of tokens
+tagged as location named entities.   
+Our intuition is that geographic relevance is important in the disaster
+domain, and we would like to take advantage of the sentences that do have 
+location information present. To make up for this imbalance, we  
+%Extracting features for just these sentences
+%would leave 
+% Last sentence is unclear
+%Assigning a null or default value to sentences without explicit location is 
+%not a viable option as 
+%the imbalance of null/default values would make it difficult for the model
+%to learn meaningful weights for these features.
+% also unclear
+instead compute an overall location for the document and derive 
+geographic features based on the document's proximity to the event in 
+question.
+These features are assigned to all sentences in the document.\\\\
+Our method of computing document-level geographic relevance features is as 
+follows.
 Using the locations in each document, we compute the median distance to the 
 nearest event location. Because document position is a good indicator 
 of importance we also compute the distance of the first mentioned
@@ -169,6 +192,20 @@ location to the nearest event location. All sentences in the document take
 as features these two distance calculations.
 Because some events can move, we also
 compute these distances to event locations from the previous hour.
+%}
+
+
+%To address the second issue, 
+%we compute features for the document as a whole and all
+%sentences from that document receive the same feature value.
+
+%Using the locations in each document, we compute the median distance to the 
+%nearest event location. Because document position is a good indicator 
+%of importance we also compute the distance of the first mentioned
+%location to the nearest event location. All sentences in the document take
+%as features these two distance calculations.
+%Because some events can move, we also
+%compute these distances to event locations from the previous hour.
 
 
 
@@ -259,27 +296,46 @@ We also use the time (in hours) since the event started as a feature.
 %
 
 \subsubsection{Model}
-
-At run-time
-our summarization system
-does not have access to event nuggets to compute sentence salience. 
-However, we can use the nuggets
-in our training data to model salience as a function of our features.
-Such a model generalizes to new events.
+%\ckcomment{(replace section with this)\\
+Given our feature representation of the input sentences, we need only target 
+salience values for model learning. 
 For each event in our training data, we sample a set of sentences and  each 
 sentence's salience is computed according to Equation \ref{eq:salience}.
-This results in a training set of sentences and the target values 
-(their salience) to predict.
+This results in a training set of sentences, their feature representations,
+and their target salience values to predict.
 
-
-Given a feature representation for the sentences, we can use
-any regression technique to predict salience.
+%Given the feature representation/salience pairs, we can use
+%any regression technique to predict salience.
 We opt to use a Gaussian process (GP) regression model
 \cite{rasmussen:gaussian-process-book} with a Radial Basis Function (RBF) 
-kernel.  
+kernel for the salience prediction task.  
 Our features fall naturally into five groups and we use a separate RBF kernel
 for each, using the sum of each feature group RBF kernel as the final input
 to the GP model.
+%}
+
+
+%At run-time
+%our summarization system
+%does not have access to event nuggets to compute sentence salience. 
+%However, we can use the nuggets
+%in our training data to model salience as a function of our features.
+%Such a model generalizes to new events.
+%For each event in our training data, we sample a set of sentences and  each 
+%sentence's salience is computed according to Equation \ref{eq:salience}.
+%This results in a training set of sentences and the target values 
+%(their salience) to predict.
+%
+%Given a feature representation for the sentences, we can use
+%any regression technique to predict salience.
+%We opt to use a Gaussian process (GP) regression model
+%\cite{rasmussen:gaussian-process-book} with a Radial Basis Function (RBF) 
+%kernel.  
+%Our features fall naturally into five groups and we use a separate RBF kernel
+%for each, using the sum of each feature group RBF kernel as the final input
+%to the GP model.
+
+
 %GP regressors are a
 %class of data-driven, non-parametric model generalizing the multi-variate
 %Gaussian to the infinite dimensional setting.  
@@ -316,7 +372,7 @@ maximize the net similarity objective
 where $e_i$ is the exemplar of the $i$-th data point, and functions
 $\operatorname{sim}$ and $\operatorname{salience}$ express the pairwise 
 similarity
-of data points and our predicted apriori preference of a data point to be an exemplar
+of data points and our predicted \textit{apriori} preference of a data point to be an exemplar
 respectively. 
 AP differs from other $k$-centers algorithms in that it simultaneously 
 considers all data points as exemplars, making it less prone to finding
@@ -348,7 +404,7 @@ Intuitively, when maximizing objective function $\mathcal{S}$, AP must balance
 between best representing the input data and representing the most salient
 input. Additionally, when the level of input is high but the salience
 predictions are low, the preference term will guide AP toward a solution
-with fewer clusters; vice-versa when input is very salient on average but
+with fewer clusters; \textit{vice-versa} when input is very salient on average but
 the volume of input is low. The adaptive nature of our model differentiates
 our method from most other update summarization systems.
 
