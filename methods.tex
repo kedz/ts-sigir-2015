@@ -104,11 +104,26 @@ word usage) of an input sentence and helps our model to select sentences
 written in the newswire style.  
 
 
+\begin{figure}
+    \center
+    \begin{tabular}{|l l l|}
+    %Event Types \\
+    \hline
+    Storm & Earthquake & Meteor Impact\\
+    Accident & Riot & Protest\\
+    Hostages & Shooting &Bombing\\
+    \hline
+    \end{tabular}
+    \caption{TREC TS event types.}
+    \label{fig:eventtypes}
+\end{figure}
+
 The second model is estimated from text specific to our event types.  For each
 event type we create a corpus of related documents using pages and 
 subcategories listed under a related Wikipedia category. For example, the 
 language model for event type `earthquake' is estimated from Wikipedia pages 
-under the category \emph{Category:Earthquakes}.  These models are intended to 
+under the category \emph{Category:Earthquakes}.  Fig.~\ref{fig:eventtypes} 
+lists the event types found in our dataset. These models are intended to 
 detect sentences similar to those appearing in summaries of other events in 
 the same category (e.g. most earthquake summaries are likely to include 
 higher probability for ngrams including the token `magnitude'). While we focus
