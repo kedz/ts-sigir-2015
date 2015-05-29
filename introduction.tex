@@ -1,46 +1,40 @@
 \label{sec:introduction}
-During crises, information is critical for first responders,
- crisis management organizations, and those caught in the event.  
-When the event is significant, as in the case of Hurricane
-Sandy, the amount of content produced by traditional news outlets,
-government agencies, relief organizations, and social media can vastly
-overwhelm those trying to monitor the situation. 
-Crisis informatics \cite{palen2010vision} is dedicated to finding methods for sharing the
-right information in a timely fashion during such an event.
-Research in this field has focused on
-human-in-the-loop approaches ranging from on the ground information 
-gathering to crowdsourced reporting and disaster management \cite{starbird2013working}.
+
+During crises, information is critical for first responders, crisis management
+organizations, and those caught in the event. When the event is significant, 
+as in the case of Hurricane Sandy, the amount of content produced by 
+traditional news outlets, government agencies, relief organizations, and 
+social media can vastly overwhelm those trying to monitor the situation. 
+Crisis informatics \cite{palen2010vision} is dedicated to finding methods for 
+sharing the right information in a timely fashion during such an event.
+Research in this field has focused on human-in-the-loop approaches ranging 
+from on the ground information gathering to crowdsourced reporting and 
+disaster management \cite{starbird2013working}.
+
 
 Multi-document summarization has the potential to assist the crisis 
-informatics community. 
-Automatic summarization could deliver
-relevant and salient information at regular intervals, 
-even when human volunteers are unable to. 
-Perhaps more importantly it could help filter out
-unnecessary and irrelevant detail when the volume of incoming information
-is large. 
-While methods for identifying,
-tracking, and summarizing events from text based input have been explored
-extensively
-%KM - I think we should consider adding other event summarizers. 
+informatics community. Automatic summarization could deliver relevant and 
+salient information at regular intervals, even when human volunteers are 
+unable to. Perhaps more importantly it could help filter out unnecessary and 
+irrelevant detail when the volume of incoming information is large. While 
+methods for identifying, tracking, and summarizing events from text based 
+input have been explored extensively
 \cite{allan1998topic,Filatova&Hatzivassiloglou.04a,Wang&al.11}, 
 these experiments were not developed to handle streaming data from a
- heterogeneous environment at web scale. 
-These methods also rely heavily on redundancy which is suboptimal for time
-sensitive domains where there is a high cost in delaying information.
+heterogeneous environment at web scale. These methods also rely heavily on 
+redundancy which is suboptimal for time sensitive domains where there is a 
+high cost in delaying information.
+
 
 In this paper, we present an update summarization system to track events
 across time. Our system predicts sentence salience in the context of a
 large-scale event, such as a disaster, and integrates these predictions into
-a clustering based multi-document summarization system. 
-We demonstrate that combining salience with clustering produces more relevant summaries
-compared to baselines using clustering or relevance alone.  
-Our experiments suggest that this
-is because our system is better able to adapt to
-dynamic changes in input volume that adversely 
-affect methods that use redundancy as a proxy for salience. 
-%or predict salience but
-%ignore redundancy in the input alone.
+a clustering based multi-document summarization system. We demonstrate that 
+combining salience with clustering produces more relevant summaries compared 
+to baselines using clustering or relevance alone.  Our experiments suggest 
+that this is because our system is better able to adapt to dynamic changes in 
+input volume that adversely affect methods that use redundancy as a proxy for 
+salience. 
 
 
 In addition to the tight integration between clustering and salience
@@ -54,37 +48,21 @@ Our feature representation includes a set of language models, one for each
 event type, to measure the typicality of the sentence with regard to the 
 current event, the distance of mentioned locations from the center of
 the event, and the change in word frequencies over the time of the event.
-While we evaluate these features in the domain of disaster, this approach is generally applicable to many update summarization tasks.
-% where queries can be categorized by the 
-%expected similarity of their ideal summaries.
-%While we ground these features in the domain of disaster, this approach is generally applicable to any update summarization task where queries can be categorized by the 
-%expected similarity of their ideal summaries.
-% to represent its likelihood of referring to the input disaster. 
-%We also utilize the change in word frequencies as we process the stream 
-%to measure the changing importance of updates over time.
-
-Our approach achieves a statistically significant improvement in 
- ROUGE scores compared to multiple baselines.
-Additionally, we introduce novel methods for estimating the average information
-gain each update provides and how completely the update summary covers 
-the event it is tracking; our system's updates contain more relevant
-information on average than the competeing baselines.
+While we evaluate these features in the domain of disasters, this approach is 
+generally applicable to many update summarization tasks.
 
 
-The remainder of the paper is organized as follows.
-We begin with a review of related work
-in the information retrieval and multi-document
-summarization literature. Section~\ref{sec:methods} outlines the details
-of our salience and summarization models. Next we describe our
-data (Section~\ref{sec:data}) and experiments (Section~\ref{sec:exper}). Finally,
-we discuss our results (Section~\ref{sec:results}) and conclude the paper.
-
-%Our main contributions are three fold. First, we present a straightforward 
-%framework for 
-%combining prior beliefs with a clustering algorithm. Second, we demonstrate
-%the empirical effectiveness of this approach on the update summarization
-%task. Finally, we present a novel feature represention for sentence salience
-%in the crisis/disaster domain.
+Our approach achieves a statistically significant improvement in ROUGE scores 
+compared to multiple baselines. Additionally, we introduce novel methods for 
+estimating the average information gain each update provides and how 
+completely the update summary covers the event it is tracking; our system's 
+updates contain more relevant information on average than the competing 
+baselines.
 
 
-
+The remainder of the paper is organized as follows. We begin with a review of 
+related work in the information retrieval and multi-document summarization 
+literature. Section~\ref{sec:methods} outlines the details of our salience 
+and summarization models. Next we describe our data (Section~\ref{sec:data}) 
+and experiments (Section~\ref{sec:exper}). Finally, we discuss our results 
+(Section~\ref{sec:results}) and conclude the paper.

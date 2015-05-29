@@ -1,15 +1,11 @@
-
 \subsection{ROUGE}
 \input{rouge_cum.tex}
 
-Table~\ref{tab:rouge} shows our results for system output samples against the full summary of nuggets using ROUGE. 
-%shows our results for the evaluation using ROUGE. 
-%AP+Salience shows improvement on ngram precision and recall over the 
-%baselines. 
-This improvement is statistically significant for all ngram
-precision, recall, and F-measures
-at the $\alpha = .01$ level
-using the Wilcoxon signed-rank test. 
+Table~\ref{tab:rouge} shows our results for system output samples against the 
+full summary of nuggets using ROUGE. This improvement is statistically 
+significant for all ngram precision, recall, and F-measures at the 
+$\alpha = .01$ level using the Wilcoxon signed-rank test. 
+
 
 \begin{figure}
     \includegraphics[]{rouge-time.eps}
@@ -19,18 +15,20 @@ using the Wilcoxon signed-rank test.
 \end{figure}
 
 
-AP+Salience maintains its performance above the baselines over time as well. Figure~\ref{fig:trouge}
-shows the ROUGE-1 scores over time. 
-We show the difference in unigram precision (bigram precision is not shown but it follows
-similar curve).
-Within the initial days of the event, AP+Salience is able to take the lead over the over 
-systems in ngram precision. 
-The AP+Salience model is better able to find salient updates
-earlier on; for the disaster domain, this is an especially important quality of the model. 
+\textsc{AP+Salience} maintains its performance above the baselines over time 
+as well. Figure~\ref{fig:trouge} shows the ROUGE-1 scores over time. We show 
+the difference in unigram precision (bigram precision is not shown but it 
+follows similar curve). Within the initial days of the event, 
+\textsc{AP+Salience} is able to take the lead over the over systems in ngram 
+precision. The \textsc{AP+Salience} model is better able to find salient 
+updates earlier on; for the disaster domain, this is an especially important 
+quality of the model. 
 
-Moreover, the AP+Salience's recall is not diminished by the high precision and remains competitive with AP.
-Over time AP+Salience's recall also begins to pull away, while the other models start to suffer
-from topic drift.
+
+Moreover, the \textsc{AP+Salience}'s recall is not diminished by the high 
+precision and remains competitive with \textsc{AP}. Over time 
+\textsc{AP+Salience}'s recall also begins to pull away, while the other models
+start to suffer from topic drift.
 
 
 \subsection{Expected Gain and Comprehensiveness}
@@ -41,46 +39,42 @@ from topic drift.
 %\vspace{-12pt}
 \end{figure}
 
-Figure~\ref{fig:nperf} shows the expected gain across a range of 
-similarity thresholds, where thresholds closer to 1 are more conservative
-estimates. The ranking of the systems remains constant across the 
-sweep with 
-AP+Salience beating all baseline systems.
-Predicting salience in general is helpful for keeping a summary on topic as
-the RS approach out performs the clustering only approaches
-on expected gain.
 
-When looking at the comprehensiveness of the summaries AP outperforms
- AP+Salience. The compromise encoded in the AP+Salience objective
-function, between being representative and being salient, is seen clearly here
-where the performance of the AP+Salience methods is lower bounded by 
-the salience focused RS
-system and upper bounded by the clustering only AP system.
-Overall, AP+Salience achieves the best balance of these two metrics.
+Figure~\ref{fig:nperf} shows the expected gain across a range of similarity 
+thresholds, where thresholds closer to 1 are more conservative estimates. 
+The ranking of the systems remains constant across the sweep with 
+\textsc{AP+Salience} beating all baseline systems. Predicting salience in 
+general is helpful for keeping a summary on topic as the \textsc{RS} approach 
+out performs the clustering only approaches on expected gain.
 
+
+When looking at the comprehensiveness of the summaries \textsc{AP} outperforms
+\textsc{AP+Salience}. The compromise encoded in the \textsc{AP+Salience} 
+objective function, between being representative and being salient, is seen 
+clearly here where the performance of the \textsc{AP+Salience} methods is 
+lower bounded by the salience focused \textsc{RS} system and upper bounded by 
+the clustering only \textsc{AP} system. Overall, \textsc{AP+Salience} achieves
+the best balance of these two metrics.
 
 
 \subsection{Feature Ablation}
 \input{rouge_fa.tex}
 
-Table~\ref{tab:farouge} shows the results of our feature ablation
-tests. Removing the language models yields a statistically 
-significant drop in both ngram recall and F-measure. 
-Interestingly, removing the basic features leads to an
-increase in both unigram and bigram precision; in the bigram
-case this is enough to cause a statistically significant increase
-in F-measure over the full model. In other words, the generic features
-actually lead to an inferior model when we can incorporate more appropriate
-domain specific features.
-The result mirrors Sparck Jones' claim that generic approaches to summarization cannot produce a useful summary \cite{ksj98}.
-%This result mirrors Sparck Jones' claim that summarization should be in service of a purpose~\cite{?}.
+
+Table~\ref{tab:farouge} shows the results of our feature ablation tests. 
+Removing the language models yields a statistically significant drop in both 
+ngram recall and F-measure. Interestingly, removing the basic features leads 
+to an increase in both unigram and bigram precision; in the bigram case this 
+is enough to cause a statistically significant increase in F-measure over the 
+full model. In other words, the generic features actually lead to an inferior 
+model when we can incorporate more appropriate domain specific features.
+The result mirrors Sparck Jones' claim that generic approaches to 
+summarization cannot produce a useful summary \cite{ksj98}.
+
 
 Removing the language model and geographic relevance features leads to a
 statistically significant drop in ROUGE-1 F1 scores. Unfortunately,
 this is not the case for the temporal relevance features. We surmise that
 these features are too strongly correlated with each other, 
-i.e. the differences in TFIDF between hours are definitely not IID variables. 
-
-
-
-
+i.e. the differences in TF*IDF between hours are definitely not i.i.d. 
+variables. 

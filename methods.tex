@@ -1,69 +1,57 @@
 \label{sec:methods}
-%In order to evaluate an update summarization system, we adopt the simulation-based approach used in the TREC Temporal Summarization (TS) Track.  We provide a brief overview of the problem.  Details on the formulation can be found in the track overview paper \cite{aslam2013trec}.  
 
 Our update summarization system takes as input 
 \begin{enumerate*}[label=\itshape\alph*\upshape)]
-  \item a short query defining the event to be tracked (e.g. `Hurricane Sandy'), 
-  \item an event category defining the type of event to be tracked (e.g. `hurricane'), 
-  \item a stream of time-stamped documents %, $(\doc_0, \doc_1,\ldots,\doc_T)$,
-  presented in temporal order, and \item an evaluation time period of interest.
-    %  $(\stime,\etime)$.  
+  \item a short query defining the event to be tracked 
+  (e.g. `Hurricane Sandy'), 
+  \item an event category defining the type of event to be tracked 
+  (e.g. `hurricane'), 
+  \item a stream of time-stamped documents presented in temporal order, 
+  and \item an evaluation time period of interest.
 \end{enumerate*} 
-While processing documents
-throughout the time period of interest, the system outputs sentences
-from these documents likely to be useful to the query issuer.  We refer
-to these selected sentences as \emph{updates}.
+While processing documents throughout the time period of interest, the system 
+outputs sentences from these documents likely to be useful to the query 
+issuer.  We refer to these selected sentences as \emph{updates}.
 
-In order to measure the usefulness of a system's updates, we consider
-the degree to which the system output reflects the different
-aspects of an event.  Events are often composed of a variety of sub-events.  
-For example, the Hurricane Sandy
-event includes sub-events related to the storm making landfall,
-the ensuing flooding, the many transportation issues, among many
+In order to measure the usefulness of a system's updates, we consider the 
+degree to which the system output reflects the different aspects of an event.
+Events are often composed of a variety of sub-events.  For example, the 
+Hurricane Sandy event includes sub-events related to the storm making 
+landfall, the ensuing flooding, the many transportation issues, among many
 others.  An ideal system would update the user about each of these
-sub-events as they occur. %, with low latency.  
-%In order to use
-%language consistent with previous literature, 
-We refer to these
-sub-events as the \emph{nuggets} associated with an event.  A nugget is
-defined as a fine-grained atomic sub-event associated with an event.  
-%An example nugget for Hurricane Sandy might be ``Sandy on course for the Jersey Shore.''
-We present 2 example nuggets associated with the Hurricane
-Sandy event 
-in Figure \ref{fig:nuggets}. 
-Note that each event has anywhere from 50 to
-several hundred nuggets in total in our gold dataset.
-%Note that each event has anywhere from 50 to
-%several hundred nuggets in total.
-We describe how these 
-nuggets are found in Section \ref{sec:data}.
+sub-events as they occur. We refer to these sub-events as the \emph{nuggets} 
+associated with an event.  A nugget is defined as a fine-grained atomic 
+sub-event associated with an event.  We present 2 example nuggets associated 
+with the Hurricane Sandy event in Figure \ref{fig:nuggets}. Each event has 
+anywhere from 50 to several hundred nuggets in total in our gold dataset.
+We describe how these nuggets are found in Section \ref{sec:data}.
 
 
 \input{nugget_examples.tex}
 
-Throughout our treatment of our algorithm, the \emph{salience} 
-of an update captures the degree to which it reflects an 
-event's nuggets.  Assuming that we have a text representation 
-for each of our nuggets, the salience of an update $u$  with respect to a set of nuggets $N$ is
-defined as,
+
+Throughout our treatment of our algorithm, the \emph{salience} of an update 
+captures the degree to which it reflects an event's unobserved nuggets.  
+Assuming that we have a text representation for each of our nuggets, the 
+salience of an update $u$  with respect to a set of nuggets $N$ is defined as,
 \begin{align}
 \operatorname{salience}(u) = \operatorname{max}_{n \in N} 
 \operatorname{sim}(u, n) \label{eq:salience}
 \end{align}
-where $\operatorname{sim}(\cdot)$ is the semantic similarity such as
-the cosine similarity of latent vectors associated with the update and 
-nugget text \cite{guo2012simple}. 
+where $\operatorname{sim}(\cdot)$ is the semantic similarity such as the 
+cosine similarity of latent vectors associated with the update and nugget 
+text \cite{guo2012simple}. 
+
 
 \subsection{Update Summarization}
 
-Our system architecture follows a simple pipeline design where each
-stage provides an additional level of processing or filtering of the input
-sentences.
-We begin with an empty update summary $U$.
-At each hour we receive a new batch of sentences $b_t$ from the stream
-of event relevant documents
+
+Our system architecture follows a simple pipeline design where each stage 
+provides an additional level of processing or filtering of the input 
+sentences. We begin with an empty update summary $U$. At each hour we receive 
+a new batch of sentences $b_t$ from the stream of event relevant documents
 and perform the following actions:
-\begin{enumerate}[nosep]
+\begin{enumerate}
   \item predict the salience of sentences in $b_t$ (Section~\ref{sec:salpred}),
   \item select a set of exemplar sentences in $b_t$ by combining 
       clustering with 
@@ -77,313 +65,162 @@ The resultant list of updates $U$ is our summary of the event.
 \subsection{Salience Prediction}
 \label{sec:salpred}
 
-%include feature table
-%\input{feature_table.tex}
 
 \subsubsection{Features}
 \label{sec:features}
-We want our model to be predictive of sentence salience across different event instances so we avoid lexical features.  Instead, we extract features such as language model scores, geographic relevance, and temporal relevance from each sentence.  
+
+
+We want our model to be predictive of sentence salience across different event instances so we avoid event-specific lexical features.  Instead, we extract features such as language model scores, geographic relevance, and temporal relevance from each sentence.  
+
 
 \textbf{Basic Features}
-We employ several basic features that have been used previously in supervised models to rank sentence salience \cite{kupiec1995trainable,conroy2001using}. These include sentence length, the number of capitalized words normalized by sentence length, document position, and number of named entities.  
-The data stream comprises text extracted from raw html documents;
-these features help to downweight sentences that are not 
-content (e.g. web page titles, links to other content) or
-more heavily weight important sentences (e.g., that appear in
-prominent positions such as paragraph initial or article initial).
+We employ several basic features that have been used previously in supervised 
+models to rank sentence salience \cite{kupiec1995trainable,conroy2001using}. 
+These include sentence length, the number of capitalized words normalized by 
+sentence length, document position, and number of named entities.  The data 
+stream comprises text extracted from raw html documents; these features help 
+to downweight sentences that are not content (e.g. web page titles, links to 
+other content) or more heavily weight important sentences (e.g., that appear 
+in prominent positions such as paragraph initial or article initial).
+
 
 \textbf{Query Features}
 Query features measure the relationship between the sentence and the event 
 query and type.  These include the number of query words present in the 
 sentence in addition to the number of event type synonyms, hypernyms, and 
-hyponyms using WordNet \cite{miller1995wordnet}.  
-For example, for event type \emph{earthquake},  we match sentence terms 
-``quake'', ``temblor'', ``seism'', and ``aftershock''.
+hyponyms using WordNet \cite{miller1995wordnet}.  For example, for event type 
+\emph{earthquake},  we match sentence terms ``quake'', ``temblor'', ``seism'',
+and ``aftershock''.
+
 
 \textbf{Language Model Features}\label{subsubsec:lm}
 Language models allow us to measure the likelihood of producing a sentence 
-from a particular source.  We consider two types of language model 
-features.  The first model is estimated from a corpus of generic news 
-articles (we used the 1995-2010 Associated Press section of the 
-Gigaword corpus \cite{graff2003english}).  
-This model is intended to assess the general writing quality (grammaticality, word usage) of an input sentence and helps our model to select sentences
+from a particular source.  We consider two types of language model features.  
+The first model is estimated from a corpus of generic news articles (we used 
+the 1995-2010 Associated Press section of the Gigaword corpus 
+\cite{graff2003english}).  
+This model is intended to assess the general writing quality (grammaticality, 
+word usage) of an input sentence and helps our model to select sentences
 written in the newswire style.  
 
-The second model is estimated from text specific to our event types.  
-For each event type we create a corpus of related documents using pages
-and subcategories listed under a related Wikipedia category.
-For example, the language model for event type `earthquake' is estimated 
-from Wikipedia pages under the category \emph{Category:Earthquakes}.  
-%\fdcomment{stress here that this technique can be applied in situations beyond crisis; any situation where the
-%expected summary is similar to some previously seen target or some side information.}
-These models are intended to detect sentences similar to those appearing in 
-summaries of other events in the same category 
-(e.g. most earthquake summaries are likely to include higher probability for 
-ngrams including the token `magnitude'). While we focus our system on the 
-language of news and disaster, we emphasize that the use of language modeling 
-can be an effective feature for multi-document summarization for other 
-domains that have related text corpora.
+
+The second model is estimated from text specific to our event types.  For each
+event type we create a corpus of related documents using pages and 
+subcategories listed under a related Wikipedia category. For example, the 
+language model for event type `earthquake' is estimated from Wikipedia pages 
+under the category \emph{Category:Earthquakes}.  These models are intended to 
+detect sentences similar to those appearing in summaries of other events in 
+the same category (e.g. most earthquake summaries are likely to include 
+higher probability for ngrams including the token `magnitude'). While we focus
+our system on the language of news and disaster, we emphasize that the use of 
+language modeling can be an effective feature for multi-document summarization
+for other domains that have related text corpora.
 
 
-
-
-We use the SRILM toolkit \cite{stolcke2002srilm} to implement a 5-gram Kneser-Ney model for both
-the background language model and the event specific language models.
-For each sentence we use the average token log probability under each model
-as a feature.
-
-
-%KM - Note: Someplace the exact list of event types should appear. Probably not
-%here.
-%KM - I note you have it in a later section but it is labeled as data you use
-%to train language models and semantic similarity. I think it would be good to
-%have up front in definition of task.
+We use the SRILM toolkit \cite{stolcke2002srilm} to implement a 5-gram 
+Kneser-Ney model for both the background language model and the event specific
+language models. For each sentence we use the average token log probability 
+under each model as a feature.
 
 
 \textbf{Geographic Relevance Features}
-%\fdcomment{need introduction here.  what are geographic features?}
-The disasters in our corpus are all phenomena that
-affect some part of the world. 
-Where possible, we would like to capture a sentence's proximity to the event,
-i.e. when a sentence references a location, it should be close to the 
+The disasters in our corpus are all phenomena that affect some part of the 
+world. Where possible, we would like to capture a sentence's proximity to the 
+event, i.e. when a sentence references a location, it should be close to the 
 area of the disaster. 
 
-There are two challenges to using geographic features. First we do not 
-know where the event is, and second, most sentences do not contain references
-to a location.
-We address the first issue by extracting all locations from 
-documents relevant to the event at the
-current hour and looking up their latitude and 
-longitude using a publicly available geolocation service. 
-%\fdcomment{is this all documents in the bucket or the filtered set?  is it a biased sample?}
-Since the documents that are at least somewhat relevant to the event,
-we assume in aggregate the locations should give us a rough area of interest.
-The locations are clustered %(using affinity propagation and uniform salience)
-%\fdcomment{affinity propagation undefined}
-and we treat the resulting cluster centers
-as the event locations for the current time.
+
+There are two challenges to using geographic features. First, we do not know 
+where the event is, and second, most sentences do not contain references to a 
+location. We address the first issue by extracting all locations from 
+documents relevant to the event at the current hour and looking up their 
+latitude and longitude using a publicly available geo-location service. 
+Since the documents that are at least somewhat relevant to the event, we 
+assume in aggregate the locations should give us a rough area of interest.
+The locations are clustered and we treat the resulting cluster centers as the 
+event locations for the current time.
 
 
-%\ckcomment{(Paragraphs in blue should replace last two paragraphs in geo relevance section)\\
 The second issue arises from the fact that the majority of sentences in our 
-data do not contain explict references to locations, i.e. a sequence of tokens
-tagged as location named entities.   
-Our intuition is that geographic relevance is important in the disaster
-domain, and we would like to take advantage of the sentences that do have 
-location information present. To make up for this imbalance, we  
-%Extracting features for just these sentences
-%would leave 
-% Last sentence is unclear
-%Assigning a null or default value to sentences without explicit location is 
-%not a viable option as 
-%the imbalance of null/default values would make it difficult for the model
-%to learn meaningful weights for these features.
-% also unclear
-instead compute an overall location for the document and derive 
-geographic features based on the document's proximity to the event in 
-question.
-These features are assigned to all sentences in the document.\\\\
+data do not contain explicit references to locations, i.e. a sequence of 
+tokens tagged as location named entities. Our intuition is that geographic 
+relevance is important in the disaster domain, and we would like to take 
+advantage of the sentences that do have location information present. To make 
+up for this imbalance, we instead compute an overall location for the document
+and derive geographic features based on the document's proximity to the event
+in question. These features are assigned to all sentences in the document.
+
+
 Our method of computing document-level geographic relevance features is as 
-follows.
-Using the locations in each document, we compute the median distance to the 
-nearest event location. Because document position is a good indicator 
-of importance we also compute the distance of the first mentioned
-location to the nearest event location. All sentences in the document take
-as features these two distance calculations.
-Because some events can move, we also
-compute these distances to event locations from the previous hour.
-%}
-
-
-%To address the second issue, 
-%we compute features for the document as a whole and all
-%sentences from that document receive the same feature value.
-
-%Using the locations in each document, we compute the median distance to the 
-%nearest event location. Because document position is a good indicator 
-%of importance we also compute the distance of the first mentioned
-%location to the nearest event location. All sentences in the document take
-%as features these two distance calculations.
-%Because some events can move, we also
-%compute these distances to event locations from the previous hour.
-
+follows. Using the locations in each document, we compute the median distance 
+to the nearest event location. Because document position is a good indicator 
+of importance we also compute the distance of the first mentioned location to 
+the nearest event location. All sentences in the document take as features 
+these two distance calculations. Because some events can move, we also compute
+these distances to event locations from the previous hour.
 
 
 \textbf{Temporal Relevance Features}
-%\fdcomment{motivate burstiness; explain what it is before using the expression.}
 As we track events over time, it is likely that the coverage of the event 
 may die down, only to spike back up when there is a breaking development.
-%Alternatively, words that were salient initially may become background context,
-%and over time lose their importance.
 Identifying terms that are ``bursty,'' i.e. suddenly peaking in usage,
 can help to locate novel sentences that are part of the most recent reportage
 and have yet to fall into the background.
 
-We compute the IDF for each hour in our data stream. 
-For each sentence, the average TFIDF for the current hour $t$ is taken as a 
-feature. Additionally, we use the difference in average TFIDF from time $t$
-to $t-i$ for $i = \{1, \ldots, 24\}$ to measure how the TFIDF scores for the 
-sentence have changed over the last 24 hours, i.e. we keep the sentence
-term frequencies fixed and compute the difference in IDF. Large changes
-in IDF value indicate the sentence contains bursty terms.
-%\fdcomment{unclear.  is it just changing the IDF part of the 
-%items in the average?}
+We compute the IDF for each hour in our data stream. For each sentence, the 
+average TF*IDF for the current hour $t$ is taken as a feature. Additionally, 
+we use the difference in average TF*IDF from time $t$ to $t-i$ for 
+$i = \{1, \ldots, 24\}$ to measure how the TF*IDF scores for the sentence have
+changed over the last 24 hours, i.e. we keep the sentence term frequencies 
+fixed and compute the difference in IDF. Large changes in IDF value indicate 
+the sentence contains bursty terms.
 We also use the time (in hours) since the event started as a feature.
-%difference 
-%Using these IDF 
-%calculations, the avg TFIDF is calculated for
-%Let $D_t$ be the set of web pages at time $t$ and let $s = \{w_1,\ldots,w_n\}$ be a sentence from a page $d \in D_t$.  We calculate the 1-hour burstiness of sentence $s$ from document $d$ at hour $t$  as 
-%\begin{align*}
-%\operatorname{b}_1(s,d,t) = \frac{1}{|s|} \sum_{w \in s} \Bigg( &
-%\operatorname{tf-idf}_t(w,d)  \\ & \left. - \frac{\sum_{d^\prime \in D_{t-1}:
-%w \in d^\prime } \operatorname{tf-idf}_{t-1}(w,d^\prime)}{|\{d^\prime \in
-%D_{t-1}: w \in d^\prime\}|} \right) \end{align*}
 
-%where \begin{align*} \operatorname{tf-idf}_t(w,d) =&
-%\log\left(1+\sum_{w^\prime \in d}1\{w=w^\prime\}  \right)\\ & \times
-%\log\left(\frac{|D_t|}{1 + \sum_{d^\prime \in D_t}1\{w \in d^\prime\}}\right).
-%\end{align*}
-
-%[\textrm{Simpler explanation goes here}]
-% 1\{w = w^\prime} %- \operatorname{avg-tf-idf}_{t_{i-1}}(w).
-%\end{align*}
-
-
-%We similarly find the sentence's 5-hour burstiness.  In addition to burstiness, we also include the sentence's average tf-idf and 
-
-
-% Formally, let $p(f)$ be a distribution over functions where $f$ is any mapping
-% of an input space $\mathcal{X}$ to the reals,
-%
-% $$f: \mathcal{X} \rightarrow \mathcal{R}.$$
-% Let the random variable $\mathbf{f} = (f(x_1),\ldots,f(x_n) )$ be
-%  an $n$-dimensional vector whose elements are evaluations of the function $f$
-% at points $x_i \in \mathcal{X}$.
-% We say $p(f)$ is a Gaussian process if for any finite subset
-% $\{x_1,\ldots,x_n\} \subset \mathcal{X}$, the marginal distribution over
-% that finite subset $p(\mathbf{f})$ has a multivariate Gaussian distribution.
-% A GP is parameterized by a mean function $\mu(\mathbf{x})$ and a
-% covariance function $K(x,x^\prime)$. Generally, the mean function is simply
-% set to 0, leaving the distribution to be completely characterized by the
-% kernel function on the data.
-%
-% In the regression setting, we typically have a response variable $y$ that
-% is the sum of our model prediction  and
-% some Gaussian noise, i.e. $y = f(x) + \epsilon$ with
-% $\epsilon \sim \mathcal{N}(0, \sigma^2)$. When
-% $f \sim \operatorname{GP}(\mathbf{0}, \mathbf{K})$, the
-% two distributions
-% of principal interest are the marginal likelihood
-% $p(\mathbf{y}|\mathbf{X}) =
-% \mathcal{N}(\mathbf{0},\mathbf{K} + \sigma^2\mathbf{I})$ and the predictive
-% distribution,
-%
-% $$p(\mathbf{y_*}|\mathbf{x_*},\mathbf{X},\mathbf{y}) =
-% \mathcal{N}(\boldsymbol{\mu}_*, \boldsymbol{\sigma}^2_*) $$
-%
-% where $\mathbf{x_*}$ is a new or unseen input, $\mathbf{y_*}$ our predicted
-% response, and
-% \begin{align*}
-% \boldsymbol{\mu}_* & = \mathbf{K_*}(\mathbf{K} + \sigma^2\mathbf{I})^{-1}\mathbf{y} \\
-% \boldsymbol{\sigma}^2_* &
-% = \mathbf{K}_{**} - \mathbf{K}_*(\mathbf{K} + \sigma^2\mathbf{I})^{-1}
-% \mathbf{K}_*^T + \sigma^2\\
-% \end{align*}.
-%
-% Here $\mathbf{K}_* = K(\mathbf{x}_*, \mathbf{X})$, and
-% $\mathbf{K}_{**} = K(\mathbf{x}_*, \mathbf{x}_*)$.
-%
-%
 
 \subsubsection{Model}
-%\ckcomment{(replace section with this)\\
-Given our feature representation of the input sentences, we need only target 
-salience values for model learning. 
-For each event in our training data, we sample a set of sentences and  each 
-sentence's salience is computed according to Equation \ref{eq:salience}.
-This results in a training set of sentences, their feature representations,
-and their target salience values to predict.
 
-%Given the feature representation/salience pairs, we can use
-%any regression technique to predict salience.
+
+Given our feature representation of the input sentences, we need only target 
+salience values for model learning. For each event in our training data, we 
+sample a set of sentences and  each sentence's salience is computed according 
+to Equation \ref{eq:salience}. This results in a training set of sentences, 
+their feature representations, and their target salience values to predict.
+
+
 We opt to use a Gaussian process (GP) regression model
 \cite{rasmussen:gaussian-process-book} with a Radial Basis Function (RBF) 
-kernel for the salience prediction task.  
-Our features fall naturally into five groups and we use a separate RBF kernel
-for each, using the sum of each feature group RBF kernel as the final input
-to the GP model.
-%}
-
-
-%At run-time
-%our summarization system
-%does not have access to event nuggets to compute sentence salience. 
-%However, we can use the nuggets
-%in our training data to model salience as a function of our features.
-%Such a model generalizes to new events.
-%For each event in our training data, we sample a set of sentences and  each 
-%sentence's salience is computed according to Equation \ref{eq:salience}.
-%This results in a training set of sentences and the target values 
-%(their salience) to predict.
-%
-%Given a feature representation for the sentences, we can use
-%any regression technique to predict salience.
-%We opt to use a Gaussian process (GP) regression model
-%\cite{rasmussen:gaussian-process-book} with a Radial Basis Function (RBF) 
-%kernel.  
-%Our features fall naturally into five groups and we use a separate RBF kernel
-%for each, using the sum of each feature group RBF kernel as the final input
-%to the GP model.
-
-
-%GP regressors are a
-%class of data-driven, non-parametric model generalizing the multi-variate
-%Gaussian to the infinite dimensional setting.  
-
-%When evaluating
-%In order to fit a regression model, the sentences are represented as feature
-%vectors (described in Section~\ref{sec:features}).
-%GP's are general
-%and are state of the art for many regression tasks.  
-%GP's are non-parametric and rely on a covariance matrix $\kernelMatrix$, measuring the similarity between pairs of instances, in our 
-%case sentences.  In our experiments, we used a radial basis 
-%function (RBF) kernel.  
-
+kernel for the salience prediction task. Our features fall naturally into 
+five groups and we use a separate RBF kernel for each, using the sum of each 
+feature group RBF kernel as the final input to the GP model.
 
 
 \subsection{Exemplar Selection}
 \label{sec:exsel}
 
+
 Once we have predicted the salience for a batch of sentences, we must
 now select a set of update candidates, i.e. sentences that are both salient
-and representative of the current batch.
-To accomplish this, we combine the output of our 
-salience prediction model with the affinity
-propagation algorithm.
-%to identify a set of exemplar sentences 
-%for each input batch. 
+and representative of the current batch. To accomplish this, we combine the 
+output of our salience prediction model with the affinity propagation 
+algorithm.
 Affinity propagation (AP) is a clustering algorithm
-that identifies a subset of datapoints as exemplars and forms clusters
+that identifies a subset of data points as exemplars and forms clusters
 by assigning the remaining points to one of the exemplars 
-\cite{frey2007clustering}. AP attempts to 
-maximize the net similarity objective 
+\cite{frey2007clustering}. AP attempts to maximize the net similarity 
+objective 
 \[ \mathcal{S} = \sum_{i : i \neq e_i}^n \operatorname{sim}(i,e_i) 
 + \sum_{i : i = e_i}^n \operatorname{salience}(e_i)  \]
 where $e_i$ is the exemplar of the $i$-th data point, and functions
 $\operatorname{sim}$ and $\operatorname{salience}$ express the pairwise 
-similarity
-of data points and our predicted \textit{apriori} preference of a data point to be an exemplar
-respectively. 
+similarity of data points and our predicted \textit{apriori} preference of a 
+data point to be an exemplar respectively. 
 AP differs from other $k$-centers algorithms in that it simultaneously 
-considers all data points as exemplars, making it less prone to finding
-local optima as a result of poor initialization. Furthermore, the 
-second term in $\mathcal{S}$ incorporates the individual importance of 
-data points as candidate exemplars; most other clustering algorithms only make
-use of the first term, i.e. the pairwise similarities between data points.
+considers all data points as exemplars, making it less prone to finding local 
+optima as a result of poor initialization. Furthermore, the second term in 
+$\mathcal{S}$ incorporates the individual importance of data points as 
+candidate exemplars; most other clustering algorithms only make use of the 
+first term, i.e. the pairwise similarities between data points.
  
-%There are very 
-%few restrictions on the nature of the similarities and preferences
-%other than that they be real-valued.
 
 AP has several useful properties and interpretations. Chiefly, the number
 of clusters $k$ is not a model hyper-parameter. Given that our task requires
@@ -393,50 +230,36 @@ similarities and preferences of the data. Generally lower preferences will
 result in fewer clusters.  
 
 
-%In our summarization system we use the output of our salience model as 
-%the preferences, i.e.
-%$\operatorname{salience}(s) = \operatorname{pref}(s)$; for the similarity 
-%function we use semantic similarity. 
-Recall that $\operatorname{salience}(s)$
-is a prediction of the semantic similarity of $s$ to information about the 
-event be summarized, i.e. the set of event nuggets.
-Intuitively, when maximizing objective function $\mathcal{S}$, AP must balance
-between best representing the input data and representing the most salient
-input. Additionally, when the level of input is high but the salience
-predictions are low, the preference term will guide AP toward a solution
-with fewer clusters; \textit{vice-versa} when input is very salient on average but
-the volume of input is low. The adaptive nature of our model differentiates
-our method from most other update summarization systems.
-
-
+Recall that $\operatorname{salience}(s)$ is a prediction of the semantic 
+similarity of $s$ to information about the event be summarized, i.e. the set 
+of event nuggets. Intuitively, when maximizing objective function 
+$\mathcal{S}$, AP must balance between best representing the input data and 
+representing the most salient input. Additionally, when the level of input is 
+high but the salience predictions are low, the preference term will guide AP 
+toward a solution with fewer clusters; \textit{vice-versa} when input is very 
+salient on average but the volume of input is low. The adaptive nature of our 
+model differentiates our method from most other update summarization systems.
 
 
 \subsection{Update Selection}
 \label{sec:upsel}
 
-The exemplar sentences from the exemplar selection stage are the most 
-salient and representative of the input for the current hour. However,
-we need to reconcile these sentences with updates from the previous hour
-to ensure that the most salient and least redundant  updates are selected.
-To 
-ensure that only the most salient updates are selected we apply a minimum
-salience threshold;
-after exemplar sentences have been identified, any exemplars whose salience is 
-less than $\lambda_{sal}$ are removed from consideration. 
 
- Next,
-to prevent adding updates that are redundant with previous output updates, 
-we filter out exemplars
-that are too similar to previous updates.
-The exemplars are examined
-sequencially in order of decreasing salience and  a similarity threshold 
-is applied, where the exemplar is ignored if its
-maximum semantic similarity to any previous updates in the summary is
-greater than $\lambda_{sim}$.
+The exemplar sentences from the exemplar selection stage are the most salient 
+and representative of the input for the current hour. However, we need to 
+reconcile these sentences with updates from the previous hour to ensure that 
+the most salient and least redundant  updates are selected. To ensure that 
+only the most salient updates are selected we apply a minimum salience 
+threshold; after exemplar sentences have been identified, any exemplars whose 
+salience is less than $\lambda_{sal}$ are removed from consideration. 
+
+
+Next, to prevent adding updates that are redundant with previous output 
+updates, we filter out exemplars that are too similar to previous updates.
+The exemplars are examined sequentially in order of decreasing salience and  a similarity threshold is applied, where the exemplar is ignored if its maximum 
+semantic similarity to any previous updates in the summary is greater than 
+$\lambda_{sim}$.
+
 
 Exemplars that pass these thresholds are selected as updates and added
 to the summary.
-
-
-
-

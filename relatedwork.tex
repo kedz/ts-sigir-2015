@@ -3,118 +3,55 @@
 A principal concern in extractive multi-document summarization is the
 selection of salient sentences for inclusion in summary output
 \cite{nenkova2012survey}. 
-%We conceptualize 
-Existing approaches generally fall into  %falling into
-one of three categories, each with specific tradeoffs with respect to update 
-summarization. 
+Existing approaches generally fall into one of three categories, each with 
+specific trade-offs with respect to update summarization. 
+
 
 First, centrality-focused approaches (including graph \cite{erkan2004lexrank},
-cluster \cite{hatzivassiloglou2001simfinder}, and centroid \cite{radev2004centroid} methods) are very natural for retrospective analysis in
-the sense that they let the data ``speak for itself.'' 
-These methods equate salience with centrality, either to the input or some other
-aggregate object (i.e. a cluster center or input centroid).
-However, they rely
-chiefly on
-redundancy. When applied to an unfolding event, there may not exist enough
-redundant content at the event onset for these methods to exploit.
+cluster \cite{hatzivassiloglou2001simfinder}, and centroid 
+\cite{radev2004centroid} methods) are very natural for retrospective analysis 
+in the sense that they let the data ``speak for itself.'' These methods 
+equate salience with centrality, either to the input or some other aggregate 
+object (i.e. a cluster center or input centroid). However, they rely
+chiefly on redundancy. When applied to an unfolding event, there may not exist
+enough redundant content at the event onset for these methods to exploit.
 Once the event onset has passed, however, the redundancy reduction of these 
 methods is quite beneficial.
 
-The second category, predictive approaches,
-includes ranking and classification based methods.
-Sentences have been ranked by the average word probability, average tf-idf
-score, and the number of topically related words (topic-signatures in the
-summarization literature)
+
+The second category, predictive approaches, includes ranking and 
+classification based methods. Sentences have been ranked by the average word 
+probability, average TF*IDF score, and the number of topically related words 
+(topic-signatures in the summarization literature)
 \cite{nenkova2005impact,hovy1998automated,lin2000automated}. The first two
 statistics are easily computable from the input sentences, while the third
-only requires an additional, generic background corpus.  
-In classification based methods, model features are
-usually derived from human generated summaries, and are non-lexical in nature
-(e.g., sentence starting position, number of topic-signatures, number of
-unique words). Seminal work in this area has employed naive
-Bayes and logistic regression classifiers to identify sentences for summary
-inclusion \cite{kupiec1995trainable,conroy2001using}. 
+only requires an additional, generic background corpus. In classification 
+based methods, model features are usually derived from human generated 
+summaries, and are non-lexical in nature (e.g., sentence starting position, 
+number of topic-signatures, number of unique words). Seminal work in this 
+area has employed na\"ive Bayes and logistic regression classifiers to 
+identify sentences for summary inclusion 
+\cite{kupiec1995trainable,conroy2001using}. 
 While these methods are less dependent on redundancy, the expressiveness of
 their features is limited. Our model expands on these basic features to 
 account for geographic, temporal, and language model features.
+
 
 The last category includes probabilistic \cite{haghighi2009exploring}, 
 information theoretic, and set cover \cite{lin2011class}
 approaches. While these methods are  focused on producing diverse
 summaries, they are difficult to adapt to the streaming setting, where 
 we do not necessarily have a fixed summary length and the corpus to be
-summarized contains many irrelevent sentences, i.e. there are large
-portions of the corpora that we specificly want to avoid. 
+summarized contains many irrelevant sentences, i.e. there are large
+portions of the corpora that we specifically want to avoid. 
 
 
-
-
-% This has often been approached as a ranking
-%problem.
-%We broadly conceptualize this decision as either an intrinsic or extrinsic
-%sentence evaluation process. Intrinsic approaches evaluate sentences
-%individually, possibly by predicting the impact on summary quality using
-%sentece level features. 
-%Sentences have been ranked by the average word probability, average tf-idf
-%score, and the number of topically related words (topic-signatures in the
-%summarization literature)
-%\cite{nenkova2005impact,hovy1998automated,lin2000automated}. The first two
-%statistics are easily computable from the input sentences, while the third
-%only requires an additional, generic background corpus.  Another ranking
-%approach, centroid summarization, involves creating an average bag of words
-%(BOW) vector, the centroid, from the input sentences and ranking sentences by
-%their similarity to the centroid \cite{radev2004centroid}.  Graph
-%\cite{erkan2004lexrank} and clustering
-%\cite{hatzivassiloglou2001simfinder,mckeown1999towards,siddharthan2004syntactic}
-%based approaches, on the other hand, make use of pair-wise similarity
-%comparisons amongst input sentences.  In these models, salient sentences are
-%more central to the input or cluster, respectively.
-
-%identify salient regions of the input space while simultaneously coping with
-%redundancy.  Graph-based algorithms have been used to rank sentences
-%Clustering algorithms, e.g., are commonly used to exploit redundancy in
-%input. Input sentences are clustered and summaries are generated by selecting
-%the most representative sentence from each cluster.  Graph-based models have
-%also been used for summarization.  E.g., the LexRank algorithm treats
-%sentences as nodes in a graph, where edges are constructed by way of cosine
-%similarity between sentence nodes; edges are either continuosly weighted by
-%similarity or discrete, existing only when the similarity is above a
-%threshold.  The PageRank algorithm is used on the graph to find the most
-%important sentence nodes. In both clustering and graph-based approaches,
-%sentence salience is largely determined by the pairwise relations between
-%sentences.
-
-%\fdadd{
 Several researchers have recognized the importance of summarization during
-natural disasters.  \cite{qi:temporal-summarization} developed a system for detecting
-novel, relevant, and comprehensive sentences immediately after a natural
-disaster.  
-%The method uses a model of
-%sentence relevance and novelty in order to select appropriate updates.
-%Training data for regression targets is automatically generated from
-%retrospective Wikipedia data.  The system is evaluated on news documents
-%related to 197 natural and human disasters from 2009 to 2011 using variants of
-%ROUGE modified to capture novelty, relevance, and comprehensiveness
-%\cite{lin2004rouge}.  
-\cite{wang:update-summarization} present a clustering-based approach to
-efficiently detect important updates during natural disasters.  
-The algorithm works by hierarchically
-clustering sentences online, allowing the system to output a more expressive
-narrative structure than \cite{qi:temporal-summarization}.  
-Our system attempts to unify these system's approaches 
-(predictive ranking and clustering respectively). 
-%The method is evaluated on
-%official press releases related to Hurricane Wilma  in 2005 using ROUGE score
-%between the system summary and a manually generated target summary. 
-%In addition
-%to natural disasters, we evaluate our system on a variety of event types 
-% such as terrorism and mass shootings (e.g., the 2012
-%shooting in Aurora, Col.), accidents
-%(e.g., the 2012 Pakistan garment factory fire), and social activism (e.g., the
-%Arab spring). The size and scope of the events varies considerably. Hurricane
-%Sandy, for example, affected multiple countries over weeks while the
-%2012 Aurora shooting was contained to a single location spanning several hours.
-
-
-
-%\fdcomment{Glasgow temporal summarization system \cite{mccreadie:temporal-summarization}.}
+natural disasters.  \cite{qi:temporal-summarization} developed a system for 
+detecting novel, relevant, and comprehensive sentences immediately after a 
+natural disaster.  \cite{wang:update-summarization} present a clustering-based
+approach to efficiently detect important updates during natural disasters.  
+The algorithm works by hierarchically clustering sentences online, allowing 
+the system to output a more expressive narrative structure than 
+\cite{qi:temporal-summarization}.  Our system attempts to unify these system's
+approaches (predictive ranking and clustering respectively). 
